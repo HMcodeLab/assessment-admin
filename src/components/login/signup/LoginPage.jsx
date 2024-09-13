@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../AuthContext";
-
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,6 +8,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation(); // Capture the original location user came from
   const { login } = useAuth();
 
   const handleLogin = async (e) => {
@@ -31,9 +31,13 @@ const LoginPage = () => {
 
       const data = await response.json();
       console.log("Login successful", data);
-      login(data.token); // Set token in context
+      login(data.token); // Save token and login user
+
       setLoading(false);
-      navigate("/dashboard");
+
+      // Redirect to the page user was originally trying to access or default to /dashboard
+      const from = location.state?.from?.pathname || "/dashboard";
+      navigate(from);
     } catch (error) {
       setError(error.message);
       setLoading(false);

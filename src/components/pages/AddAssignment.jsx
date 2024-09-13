@@ -2,13 +2,14 @@
 import { FaPlus } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-import { adminToken } from "../../api";
+// import { adminToken } from "../../api";
 import { GoDownload } from "react-icons/go";
 import { FiPlus } from "react-icons/fi";
 import { useParams } from "react-router-dom";
 
 const AddAssignment = () => {
   const { testId } = useParams();
+  const adminToken = localStorage.getItem("authToken");
 
   console.log("chack id is comming or not", testId);
   // const params = useParams();
@@ -39,7 +40,7 @@ const AddAssignment = () => {
     const fetchAssessmentData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_DOMAIN}/getmoduleassessment/${testId}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/getModuleAssessment/${testId}`,
           {
             headers: {
               Authorization: `Bearer ${adminToken}`,

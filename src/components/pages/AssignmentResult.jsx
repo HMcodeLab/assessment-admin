@@ -13,7 +13,7 @@ import {
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { adminToken } from "../../api";
+// import { adminToken } from "../../api";
 import ResultsAssessment from "./ResultsAssessment";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -23,10 +23,11 @@ const AssignmentResult = () => {
   const [showModal, setShowModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(6);
+  const adminToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getallmoduleassessment`, {
+      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
         headers: {
           Authorization: "Bearer " + adminToken,
         },
@@ -42,7 +43,7 @@ const AssignmentResult = () => {
   const handleViewClick = (testId) => {
     axios
       .get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/getallusersresultbymoduleassessment/${testId}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUsersResultForAssessment/${testId}`,
         {
           headers: {
             Authorization: "Bearer " + adminToken,
@@ -117,7 +118,7 @@ const AssignmentResult = () => {
   );
 
   return (
-    <div className="p-5">
+    <div className="p-5 ml-[12vw]">
       <Toaster position="top-center" />
       <h1 className="text-[30px] flex justify-center font-bold p-4">
         Assessment Results

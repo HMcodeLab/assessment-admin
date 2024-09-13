@@ -23,7 +23,7 @@ const Sidebar = () => {
             className="text-white font-semibold flex justify-end cursor-pointer"
             onClick={() => setOpenSidebar(false)}
           >
-            X
+            {/* X */}
           </div>
 
           <ul className="space-y-2 font-medium">

@@ -1,8 +1,8 @@
- import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaDeleteLeft, FaPlus } from "react-icons/fa6";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-import { adminToken } from "../../api";
+// import { adminToken } from "../../api";
 import { GoDownload } from "react-icons/go";
 import { FiPlus } from "react-icons/fi";
 import { useParams } from "react-router-dom";
@@ -12,12 +12,13 @@ import { MdDelete } from "react-icons/md";
 const EditAssessment = () => {
   const { testId } = useParams();
   const [assessment, setAssessment] = useState(null);
+  const adminToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchAssessmentData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.REACT_APP_SERVER_DOMAIN}/getmoduleassessment/${testId}`,
+          `${process.env.REACT_APP_SERVER_DOMAIN}/getModuleAssessment/${testId}`,
           {
             headers: {
               Authorization: `Bearer ${adminToken}`,
@@ -61,7 +62,7 @@ const EditAssessment = () => {
         return;
       }
 
-      const apiUrl = `${process.env.REACT_APP_SERVER_DOMAIN}/deletemodulefromassessment`;
+      const apiUrl = `${process.env.REACT_APP_SERVER_DOMAIN}/deleteModuleFromAssessment`;
 
       const response = await axios.delete(apiUrl, {
         headers: {
@@ -130,7 +131,7 @@ const EditAssessment = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/updatemoduleassessment/${testId}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/editModuleAssessment/${testId}`,
         assessment, // Use assessment directly
         {
           headers: {
@@ -140,7 +141,7 @@ const EditAssessment = () => {
         }
       );
 
-      toast.success("Assessment updated successfully!"); // Success toast
+      toast.success("Assessment updated successfully!");
     } catch (error) {
       toast.error(
         error.response
@@ -150,15 +151,13 @@ const EditAssessment = () => {
     }
   };
 
- 
-
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5">
-      <div className="w-full h-[5vh] bg-green-600 p-1 mb-5 rounded-sm">
-        <div className="flex flex-row justify-between px-4">
-          <h1 className="flex flex-row gap-2 items-center border rounded-xl shadow-md justify-center text-xl font-semibold w-[12vw] h-[4vh]">
+    <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5 ">
+      <div className="h-[5vh] p-1 mb-5 rounded-sm w-[90%]">
+        <div className="flex flex-row justify-end px-4">
+          {/* <h1 className="flex flex-row gap-2 items-center border rounded-xl shadow-md justify-center text-xl font-semibold w-[12vw] h-[4vh]">
             <FiPlus /> Edit Assessment
-          </h1>
+          </h1> */}
 
           <a
             href="/PAPAssessmentTemplate.xlsx"
@@ -170,7 +169,7 @@ const EditAssessment = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8 space-y-8">
+      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8 space-y-8 w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center underline">
           Assessment Submission
         </h1>

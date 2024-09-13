@@ -36,8 +36,24 @@ const Register = () => {
     }));
   };
 
+  // Validate form data
+  const validateForm = () => {
+    const { email, password, firstName, lastName, mobile, profile } = formData;
+    if (!email || !password || !firstName || !lastName || !mobile || !profile) {
+      toast.error("All fields are required!");
+      return false;
+    }
+    if (!/^\d{10}$/.test(mobile)) {
+      toast.error("Invalid mobile number! It should be 10 digits.");
+      return false;
+    }
+    return true;
+  };
+
   // Submit data to API using JSON
   const handleRegister = async () => {
+    if (!validateForm()) return;
+
     setLoading(true);
     setError(null);
 
@@ -47,22 +63,23 @@ const Register = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData), // Send formData as JSON
+        body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
-        throw new Error("Registration failed");
+        // const errorData = await response.json();
+        throw new Error(error?.message || "Registration failed");
       }
 
       const data = await response.json();
       console.log("Registration successful", data);
       setLoading(false);
-      toast.success('Registration successful!'); // Show success toast
+      toast.success('Registration successful!');
       navigate("/"); 
     } catch (error) {
       setError(error.message);
       setLoading(false);
-      toast.error(error.message); // Show error toast
+      toast.error(error.message);
     }
   };
 

@@ -14,7 +14,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import EachStudentDetails from "./EachStudentDetails";
 import axios from "axios";
-import { adminToken } from "../../api";
+// import { adminToken } from "../../api";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import toast from 'react-hot-toast';
 
@@ -24,6 +24,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
   const [studentDetails, setStudentDetails] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const adminToken = localStorage.getItem("authToken");
 
   useEffect(() => {
     if (student && (!student.data || student.data.length === 0)) {
@@ -41,7 +42,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/getuserresultbymoduleassessment`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`,
         {
           params: {
             userID: studentData?.user?._id,
@@ -129,13 +130,13 @@ const ResultsAssessment = ({ show, onClose, student }) => {
                   {student?.data?.map((studentData, index) => (
                     <TableRow key={index}>
                       <TableCell sx={{ fontSize: "1rem" }}>
-                        {studentData?.user?.name || ""}
+                        {studentData?.module?.modueleInfo?.moduleName || ""}
                       </TableCell>
                       <TableCell sx={{ fontSize: "1rem" }}>
-                        {studentData?.user?.email || ""}
+                        {studentData?.email || ""}
                       </TableCell>
                       <TableCell sx={{ fontSize: "1rem" }}>
-                        {studentData?.user?.phone || ""}
+                        {studentData?.phone || ""}
                       </TableCell>
                       <TableCell
                         sx={{ fontSize: "1rem", cursor: "pointer", color: 'blue' }}

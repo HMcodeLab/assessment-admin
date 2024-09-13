@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 export const REACT_APP_SERVER_DOMAIN = process.env.REACT_APP_SERVER_DOMAIN;
 
-export const adminToken = localStorage.getItem("adminDetail");
+export const adminToken = localStorage.getItem("authToken");
 
 export const Toast = ({ type }) => {
   const [show, setShow] = useState(true);

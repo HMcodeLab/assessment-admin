@@ -23,9 +23,10 @@ import { saveAs } from "file-saver";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
-import { adminToken } from "../../api";
+// import { adminToken } from "../../api";
 
 const TestDetails = () => {
+  const adminToken = localStorage.getItem("authToken");
   const [testData, setTestData] = useState([]);
   const [enabledTests, setEnabledTests] = useState({});
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -36,7 +37,7 @@ const TestDetails = () => {
 
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getallmoduleassessment`, {
+      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
         headers: {
           Authorization: "Bearer " + adminToken,
         },
@@ -59,7 +60,7 @@ const TestDetails = () => {
 
     axios
       .put(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/changeassessmentvisiblity/${testId}`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/ChangeAssessmentVisiblity/${testId}`,
         { isVisible: newVisibility },
         {
           headers: {
@@ -95,7 +96,7 @@ const TestDetails = () => {
   const handleDeleteConfirm = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/deletemodulefromassessment`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/deleteModuleFromAssessment`,
         {
           method: "DELETE",
           headers: {
@@ -169,7 +170,7 @@ const TestDetails = () => {
   };
 
   const handleEdit = (testId) => {
-    navigate(`/EditAssessment/${testId}`);
+    navigate(`/edit-assessment/${testId}`);
   };
 
   // Get current tests for pagination
@@ -182,7 +183,7 @@ const TestDetails = () => {
   };
 
   return (
-    <div className="p-5">
+    <div className="ml-[14vw]">
       <Toaster />
       <h1 className="text-[30px] flex justify-center font-bold p-4">
         Assessment Details
