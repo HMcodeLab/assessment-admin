@@ -12,6 +12,8 @@ import LoginPage from "./components/login/signup/LoginPage";
 import Register from "./components/login/signup/Register";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./AuthContext";
+import CMDScreen from "./components/pages/AssignmentDetails";
+import AdminProfile from "./components/profile/AdminProfile";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -57,6 +59,13 @@ function App() {
                 path="/testdetails"
                 element={<PrivateRoute element={TestDetails} />}
               />
+
+                <Route
+                path="/profile"
+                element={<PrivateRoute element={AdminProfile} />}
+              />
+            
+
             </Routes>
           </div>
         </div>

@@ -42,7 +42,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getUsersResultForAssessment`,
         {
           params: {
             userID: studentData?.user?._id,
@@ -52,15 +52,16 @@ const ResultsAssessment = ({ show, onClose, student }) => {
             Authorization: `Bearer ${adminToken}`,
           },
         }
-      );console.log("check response",response);
+      );
 
+      console.log(response);
       const data = response?.data;
       const details = data?.data;
 
       if (details) {
         setStudentDetails(details);
       } else {
-        setError("No data available.");
+        // setError("No data available.");
         toast.error("No data available.");
       }
     } catch (error) {
