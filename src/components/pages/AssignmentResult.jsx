@@ -119,7 +119,7 @@ const AssignmentResult = () => {
   );
 
   return (
-    <div className="p-5 ml-[12vw]">
+    <div className="p-5">
       <Toaster position="top-center" />
       <h1 className="text-[30px] flex justify-center font-bold p-4">
         Assessment Results

@@ -27,6 +27,7 @@ const EachStudentDetails = ({
 }) => {
   const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
+  console.log("check data in studentDetails", studentDetails);
 
 
 

@@ -183,7 +183,7 @@ const TestDetails = () => {
   };
 
   return (
-    <div className="ml-[14vw]">
+    <div className="mx-6">
       <Toaster />
       <h1 className="text-[30px] flex justify-center font-bold p-4">
         Assessment Details

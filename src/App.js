@@ -12,34 +12,31 @@ import LoginPage from "./components/login/signup/LoginPage";
 import Register from "./components/login/signup/Register";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./AuthContext";
+import AdminProfile from "./components/profile/AdminProfile";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
   return (
     <Router>
-      <div className="flex flex-col h-screen">
-        {/* Main container */}
-        <div className="flex flex-1">
-          {/* Sidebar should have a fixed width */}
+      <div className="flex flex-col h-screen overflow-hidden"> {/* Removed unnecessary height constraint */}
+        <div className="flex flex-1 overflow-hidden"> {/* Ensures no overflow unless necessary */}
           {isAuthenticated && (
             <div className="w-64">
               <Sidebar />
             </div>
           )}
 
-          {/* Main content area */}
           <div
             className={
               isAuthenticated
-                ? "flex-1 flex flex-col overflow-y-auto"
-                : "w-full flex flex-col overflow-y-auto"
+                ? "flex-1 flex flex-col overflow-hidden"  // Removed overflow-y-auto here
+                : "w-full flex flex-col overflow-hidden"  // Ensures content does not overflow unless necessary
             }
           >
             {isAuthenticated && <Navbar />}
 
-            {/* Route rendering */}
-            <div className="flex-1">
+            <div className="flex-1 overflow-auto px-0"> {/* Enable overflow only when needed */}
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<Register />} />
@@ -72,6 +69,10 @@ function App() {
                 <Route
                   path="/testdetails"
                   element={<PrivateRoute element={TestDetails} />}
+                />
+                <Route
+                  path="/profile"
+                  element={<PrivateRoute element={AdminProfile} />}
                 />
               </Routes>
             </div>
