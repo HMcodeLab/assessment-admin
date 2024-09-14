@@ -80,6 +80,7 @@ console.log(excelFile);
   
       if (response.status === 201) {
         toast.success("File uploaded successfully!");
+        handleClear();
         fetchTestData(); // Fetch test data after successful upload
       } else {
         toast.error("Error uploading file.");
