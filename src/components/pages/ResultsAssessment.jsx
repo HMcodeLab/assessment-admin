@@ -35,6 +35,8 @@ const ResultsAssessment = ({ show, onClose, student }) => {
   if (!student || !student.data || student.data.length === 0) return null;
 
   const handleViewClick = async (studentData) => {
+    // console.log(studentData);
+    
     setSelectedStudent(studentData);
     setDetailsModalOpen(true);
     setLoading(true);
@@ -59,6 +61,8 @@ const ResultsAssessment = ({ show, onClose, student }) => {
       const details = data?.data;
 
       if (details) {
+        // console.log(details);
+        
         setStudentDetails(details);
       } else {
         // setError("No data available.");
@@ -121,9 +125,9 @@ const ResultsAssessment = ({ show, onClose, student }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ fontSize: "1.2rem" }}>User Name</TableCell>
+                    <TableCell sx={{ fontSize: "1.2rem" }}>moduleAssessment</TableCell>
                     <TableCell sx={{ fontSize: "1.2rem" }}>Email</TableCell>
-                    <TableCell sx={{ fontSize: "1.2rem" }}>Contact</TableCell>
+                    {/* <TableCell sx={{ fontSize: "1.2rem" }}>Contact</TableCell> */}
                     <TableCell sx={{ fontSize: "1.2rem" }}>Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -131,14 +135,14 @@ const ResultsAssessment = ({ show, onClose, student }) => {
                   {student?.data?.map((studentData, index) => (
                     <TableRow key={index}>
                       <TableCell sx={{ fontSize: "1rem" }}>
-                        {studentData?.module?.modueleInfo?.moduleName || ""}
+                        {studentData?.moduleAssessment|| ""}
                       </TableCell>
                       <TableCell sx={{ fontSize: "1rem" }}>
                         {studentData?.email || ""}
                       </TableCell>
-                      <TableCell sx={{ fontSize: "1rem" }}>
+                      {/* <TableCell sx={{ fontSize: "1rem" }}>
                         {studentData?.phone || ""}
-                      </TableCell>
+                      </TableCell> */}
                       <TableCell
                         sx={{ fontSize: "1rem", cursor: "pointer", color: 'blue' }}
                         className="hover:text-blue-950 hover:underline"
@@ -163,6 +167,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
         <EachStudentDetails
           open={detailsModalOpen}
           onClose={closeDetailsModal}
+          studentData={selectedStudent || {}}
           studentDetails={studentDetails || {}}
           loading={loading}
           error={error}

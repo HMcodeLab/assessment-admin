@@ -22,7 +22,7 @@ const AssignmentResult = () => {
   const [selectedTest, setSelectedTest] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(6);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const adminToken = localStorage.getItem("authToken");
 
   useEffect(() => {
@@ -58,6 +58,7 @@ const AssignmentResult = () => {
         } else if (response?.data?.length === 0) {
           toast.error("No User's Assessment Report Found");
         } else {
+          // console.log(response.data);          
           setSelectedTest(response?.data);
           setShowModal(true);
         }

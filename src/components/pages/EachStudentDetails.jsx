@@ -20,6 +20,7 @@ import toast from "react-hot-toast";
 const EachStudentDetails = ({
   open,
   onClose,
+  studentData,
   studentDetails,
   loading,
   error,
@@ -28,16 +29,21 @@ const EachStudentDetails = ({
   const [selectedModule, setSelectedModule] = useState(null);
   console.log("check data in studentDetails", studentDetails);
 
-  useEffect(() => {
-    if (open && !studentDetails) {
-      toast.error("This data is not available");
-    }
-  }, [open, studentDetails]);
 
-  if (!studentDetails) return null;
-  if (studentDetails) console.log(studentDetails);
 
-  const { user, ProctoringScore = {}, generatedModules = [] } = studentDetails;
+  // useEffect(() => {
+  //   if (open && !studentDetails) {
+  //     toast.error("This data is not available");
+  //   }
+  // }, [open, studentDetails]);
+
+  // if (!studentDetails) return null;
+  // if (studentDetails) console.log(studentDetails);
+  if(studentData) console.log(studentData);
+  
+  
+
+  const { user, ProctoringScore = {}, generatedModules = [] } = studentData;
 
   const handleViewClick = (module) => {
     setSelectedModule(module);
@@ -112,19 +118,19 @@ const EachStudentDetails = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell>Name</TableCell>
                       <TableCell>{user?.name || ""}</TableCell>
-                    </TableRow>
+                    </TableRow> */}
                     <TableRow>
                       <TableCell>Email</TableCell>
-                      <TableCell>{user?.email || ""}</TableCell>
+                      <TableCell>{studentData?.email || ""}</TableCell>
                     </TableRow>
-                    <TableRow>
+                    {/* <TableRow>
                       <TableCell>Phone</TableCell>
                       <TableCell>{user?.phone || ""}</TableCell>
-                    </TableRow>
-                    <TableRow>
+                    </TableRow> */}
+                    {/* <TableRow>
                       <TableCell>College</TableCell>
                       <TableCell>{user?.college || ""}</TableCell>
                     </TableRow>
@@ -135,18 +141,18 @@ const EachStudentDetails = ({
                     <TableRow>
                       <TableCell>Year of Passing</TableCell>
                       <TableCell>{user?.yearofpass || ""}</TableCell>
-                    </TableRow>
-                    <TableRow>
+                    </TableRow> */}
+                    {/* <TableRow>
                       <TableCell>Profile Complete</TableCell>
                       <TableCell>{user?.isProfileComplete ? "Yes" : "No"}</TableCell>
-                    </TableRow>
+                    </TableRow> */}
                     <TableRow>
                       <TableCell>Total Marks</TableCell>
                       <TableCell>Marks Obtained</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>{studentDetails?.maxMarks || 0}</TableCell>
-                      <TableCell>{studentDetails?.totalMarks || 0}</TableCell>
+                      <TableCell>{studentData?.maxMarks || 0}</TableCell>
+                      <TableCell>{studentData?.totalMarks || 0}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
