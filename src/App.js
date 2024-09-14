@@ -19,45 +19,62 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col h-screen">
+        {/* Main container */}
         <div className="flex flex-1">
-          {isAuthenticated && <Sidebar className="w-64" />}
+          {/* Sidebar should have a fixed width */}
+          {isAuthenticated && (
+            <div className="w-64">
+              <Sidebar />
+            </div>
+          )}
+
+          {/* Main content area */}
           <div
             className={
-              isAuthenticated ? "flex-1 overflow-y-auto w-full" : "w-full"
+              isAuthenticated
+                ? "flex-1 flex flex-col overflow-y-auto"
+                : "w-full flex flex-col overflow-y-auto"
             }
           >
             {isAuthenticated && <Navbar />}
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<Register />} />
 
-              {/* Protect routes using PrivateRoute */}
-              <Route path="/" element={<PrivateRoute element={Dashboard} />} />
-              <Route
-                path="/dashboard"
-                element={<PrivateRoute element={Dashboard} />}
-              />
-              <Route
-                path="/add-assignment"
-                element={<PrivateRoute element={AddAssignment} />}
-              />
-              <Route
-                path="/assessmentresult"
-                element={<PrivateRoute element={AssignmentResult} />}
-              />
-              <Route
-                path="/assessment"
-                element={<PrivateRoute element={Assessment} />}
-              />
-              <Route
-                path="/edit-assessment/:testId"
-                element={<PrivateRoute element={EditAssessment} />}
-              />
-              <Route
-                path="/testdetails"
-                element={<PrivateRoute element={TestDetails} />}
-              />
-            </Routes>
+            {/* Route rendering */}
+            <div className="flex-1">
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<Register />} />
+
+                {/* Protect routes using PrivateRoute */}
+                <Route
+                  path="/"
+                  element={<PrivateRoute element={Dashboard} />}
+                />
+                <Route
+                  path="/dashboard"
+                  element={<PrivateRoute element={Dashboard} />}
+                />
+                <Route
+                  path="/add-assignment"
+                  element={<PrivateRoute element={AddAssignment} />}
+                />
+                <Route
+                  path="/assessmentresult"
+                  element={<PrivateRoute element={AssignmentResult} />}
+                />
+                <Route
+                  path="/assessment"
+                  element={<PrivateRoute element={Assessment} />}
+                />
+                <Route
+                  path="/edit-assessment/:testId"
+                  element={<PrivateRoute element={EditAssessment} />}
+                />
+                <Route
+                  path="/testdetails"
+                  element={<PrivateRoute element={TestDetails} />}
+                />
+              </Routes>
+            </div>
           </div>
         </div>
       </div>
