@@ -311,7 +311,7 @@ const EditAssessment = () => {
                         )
                       }
                     />
-                    <input
+                    {/* <input
                       type="number"
                       placeholder="Time Limit"
                       className="border w-full h-12 p-3"
@@ -323,7 +323,7 @@ const EditAssessment = () => {
                           e.target.value
                         )
                       }
-                    />
+                    /> */}
                     <label className="text-xl font-semibold">
                       Upload Questions
                     </label>
