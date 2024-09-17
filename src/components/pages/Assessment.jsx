@@ -10,7 +10,7 @@ const Assessment = () => {
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
 
-  // Function to fetch test data
+ 
   const fetchTestData = async () => {
     try {
       const response = await axios.get(
