@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
@@ -6,13 +6,45 @@ import toast, { Toaster } from "react-hot-toast";
 const Assessment = () => {
   const [excelData, setExcelData] = useState([]);
   const [excelFile, setExcelFile] = useState(null);
+  const [modules, setModules] = useState([]);
+  const [selectedModule, setSelectedModule] = useState("");
   const [testData, setTestData] = useState([]);
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
 
- 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`,
+        {
+          headers: {
+            Authorization: "Bearer " + adminToken,
+          },
+        }
+      );
+      if (response && response.data) {
+        const modules = response.data.data.map((module) => ({
+          name: module.assessmentName,
+          id: module._id,
+        }));
+        setModules(modules);
+        // console.log(response.data.data);
+      }
+      // console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  
+  // console.log(modules);
+
+  const handleChange = (event) => {
+    setSelectedModule(event.target.value); // Update state with selected value
+  };
+
   const fetchTestData = async () => {
     try {
       const response = await axios.get(
@@ -36,18 +68,21 @@ const Assessment = () => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const validTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
-      
+      const validTypes = [
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ];
+
       // Check if the file type is valid
       if (!validTypes.includes(file.type)) {
         toast.error("Please upload a valid Excel file (.xls or .xlsx)");
         return;
         // handleClear();
       }
-      
-      console.log(file.type);
+
+      // console.log(file.type);
       setExcelFile(file);
-      
+
       const reader = new FileReader();
       reader.onload = (event) => {
         const binaryStr = event.target.result;
@@ -57,12 +92,12 @@ const Assessment = () => {
         const data = XLSX.utils.sheet_to_json(sheet);
         setExcelData(data);
       };
-      
+
       reader.readAsBinaryString(file);
     }
   };
-  
-console.log(excelFile);
+
+  // console.log(excelFile);
 
   const handleClear = () => {
     setExcelFile(null);
@@ -77,22 +112,22 @@ console.log(excelFile);
       toast.error("Please upload an Excel file first.");
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("candidates", excelFile); // Append the file itself
-      formData.append("moduleAssessmentid", "66d93cc4d898158086e281c2"); // Add other data if needed
-  
+      formData.append("moduleAssessmentid", selectedModule); // Add other data if needed
+
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/addCandidatesForAssessment`,
         formData, // Send the form data with the file
         {
           headers: {
-            Authorization: `Admin ${adminToken}`, 
+            Authorization: `Admin ${adminToken}`,
           },
         }
       );
-  
+
       if (response.status === 201) {
         toast.success("File uploaded successfully!");
         handleClear();
@@ -108,7 +143,6 @@ console.log(excelFile);
       );
     }
   };
-  
 
   const handleDownloadExcel = () => {
     const url = "/CandidatesForAssessment.xlsx";
@@ -133,6 +167,23 @@ console.log(excelFile);
             className="border p-3 rounded-lg text-white"
             ref={fileInputRef}
           />
+
+          <select
+            name="module"
+            id="module"
+            value={selectedModule}
+            onChange={handleChange}
+          >
+            <option value="" disabled>
+              Select a module
+            </option>{" "}
+            {/* Default option */}
+            {modules.map((module) => (
+              <option value={module.id} key={module.id}>
+                {module.name}
+              </option>
+            ))}
+          </select>
           <button
             onClick={handleClear}
             className="h-[6vh] rounded-lg p-2 px-4 bg-red-400 hover:bg-red-500"
