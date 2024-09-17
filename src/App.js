@@ -19,7 +19,7 @@ function App() {
 
   return (
     <Router>
-      <div className="flex flex-col h-screen overflow-hidden"> {/* Removed unnecessary height constraint */}
+      <div className="flex flex-col h-screen overflow-hidden"> 
         <div className="flex flex-1 overflow-hidden"> {/* Ensures no overflow unless necessary */}
           {isAuthenticated && (
             <div className="w-64">
