@@ -34,7 +34,18 @@ const Assessment = () => {
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const validTypes = ['application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
+      
+      // Check if the file type is valid
+      if (!validTypes.includes(file.type)) {
+        toast.error("Please upload a valid Excel file (.xls or .xlsx)");
+        return;
+        // handleClear();
+      }
+      
+      console.log(file.type);
       setExcelFile(file);
+      
       const reader = new FileReader();
       reader.onload = (event) => {
         const binaryStr = event.target.result;
@@ -44,9 +55,11 @@ const Assessment = () => {
         const data = XLSX.utils.sheet_to_json(sheet);
         setExcelData(data);
       };
+      
       reader.readAsBinaryString(file);
     }
   };
+  
 console.log(excelFile);
 
   const handleClear = () => {

@@ -21,13 +21,13 @@ const EachStudentDetails = ({
   open,
   onClose,
   studentData,
-  studentDetails,
+  // studentDetails,
   loading,
   error,
 }) => {
   const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
   const [selectedModule, setSelectedModule] = useState(null);
-  console.log("check data in studentDetails", studentDetails);
+  // console.log("check data in studentDetails", studentDetails);
 
 
 

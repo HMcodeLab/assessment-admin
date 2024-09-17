@@ -39,42 +39,8 @@ const ResultsAssessment = ({ show, onClose, student }) => {
     
     setSelectedStudent(studentData);
     setDetailsModalOpen(true);
-    setLoading(true);
+    setLoading(false);
     setError(null);
-
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/getUsersResultForAssessment`,
-        {
-          params: {
-            userID: studentData?.user?._id,
-            moduleAssessmentid: studentData.moduleAssessment,
-          },
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
-        }
-      );
-
-      console.log(response);
-      const data = response?.data;
-      const details = data?.data;
-
-      if (details) {
-        // console.log(details);
-        
-        setStudentDetails(details);
-      } else {
-        // setError("No data available.");
-        toast.error("No data available.");
-      }
-    } catch (error) {
-      console.error("Error fetching student details:", error);
-      setError("Failed to load student details.");
-      toast.error("Failed to load student details.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   const closeDetailsModal = () => {
@@ -168,7 +134,6 @@ const ResultsAssessment = ({ show, onClose, student }) => {
           open={detailsModalOpen}
           onClose={closeDetailsModal}
           studentData={selectedStudent || {}}
-          studentDetails={studentDetails || {}}
           loading={loading}
           error={error}
         />
