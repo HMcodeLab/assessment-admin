@@ -85,7 +85,7 @@ const LoginPage = () => {
               {loading ? "Logging in..." : "Login"}
             </button>
           </div>
-          <p className="mt-4 text-center">
+          {/* <p className="mt-4 text-center">
             Don't have an account?{" "}
             <button
               onClick={handleSignUpClick}
@@ -93,7 +93,7 @@ const LoginPage = () => {
             >
               Register
             </button>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
