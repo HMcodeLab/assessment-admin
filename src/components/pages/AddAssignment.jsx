@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 const AddAssignment = () => {
   const { testId } = useParams();
   const adminToken = localStorage.getItem("authToken");
+  const [module, setModule] = useState(null)
 
   console.log("chack id is comming or not", testId);
   // const params = useParams();
@@ -160,6 +161,7 @@ const AddAssignment = () => {
 
   const handleFileChange = (assessmentIndex, moduleIndex, event) => {
     const file = event.target.files[0];
+    if(file) setModule(file);
     const updatedAssessments = assessments.map((assessment, i) =>
       i === assessmentIndex
         ? {
@@ -177,6 +179,7 @@ const AddAssignment = () => {
     try {
       // Convert assessments state to JSON string
       const jsonData = JSON.stringify(assessments[0]);
+      
 
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/createModuleAssessment`,

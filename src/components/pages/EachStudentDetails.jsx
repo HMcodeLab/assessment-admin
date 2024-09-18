@@ -16,31 +16,40 @@ import CloseIcon from "@mui/icons-material/Close";
 import QuestionsModal from "./QuestionsModal";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import toast from "react-hot-toast";
+import axios from "axios";
 
-const EachStudentDetails = ({
-  open,
-  onClose,
-  studentData,
-  // studentDetails,
-  loading,
-  error,
-}) => {
+const EachStudentDetails = ({ open, onClose, studentData, loading, error }) => {
   const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
+  const [load, setload] = useState(false)
+  const [studentDetails, setStudentDetails] = useState(null)
   const [selectedModule, setSelectedModule] = useState(null);
-  // console.log("check data in studentDetails", studentDetails);
+  // if (studentData) console.log(studentData);
+  const adminToken = localStorage.getItem("authToken");
 
+  const fetchData = async () => {
+    setload(true)
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/getUsersResultForAssessment?moduleAssessmentid=${studentData.moduleAssessment}&email=${studentData.email}`,{
+        headers:{
+          Authorization:`Bearer ${adminToken}`
+        }
+      });
+      if(response&&response.data){
+        setStudentDetails(response.data.data);
+      }
+      // console.log(response.data.data);
+    } catch (error) {
+      console.log(error);      
+    }finally{
+      setload(false);
+    }
+  };
 
+  useEffect(()=>{
+    fetchData();
+  },[])
 
-  // useEffect(() => {
-  //   if (open && !studentDetails) {
-  //     toast.error("This data is not available");
-  //   }
-  // }, [open, studentDetails]);
-
-  // if (!studentDetails) return null;
-  // if (studentDetails) console.log(studentDetails);
-  if(studentData) console.log(studentData);
-  
+  console.log(studentDetails);
   
 
   const { user, ProctoringScore = {}, generatedModules = [] } = studentData;
@@ -49,9 +58,14 @@ const EachStudentDetails = ({
     setSelectedModule(module);
     setQuestionsModalOpen(true);
   };
-
+if(load){
+  return(
+    <h1>Loading...</h1>
+  )
+}
   return (
     <>
+
       <Modal
         open={open}
         onClose={onClose}
@@ -124,7 +138,7 @@ const EachStudentDetails = ({
                     </TableRow> */}
                     <TableRow>
                       <TableCell>Email</TableCell>
-                      <TableCell>{studentData?.email || ""}</TableCell>
+                      <TableCell>{studentDetails?.email || ""}</TableCell>
                     </TableRow>
                     {/* <TableRow>
                       <TableCell>Phone</TableCell>
@@ -151,8 +165,8 @@ const EachStudentDetails = ({
                       <TableCell>Marks Obtained</TableCell>
                     </TableRow>
                     <TableRow>
-                      <TableCell>{studentData?.maxMarks || 0}</TableCell>
-                      <TableCell>{studentData?.totalMarks || 0}</TableCell>
+                      <TableCell>{studentDetails?.maxMarks || 0}</TableCell>
+                      <TableCell>{studentDetails?.totalMarks || 0}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -213,7 +227,8 @@ const EachStudentDetails = ({
                           {module?.module?.modueleInfo?.timelimit || ""} mins
                         </TableCell>
                         <TableCell>
-                          {module?.module?.generatedQustionSet?.length || 0} Questions
+                          {module?.module?.generatedQustionSet?.length || 0}{" "}
+                          Questions
                         </TableCell>
                         <TableCell>
                           {module?.module?.modueleInfo?.moduleMaxMarks || 0}

@@ -13,6 +13,7 @@ import Register from "./components/login/signup/Register";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./AuthContext";
 import AdminProfile from "./components/profile/AdminProfile";
+import AddQuestions from "./components/pages/AddQuestions";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -73,6 +74,10 @@ function App() {
                 <Route
                   path="/profile"
                   element={<PrivateRoute element={AdminProfile} />}
+                />
+                 <Route
+                  path="/AddQuestions"
+                  element={<PrivateRoute element={AddQuestions} />}
                 />
               </Routes>
             </div>

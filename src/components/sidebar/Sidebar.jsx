@@ -1,14 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaPlusCircle } from "react-icons/fa";
 import { CiLogout } from "react-icons/ci";
 import { TbListDetails, TbReportSearch } from "react-icons/tb";
 import { useAuth } from "../../AuthContext";
-import logo from '../../Assets/HMLOGO.gif'
+import logo from "../../Assets/HMLOGO.gif";
 
 const Sidebar = () => {
   const { isAuthenticated } = useAuth();
   const [openSidebar, setOpenSidebar] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+
+    navigate("/login");
+  };
 
   return isAuthenticated ? (
     <>
@@ -29,14 +37,14 @@ const Sidebar = () => {
           </div>
 
           <ul className="space-y-2 font-medium">
-          <li>
+            <li>
               <Link
                 to="/dashboard"
                 className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
               >
                 <img src={logo} alt="brand logo" />
-                </Link>
-                </li>
+              </Link>
+            </li>
             <li>
               <Link
                 to="/dashboard"
@@ -109,11 +117,24 @@ const Sidebar = () => {
                 </span>
               </Link>
             </li>
+            <li>
+              <Link
+                to="/AddQuestions"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <FaPlusCircle className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
+                <span className="flex-1 ms-3 whitespace-nowrap">
+                  Add Questions
+                </span>
+              </Link>
+            </li>
           </ul>
           <div className="relative h-[53%]">
             <div className="absolute bottom-0 flex flex-row justify-center items-end gap-3 p-4">
               <CiLogout className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" />
-              <button className="text-green-500">LOGOUT</button>
+              <button className="text-green-500" onClick={handleLogout}>
+                LOGOUT
+              </button>
             </div>
           </div>
         </div>
