@@ -1,57 +1,92 @@
-import axios from 'axios'
-import React, { useEffect ,useState} from 'react'
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const FeedBack = () => {
-    const adminToken = localStorage.getItem("authToken");
-    const [feedbacks, setfeedbacks] = useState([])
-    const fetchData = async () =>{
-        try {
-            const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllUserFeedbacks`,{
-                headers:{
-                    Authorization:`Baerer ${adminToken}`
-                }
-            })
-            console.log(response.data.feedbacks);
-            if(response && response.data){
-                setfeedbacks(response.data.feedbacks)
-            }  
-        } catch (error) {
-                console.log("Error in fetching feedbacks form",error);
-                
+  const adminToken = localStorage.getItem("authToken");
+  const [feedbacks, setfeedbacks] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUserFeedbacks`,
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
         }
+      );
+      console.log(response.data.feedbacks);
+      if (response && response.data) {
+        setfeedbacks(response.data.feedbacks);
+      }
+    } catch (error) {
+      console.log("Error in fetching feedbacks form", error);
     }
+  };
 
-    useEffect(()=>{
-        fetchData();
-    },[])
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
-    <div className="flex flex-col gap-2">
-        <h1 className='text-center text-2xl text-green-500 font-semibold'>Student FeedBack Form</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>FeedBacks</th>
+    <div className="flex flex-col items-center p-4">
+      <h1 className="text-center text-3xl text-green-500 font-bold mb-6">
+        Student Feedback Form
+      </h1>
+      <div className="w-full overflow-x-auto">
+        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+          <thead className="bg-green-500 text-white">
+            <tr>
+              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
+                Id
+              </th>
+              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
+                Name
+              </th>
+              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
+                Email
+              </th>
+              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
+                Feedback
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {feedbacks.length > 0 ? (
+              feedbacks.map((feedback, index) => (
+                <tr
+                  key={index}
+                  className="border-b transition duration-300 ease-in-out hover:bg-gray-100"
+                >
+                  <td className="py-4 px-6 whitespace-nowrap">
+                    {feedback?._id}
+                  </td>
+                  <td className="py-4 px-6 whitespace-nowrap">
+                    {feedback?.name}
+                  </td>
+                  <td className="py-4 px-6 whitespace-nowrap">
+                    {feedback?.email}
+                  </td>
+                  <td className="py-4 px-6 whitespace-nowrap">
+                    {feedback?.feedback}
+                  </td>
                 </tr>
-            </thead>
-            <tbody>
-                {
-                    feedbacks.map((feedback,index)=>(
-                        <tr key={index} className='text-center '>
-                            <td>{feedback?._id}</td>
-                            <td>{feedback?.name}</td>
-                            <td>{feedback?.email}</td>
-                            <td>{feedback?.feedback}</td>
-                        </tr>
-                    ))
-                }
-               
-            </tbody>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="4"
+                  className="text-center py-4 px-6 text-gray-500"
+                >
+                  No feedbacks available.
+                </td>
+              </tr>
+            )}
+          </tbody>
         </table>
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default FeedBack
+export default FeedBack;
