@@ -1,11 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ImSpinner9 } from "react-icons/im";
 
 const FeedBack = () => {
   const adminToken = localStorage.getItem("authToken");
+  const [loading, setloading] = useState(false)
   const [feedbacks, setfeedbacks] = useState([]);
 
   const fetchData = async () => {
+    setloading(true)
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUserFeedbacks`,
@@ -21,12 +24,20 @@ const FeedBack = () => {
       }
     } catch (error) {
       console.log("Error in fetching feedbacks form", error);
+    }finally{
+        setloading(false)
     }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+if(loading){
+    return(
+        <ImSpinner9 className="animate-spin text-green-600 size-[8vh] mx-auto my-[25%]"/>
+    )
+}
 
   return (
     <div className="flex flex-col items-center p-4">

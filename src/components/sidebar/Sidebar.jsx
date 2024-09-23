@@ -14,9 +14,13 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-
+  
     navigate("/login");
+    
+    // Force a complete page refresh
+    window.location.reload();
   };
+  
 
   return isAuthenticated ? (
     <>

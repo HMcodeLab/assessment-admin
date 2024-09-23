@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import { FaRegCircleUser } from "react-icons/fa6";
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+  
+    navigate("/login");
+    
+    // Force a complete page refresh
+    window.location.reload();
   };
 
   return (
@@ -25,8 +36,9 @@ const Navbar = () => {
             <a href="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
               User Profile
             </a>
-            <a href="/logout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+            <a className="block px-4 py-2 text-gray-800 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
               Logout
+
             </a>
           </div>
         )}
