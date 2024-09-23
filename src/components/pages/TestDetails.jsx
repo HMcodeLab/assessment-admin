@@ -182,6 +182,41 @@ const TestDetails = () => {
     setCurrentPage(value);
   };
 
+    // format date
+    function formatDate(dateString) {
+      const dateObj = new Date(dateString);
+  
+      const day = String(dateObj.getDate()).padStart(2, "0");
+      const year = dateObj.getFullYear();
+  
+      const monthNames = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const month = monthNames[dateObj.getMonth()];
+  
+      let hours = dateObj.getHours();
+      const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+  
+      const ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+  
+      const time = `${hours}.${minutes}${ampm}`;
+  
+      return `${day} ${month} ${year} ${time}`;
+    }
+
   return (
     <div className="mx-6">
       <Toaster />
@@ -276,10 +311,10 @@ const TestDetails = () => {
                   {test.ProctoringFor?.soundCaptured?.inUse ? "Yes" : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {new Date(test.startDate).toLocaleDateString()}
+                  {formatDate(test.startDate)}
                 </TableCell>
                 <TableCell className="border">
-                  {new Date(test.lastDate).toLocaleDateString()}
+                  {formatDate(test.lastDate)}
                 </TableCell>
                 <TableCell className="border">
                   <Switch

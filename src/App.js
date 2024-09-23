@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Sidebar from "./components/sidebar/Sidebar";
 import Dashboard from "./components/pages/Dashboard";
 import AddAssignment from "./components/pages/AddAssignment";
-import AssignmentResult from "./components/pages/AssignmentResult";
+import AssignmentResult from "./components/pages/AllAssignmentModules";
 import Navbar from "./components/Navbar/Navbar";
-import Assessment from "./components/pages/Assessment";
+import AddCandidates from "./components/pages/AddCandidates";
 import EditAssessment from "./components/pages/EditAssessment";
 import TestDetails from "./components/pages/TestDetails";
 import LoginPage from "./components/login/signup/LoginPage";
@@ -14,6 +14,9 @@ import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./AuthContext";
 import AdminProfile from "./components/profile/AdminProfile";
 import AddQuestions from "./components/pages/AddQuestions";
+import AllStudentDetails from "./components/pages/testReport/AllStudentDetails";
+import EachStudentDetails from "./components/pages/testReport/EachStudentDetails";
+import FeedBack from "./components/pages/FeedBack";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -60,8 +63,8 @@ function App() {
                   element={<PrivateRoute element={AssignmentResult} />}
                 />
                 <Route
-                  path="/assessment"
-                  element={<PrivateRoute element={Assessment} />}
+                  path="/add-candidates"
+                  element={<PrivateRoute element={AddCandidates} />}
                 />
                 <Route
                   path="/edit-assessment/:testId"
@@ -78,6 +81,18 @@ function App() {
                  <Route
                   path="/AddQuestions"
                   element={<PrivateRoute element={AddQuestions} />}
+                />
+                 <Route
+                  path="/test-report/:testId"
+                  element={<PrivateRoute element={AllStudentDetails} />}
+                />
+                 <Route
+                  path="/student-test-report/:testId/:studentId"
+                  element={<PrivateRoute element={EachStudentDetails} />}
+                />
+                 <Route
+                  path="/feedback"
+                  element={<PrivateRoute element={FeedBack} />}
                 />
               </Routes>
             </div>

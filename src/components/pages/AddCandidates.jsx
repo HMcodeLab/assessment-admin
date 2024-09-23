@@ -3,7 +3,7 @@ import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
 
-const Assessment = () => {
+const AddCandidates = () => {
   const [excelData, setExcelData] = useState([]);
   const [excelFile, setExcelFile] = useState(null);
   const [modules, setModules] = useState([]);
@@ -11,6 +11,7 @@ const Assessment = () => {
   const [testData, setTestData] = useState([]);
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
+  const [loading, setloading] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -107,9 +108,16 @@ const Assessment = () => {
     }
   };
 
-  const handleUploadToAPI = async () => {
+  const handleSubmit = async () => {
+    setloading(true);
+    if (!selectedModule) {
+      toast.error("Please select any one module");
+      setloading(false);
+      return;
+    }
     if (!excelFile) {
       toast.error("Please upload an Excel file first.");
+      setloading(false);
       return;
     }
 
@@ -131,6 +139,7 @@ const Assessment = () => {
       if (response.status === 201) {
         toast.success("File uploaded successfully!");
         handleClear();
+
         fetchTestData(); // Fetch test data after successful upload
       } else {
         toast.error("Error uploading file.");
@@ -141,6 +150,8 @@ const Assessment = () => {
         "Upload error:",
         error.response ? error.response.data : error.message
       );
+    } finally {
+      setloading(false);
     }
   };
 
@@ -153,26 +164,25 @@ const Assessment = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-600 p-5">
+    <div className="h-auto w-full bg-gray-600 p-5">
       <Toaster position="top-center" />
-      <div className="h-[10vh] w-full flex items-center justify-between mt-3 px-10 border rounded-lg shadow-2xl">
-        <div className="text-2xl font-semibold text-white">
-          Upload Your Excel
+      <div className="w-full xl:w-[30%] xl:mx-auto flex flex-col items-center justify-between mt-3 px-10 border rounded-lg shadow-2xl">
+        <div className=" flex items-center py-4 gap-4">
+          <p className="text-2xl font-semibold text-white">Add Candidates</p>
+          <button
+            onClick={handleDownloadExcel}
+            className="rounded-lg p-2 px-4 bg-blue-400 hover:bg-blue-500 text-white"
+          >
+            Format
+          </button>
         </div>
-        <div className="flex flex-row justify-center items-center gap-4">
-          <input
-            type="file"
-            accept=".xlsx, .xls"
-            onChange={handleFileUpload}
-            className="border p-3 rounded-lg text-white"
-            ref={fileInputRef}
-          />
-
+        <div className="relative flex flex-col justify-center items-center gap-4 py-4">
           <select
             name="module"
             id="module"
             value={selectedModule}
             onChange={handleChange}
+            className="px-12 py-2 w-[320px] rounded-lg focus:outline-none"
           >
             <option value="" disabled>
               Select a module
@@ -184,30 +194,37 @@ const Assessment = () => {
               </option>
             ))}
           </select>
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleFileUpload}
+            className="border p-3 rounded-lg text-white"
+            ref={fileInputRef}
+          />
+          {excelFile && (
+            <button
+              onClick={handleClear}
+              className="text-white text-2xl absolute mt-[0px] right-[-20px]"
+              title="clear file"
+            >
+              X
+            </button>
+          )}
           <button
-            onClick={handleClear}
-            className="h-[6vh] rounded-lg p-2 px-4 bg-red-400 hover:bg-red-500"
+            onClick={handleSubmit}
+            className="w-[100%] rounded-lg p-2 px-4 bg-green-400 hover:bg-green-500 text-white hover:font-semibold"
           >
-            Clear
-          </button>
-          <button
-            onClick={handleUploadToAPI}
-            className="h-[6vh] rounded-lg p-2 px-4 bg-green-400 hover:bg-green-500"
-          >
-            Upload Excel
-          </button>
-          <button
-            onClick={handleDownloadExcel}
-            className="h-[6vh] rounded-lg p-2 px-4 bg-blue-400 hover:bg-blue-500"
-          >
-            Download Excel
+            {loading ? "Submitting" : "Submit"}
           </button>
         </div>
       </div>
 
-      <div className="mt-10 bg-white p-5 rounded-lg">
+      <h1 className="text-center  my-4 text-2xl underline text-white font-semibold">
+        All Candidates Details
+      </h1>
+      <div className="mt-10  w-full overflow-x-auto scroll-smooth bg-white p-5 rounded-lg">
         {excelData.length > 0 ? (
-          <table className="w-full table-auto">
+          <table className="w-full table-auto text-center">
             <thead>
               <tr>
                 {Object.keys(excelData[0]).map((key) => (
@@ -237,4 +254,4 @@ const Assessment = () => {
   );
 };
 
-export default Assessment;
+export default AddCandidates;

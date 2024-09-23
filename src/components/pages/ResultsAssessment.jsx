@@ -12,7 +12,7 @@ import {
   CircularProgress,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import EachStudentDetails from "./EachStudentDetails";
+// import EachStudentDetails from "./EachStudentDetails";
 import axios from "axios";
 // import { adminToken } from "../../api";
 import { IoMdArrowRoundBack } from "react-icons/io";
@@ -129,7 +129,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
         </Box>
       </Modal>
 
-      {selectedStudent && (
+      {/* {selectedStudent && (
         <EachStudentDetails
           open={detailsModalOpen}
           onClose={closeDetailsModal}
@@ -137,7 +137,7 @@ const ResultsAssessment = ({ show, onClose, student }) => {
           loading={loading}
           error={error}
         />
-      )}
+      )} */}
     </>
   );
 };
