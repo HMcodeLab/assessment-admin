@@ -17,7 +17,6 @@ import AddQuestions from "./components/pages/AddQuestions";
 import AllStudentDetails from "./components/pages/testReport/AllStudentDetails";
 import EachStudentDetails from "./components/pages/testReport/EachStudentDetails";
 import FeedBack from "./components/pages/FeedBack";
-import AllQuestions from "./components/pages/AllQuestions";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -70,10 +69,6 @@ function App() {
                 <Route
                   path="/edit-assessment/:testId"
                   element={<PrivateRoute element={EditAssessment} />}
-                />
-                <Route
-                  path="/view-ques"
-                  element={<PrivateRoute element={AllQuestions } />}
                 />
                 <Route
                   path="/testdetails"

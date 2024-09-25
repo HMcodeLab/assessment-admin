@@ -18,12 +18,14 @@ import {
   Pagination,
 } from "@mui/material";
 import { GrDocumentCsv, GrDownload } from "react-icons/gr";
+import { MdVisibilityOff } from "react-icons/md";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
+import AllQuestions from "./AllQuestions";
 // import { adminToken } from "../../api";
 
 const TestDetails = () => {
@@ -36,6 +38,7 @@ const TestDetails = () => {
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [testsPerPage] = useState(5); // Number of tests per page
   const navigate = useNavigate();
+  const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
 
 
 
@@ -97,6 +100,11 @@ const TestDetails = () => {
     setSelectedTestId(testId);
     setOpenDeleteDialog(true);
   };
+
+  const handleViewQuestions = (testId)=>{
+    setSelectedTestId(testId)
+    setQuestionsModalOpen(!questionsModalOpen);
+  }
 
   const handleDeleteConfirm = async () => {
     try {
@@ -225,7 +233,7 @@ if(loading){
   return(<Loader/>)
 }
 
-  console.log(testData[0]?.ProctoringFor);
+  // console.log(testData[0]?.ProctoringFor);
   return (
     <div className="mx-6">
       <Toaster />
@@ -261,22 +269,7 @@ if(loading){
                 Time Limit (mins)
               </TableCell>
               <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Mic
-              </TableCell>
-              <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Camera
-              </TableCell>
-              <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Tab Switching
-              </TableCell>
-              <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Multi Person In Frame
-              </TableCell>
-              <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Phone in a Frame
-              </TableCell>
-              <TableCell sx={{ fontSize: "1rem" }} className="border">
-                Control Key Pressed
+              Proctoring
               </TableCell>
               <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Start Date
@@ -302,24 +295,17 @@ if(loading){
                 <TableCell className="border">{test?.maxMarks}</TableCell>
                 <TableCell className="border">{test?.timelimit}</TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.mic?.inUse ? "Yes" : "No"}
-                </TableCell>
-                <TableCell className="border">
-                  {test.ProctoringFor?.webcam?.inUse ? "Yes" : "No"}
-                </TableCell>
-                <TableCell className="border">
-                  {test.ProctoringFor?.TabSwitch?.inUse ? "Yes" : "No"}
-                </TableCell>
-                <TableCell className="border">
-                  {test.ProctoringFor?.multiplePersonInFrame?.inUse
-                    ? "Yes"
-                    : "No"}
-                </TableCell>
-                <TableCell className="border">
-                  {test.ProctoringFor?.PhoneinFrame?.inUse ? "Yes" : "No"}
-                </TableCell>
-                <TableCell className="border">
-                  {test.ProctoringFor?.ControlKeyPressed?.inUse ? "Yes" : "No"}
+                {[
+                    test.ProctoringFor?.mic?.inUse && "Mic",
+                    test.ProctoringFor?.webcam?.inUse && "Webcam",
+                    test.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
+                    test.ProctoringFor?.multiplePersonInFrame?.inUse &&
+                      "MultiplePersonInFrame",
+                    test.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
+                    test.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
+                  ]
+                    .filter(Boolean) // Remove falsy values
+                    .join(" , ")}{" "}
                 </TableCell>
 
                 <TableCell className="border">
@@ -334,12 +320,15 @@ if(loading){
                     onChange={() => handleToggle(test._id)}
                   />
                 </TableCell>
-                <TableCell className="border flex items-center">
+                <TableCell className="border grid grid-cols-3">
                   <Button onClick={() => handleEdit(test._id)}>
                     <FaRegEdit className="text-xl" />
                   </Button>
                   <Button onClick={() => handleDeleteClick(test._id)}>
                     <MdDelete className="text-xl" />
+                  </Button>
+                  <Button onClick={() => handleViewQuestions(test.Assessmentmodules)}>
+                    <MdVisibilityOff className="text-xl" />
                   </Button>
                 </TableCell>
               </TableRow>
@@ -347,6 +336,9 @@ if(loading){
           </TableBody>
         </Table>
       </TableContainer>
+      {
+        questionsModalOpen && <AllQuestions open={()=>setQuestionsModalOpen(true)} onClose={()=>setQuestionsModalOpen(false)} testModules={selectedTestId} />
+      }
 
       <Pagination
         count={Math?.ceil(testData.length / testsPerPage)}

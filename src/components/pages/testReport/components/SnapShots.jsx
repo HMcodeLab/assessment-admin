@@ -1,38 +1,48 @@
 import React, { useState } from "react";
 import ImageViewer from "../ImageViewer";
+import { FaAngleLeft,FaAngleRight } from "react-icons/fa";
 
 const Carousel = ({ userScreenshots }) => {
-    const [modalOpen, setModalOpen] = useState(false)
-    const [image, setImage] = useState("")
-  console.log(userScreenshots);
-
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imageType, setImageType] = useState();
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = userScreenshots;
 
+  // Determine whether the image is a desktop or mobile screenshot based on aspect ratio
+  const handleImageLoad = (e) => {
+    const { naturalWidth, naturalHeight } = e.target;
+
+    // Determine whether the image is a desktop or mobile screenshot based on aspect ratio
+    if (naturalWidth > naturalHeight) {
+      setImageType('desktop');
+    } else {
+      setImageType('mobile');
+    }
+  };
+
+  // Navigate to the next slide
   const handleNext = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length);
   };
 
+  // Navigate to the previous slide
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
-  const handleView = (image) =>{
-    setImage(image);
+  // Open modal with the selected image
+  const handleView = () => {
     setModalOpen(true);
-  }
-// console.log(image);
+  };
 
   return (
-    userScreenshots.length>0 && (
-      <div
-        id="default-carousel"
-        className="relative w-full"
-        data-carousel="slide"
-      >
+    userScreenshots.length > 0 && (
+      <div id="default-carousel" className="relative w-full" data-carousel="slide">
         {/* Carousel wrapper */}
         <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-            <h1 className="text-red-500 text-center py-2 font-semibold text-xl">ScreenShot</h1>
+          <h1 className="text-red-500 text-center py-2 font-semibold text-xl">
+            ScreenShot
+          </h1>
           {slides.map((slide, index) => (
             <div
               key={index}
@@ -43,8 +53,9 @@ const Carousel = ({ userScreenshots }) => {
             >
               <img
                 src={slide}
-                className="absolute block  -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 w-[180px] cursor-pointer"
-                onClick={()=>{handleView(slide)}}
+                className={`absolute block -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 ${imageType==="mobile" ? "w-[180px]":"w-[600px]"}  cursor-pointer`}
+                onClick={() => handleView(slide)}
+                onLoad={handleImageLoad}
                 alt={`Slide ${index + 1}`}
               />
             </div>
@@ -73,50 +84,24 @@ const Carousel = ({ userScreenshots }) => {
           className="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
           onClick={handlePrev}
         >
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg
-              className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 6 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 1 1 5l4 4"
-              />
-            </svg>
-            <span className="sr-only">Previous</span>
-          </span>
+          <FaAngleLeft className="text-2xl"/>
         </button>
         <button
           type="button"
           className="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
           onClick={handleNext}
         >
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-            <svg
-              className="w-4 h-4 text-white dark:text-gray-800 rtl:rotate-180"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 6 10"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="m1 9 4-4-4-4"
-              />
-            </svg>
-            <span className="sr-only">Next</span>
-          </span>
+         <FaAngleRight className="text-2xl"/>
         </button>
-        {modalOpen && <ImageViewer image={image} open={()=>setModalOpen(true)} close={()=>setModalOpen(false)}/>}
+
+        {/* ImageViewer Modal */}
+        {modalOpen && (
+          <ImageViewer
+            images={userScreenshots}
+            open={() => setModalOpen(true)}
+            close={() => setModalOpen(false)}
+          />
+        )}
       </div>
     )
   );
