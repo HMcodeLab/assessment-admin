@@ -5,17 +5,21 @@ import toast, { Toaster } from "react-hot-toast";
 import { FaChevronRight } from "react-icons/fa";
 import tag from "../../../Assets/Tag.png";
 import BarChart from "./components/graphs/BarGraph";
+import { ImSpinner9 } from "react-icons/im";
 import * as XLSX from "xlsx"; // Import xlsx library
 
+
 const AllStudentDetails = () => {
-  const { testId } = useParams(); // Access the testId from the URL
+  const { testId } = useParams(); 
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [allStudent, setAllStudent] = useState([]);
   const [showModal, setShowModal] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState(null); // Track selected student for deletion
+  const [selectedStudent, setSelectedStudent] = useState(null); 
   const adminToken = localStorage.getItem("authToken");
   const navigate = useNavigate();
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [searchQuery, setSearchQuery] = useState(""); 
 
   const fetchData = async () => {
     setLoading(true);
@@ -40,13 +44,35 @@ const AllStudentDetails = () => {
 
   useEffect(() => {
     fetchData();
-  }, []); // Only run once, on mount
+  }, []);
 
   if (loading) {
     return (
-      <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+      <div className="flex items-center justify-center min-h-screen">
+      <ImSpinner9 className="animate-spin text-3xl text-green-600" />
+    </div>
     );
   }
+
+  const filterByStatus = (student) => {
+    if (selectedStatus === "All") return true;
+    if (selectedStatus === "Suspended") return student?.isSuspended;
+    if (selectedStatus === "Ongoing") return !student?.isSuspended && !student?.isAssessmentCompleted;
+    if (selectedStatus === "Completed Successfully") return student?.isAssessmentCompleted && !student?.isSuspended;
+    return true;
+  };
+
+  const filterBySearch = (student) => {
+    const lowerCaseSearchQuery = searchQuery.toLowerCase();
+    return (
+      student.name.toLowerCase().includes(lowerCaseSearchQuery) ||
+      student.email.toLowerCase().includes(lowerCaseSearchQuery)
+    );
+  };
+
+  const filteredStudents = allStudent.filter(filterByStatus).filter(filterBySearch);
+
+ 
 
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
@@ -102,39 +128,39 @@ const AllStudentDetails = () => {
     setShowModal(true);
   };
 
-// Confirm deletion and remove from state without reloading
-const handleDeleteConfirm = async () => {
-  if (!selectedStudent) return;
-  setDeleteLoading(true);
-  setShowModal(false);
-  try {
-    const response = await axios.delete(
-      `${process.env.REACT_APP_SERVER_DOMAIN}/deleteUserReport`,
-      {
-        data: {
-          moduleAssessmentid: testId,
-          email: selectedStudent,
-        },
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
-      }
-    );
-    if (response) {
-      toast.success("Student Report Deleted Successfully");
-
-      // Remove the deleted student from the state
-      setAllStudent((prevStudents) =>
-        prevStudents.filter((student) => student.email !== selectedStudent)
+  // Confirm deletion and remove from state without reloading
+  const handleDeleteConfirm = async () => {
+    if (!selectedStudent) return;
+    setDeleteLoading(true);
+    setShowModal(false);
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/deleteUserReport`,
+        {
+          data: {
+            moduleAssessmentid: testId,
+            email: selectedStudent,
+          },
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
       );
+      if (response) {
+        toast.success("Student Report Deleted Successfully");
+
+        // Remove the deleted student from the state
+        setAllStudent((prevStudents) =>
+          prevStudents.filter((student) => student.email !== selectedStudent)
+        );
+      }
+    } catch (error) {
+      toast.error("Error in Deleting student Report");
+    } finally {
+      setDeleteLoading(false);
+      setSelectedStudent(null);
     }
-  } catch (error) {
-    toast.error("Error in Deleting student Report");
-  } finally {
-    setDeleteLoading(false);
-    setSelectedStudent(null);
-  }
-};
+  };
 
   const handleDeleteCancel = () => {
     setSelectedStudent(null);
@@ -143,14 +169,17 @@ const handleDeleteConfirm = async () => {
 
   const AlertModal = ({ showModal, onClose, onConfirm }) => {
     if (!showModal) return null;
-  
+
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-        <Toaster/>
+        <Toaster />
         <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
           <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
-          <p className="mb-6">Are you sure you want to delete this report? This action cannot be undone.</p>
-          
+          <p className="mb-6">
+            Are you sure you want to delete this report? This action cannot be
+            undone.
+          </p>
+
           <div className="flex justify-end space-x-4">
             <button
               onClick={onClose}
@@ -185,10 +214,36 @@ const handleDeleteConfirm = async () => {
         </button>
       </div>
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg border-2 border-blue-400">
+
+        <div className="flex flex-row justify-between items-center px-2">
+        <div className="p-4">
+          <label htmlFor="statusFilter">Filter by Status: </label>
+          <select
+            id="statusFilter"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="border border-blue-500 p-2 rounded-lg"
+          >
+            <option value="All">All</option>
+            <option value="Suspended">Suspended</option>
+            <option value="Ongoing">Ongoing</option>
+            <option value="Completed Successfully">
+              Completed Successfully
+            </option>
+          </select>
+        </div>
+          <div>
+            <input type="text" placeholder="Search Students" 
+             value={searchQuery}
+             onChange={(e) => setSearchQuery(e.target.value)}
+            className="border p-3 rounded-lg w-[20vw]"
+            />
+          </div>
+        </div>
+
         <table className="min-w-full bg-white">
           <thead className="bg-gray-100">
             <tr>
-
               <th className="px-4 py-2 text-left">SNo.</th>
               <th className="px-4 py-2 text-left">Student Name</th>
               <th className="px-4 py-2 text-left">Email ID</th>
@@ -201,26 +256,34 @@ const handleDeleteConfirm = async () => {
             </tr>
           </thead>
           <tbody>
-            {allStudent.map((student, index) => (
+            {filteredStudents.map((student, index) => (
               <tr
                 key={index}
                 className={`${student?.isSuspended && "bg-red-400"} ${
                   student?.isAssessmentCompleted && "bg-green-400"
                 }`}
               >
-                <td className="border-t px-4 py-2">{index+1}</td>
-                <td className="border-t px-4 py-2">{student?.name}</td>
-                <td className="border-t px-4 py-2">{student?.email}</td>
-                <td className="border-t px-4 py-2">{student?.phone_number}</td>
-                <td className="border-t px-4 py-2">{student?.college_name}</td>
-                <td className="border-t px-4 py-2">
-                  {student?.year_of_passing}
-                </td>
-                <td className="border-t px-4 py-2">{student?.rank}</td>
-                <td className="border-t px-4 py-2">{getStatus(student)}</td>
-                <td className="cursor-pointer border-t px-4 py-2">
-                  <p onClick={() => handleView(student.email)}>View</p>
-                  <p onClick={() => handleDeleteClick(student?.email)}>Delete</p>
+                <td className="border px-4 py-2">{index + 1}</td>
+                <td className="border px-4 py-2">{student?.name}</td>
+                <td className="border px-4 py-2">{student?.email}</td>
+                <td className="border px-4 py-2">{student?.phone_number}</td>
+                <td className="border px-4 py-2">{student?.college_name}</td>
+                <td className="border px-4 py-2">{student?.year_of_passing}</td>
+                <td className="border px-4 py-2">{student?.rank}</td>
+                <td className="border px-4 py-2">{getStatus(student)}</td>
+                <td className="border px-4 py-2">
+                  <button
+                    onClick={() => handleView(student._id)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    View
+                  </button>
+                  <button
+                    onClick={() => handleDeleteClick(student?.email)}
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -228,13 +291,15 @@ const handleDeleteConfirm = async () => {
         </table>
       </div>
 
-      <div className="flex justify-end mt-4">
-        <button className="flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
-          Next
-          <FaChevronRight className="ml-2" />
-        </button>
+      {/* Display the student count based on filter */}
+      <div className="p-4">
+        <p className="font-semibold">
+          {`${filteredStudents.length}/${allStudent.length} students : ${selectedStatus}`}
+        </p>
       </div>
-      <div>
+
+         {/* Rank Chart */}
+         <div className="mt-8">
         <div className="flex items-center mb-2">
           <img
             src={tag}
@@ -244,10 +309,9 @@ const handleDeleteConfirm = async () => {
           <h2 className="text-lg font-bold text-black">Rank</h2>
         </div>
         <hr className="border-gray-300 mb-4" />
-        <BarChart rankCount={rankCounts} />
+        <BarChart rankCount={rankCounts} /> 
       </div>
 
-      {/* Delete Confirmation Modal */}
       <AlertModal
         showModal={showModal}
         onClose={handleDeleteCancel}
