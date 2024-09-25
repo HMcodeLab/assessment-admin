@@ -16,7 +16,7 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
-const QuestionsModal = ({ open, onClose, module }) => {
+const AllQuestions = ({ open, onClose, module }) => {
   if (!module) return null;
 
   const handleDownload = () => {
@@ -157,5 +157,5 @@ const QuestionsModal = ({ open, onClose, module }) => {
   );
 };
 
-export default QuestionsModal;
+export default AllQuestions;
 

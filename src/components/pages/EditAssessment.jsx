@@ -160,6 +160,26 @@ const EditAssignment = () => {
       <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
     );
   };
+  const handleSelect = () => {
+    const allSelected = Object.keys(assessment?.ProctoringFor || {}).every(
+      (key) => assessment?.ProctoringFor[key].inUse
+    );
+
+    // Toggle all 'inUse' fields based on the current selection status
+    setAssessment((prev) => ({
+      ...prev,
+      ProctoringFor: Object.keys(prev?.ProctoringFor || {}).reduce(
+        (acc, key) => {
+          acc[key] = {
+            ...prev.ProctoringFor[key],
+            inUse: !allSelected, // If all are selected, deselect them, otherwise select all
+          };
+          return acc;
+        },
+        {}
+      ),
+    }));
+  };
 
   return (
     <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5 ">
@@ -186,7 +206,18 @@ const EditAssignment = () => {
                     handleInputChange("assessmentName", e.target.value)
                   }
                 />
-
+                <label htmlFor="" className="text-xl font-semibold">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  placeholder="Assessment description"
+                  className="border w-full h-12 p-3"
+                  value={assessment?.assessmentDesc || ""}
+                  onChange={(e) =>
+                    handleInputChange("assessmentDesc", e.target.value)
+                  }
+                />
                 <label className="text-xl font-semibold">Total Marks</label>
                 <input
                   type="number"
@@ -238,26 +269,31 @@ const EditAssignment = () => {
                     handleInputChange("timelimit", e.target.value)
                   }
                 />
-
-                <label className="text-xl font-semibold">
-                  Proctoring Options
-                </label>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="flex items-center justify-between text-xl font-semibold">
+                  <label>Proctoring Options</label>
+                  <p className="cursor-pointer" onClick={handleSelect}>
+                    {Object.keys(assessment?.ProctoringFor || {}).every(
+                      (key) => assessment?.ProctoringFor[key].inUse
+                    )
+                      ? "Deselect All"
+                      : "Select All"}
+                  </p>
+                </div>
+                <div className="grid grid-cols-3 gap-4 my-4">
                   {assessment?.ProctoringFor &&
                     Object.keys(assessment?.ProctoringFor).map((key) => (
-                      <div key={key} className="space-y-2">
+                      <div
+                        key={key}
+                        className="space-y-2"
+                        onChange={(e) =>
+                          handleProctoringChange(key, "inUse", e.target.checked)
+                        }
+                      >
                         <div className="flex items-center gap-2">
                           <input
                             className="cursor-pointer rounded-full form-checkbox h-5 w-5 text-blue-500 transition duration-150 ease-in-out"
                             type="checkbox"
                             checked={assessment?.ProctoringFor[key].inUse}
-                            onChange={(e) =>
-                              handleProctoringChange(
-                                key,
-                                "inUse",
-                                e.target.checked
-                              )
-                            }
                           />
                           <span className="text-gray-700 capitalize">
                             {key}
@@ -329,7 +365,7 @@ const EditAssignment = () => {
               onClick={handleSubmit}
               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
             >
-              {loading ? "Submiting ..." : "Submit"}
+              {loading ? "Updating ..." : "Update"}
             </button>
           </div>
         </div>

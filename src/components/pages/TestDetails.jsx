@@ -23,10 +23,12 @@ import { saveAs } from "file-saver";
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader";
 // import { adminToken } from "../../api";
 
 const TestDetails = () => {
   const adminToken = localStorage.getItem("authToken");
+  const [loading, setloading] = useState(true);
   const [testData, setTestData] = useState([]);
   const [enabledTests, setEnabledTests] = useState({});
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -34,6 +36,8 @@ const TestDetails = () => {
   const [currentPage, setCurrentPage] = useState(1); // For pagination
   const [testsPerPage] = useState(5); // Number of tests per page
   const navigate = useNavigate();
+
+
 
   useEffect(() => {
     axios
@@ -53,6 +57,7 @@ const TestDetails = () => {
       .catch((error) => {
         console.error("Error fetching test details:", error);
       });
+    setloading(false);
   }, []);
 
   const handleToggle = (testId) => {
@@ -88,24 +93,23 @@ const TestDetails = () => {
       });
   };
 
-  // const handleDeleteClick = (testId) => {
-  //   setSelectedTestId(testId);
-  //   setOpenDeleteDialog(true);
-  // };
+  const handleDeleteClick = (testId) => {
+    setSelectedTestId(testId);
+    setOpenDeleteDialog(true);
+  };
 
   const handleDeleteConfirm = async () => {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/deleteModuleFromAssessment`,
+        `${process.env.REACT_APP_SERVER_DOMAIN}/deleteModuleAssessment`,
         {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Admin ${adminToken}`,
+            Authorization: `Bearer ${adminToken}`,
           },
           body: JSON.stringify({
             moduleAssessmentid: selectedTestId, // replace this with the actual module assessment ID
-            moduleid: "66cda0af48671d0f30160556", // replace this with the actual module ID
           }),
         }
       );
@@ -182,41 +186,46 @@ const TestDetails = () => {
     setCurrentPage(value);
   };
 
-    // format date
-    function formatDate(dateString) {
-      const dateObj = new Date(dateString);
-  
-      const day = String(dateObj.getDate()).padStart(2, "0");
-      const year = dateObj.getFullYear();
-  
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      const month = monthNames[dateObj.getMonth()];
-  
-      let hours = dateObj.getHours();
-      const minutes = String(dateObj.getMinutes()).padStart(2, "0");
-  
-      const ampm = hours >= 12 ? "pm" : "am";
-      hours = hours % 12;
-      hours = hours ? hours : 12; // the hour '0' should be '12'
-  
-      const time = `${hours}.${minutes}${ampm}`;
-  
-      return `${day} ${month} ${year} ${time}`;
-    }
+  // format date
+  function formatDate(dateString) {
+    const dateObj = new Date(dateString);
 
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const year = dateObj.getFullYear();
+
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const month = monthNames[dateObj.getMonth()];
+
+    let hours = dateObj.getHours();
+    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+
+    const time = `${hours}.${minutes}${ampm}`;
+
+    return `${day} ${month} ${year} ${time}`;
+  }
+
+if(loading){
+  return(<Loader/>)
+}
+
+  console.log(testData[0]?.ProctoringFor);
   return (
     <div className="mx-6">
       <Toaster />
@@ -239,46 +248,46 @@ const TestDetails = () => {
         <Table>
           <TableHead>
             <TableRow className="border">
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Assessment Name
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Module Name
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Max Marks
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Time Limit (mins)
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (Mic)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Mic
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (Camera)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Camera
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (TabSwitch)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Tab Switching
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (MultiPersonInFrame)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Multi Person In Frame
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (PhoneinFrame)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Phone in a Frame
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Proctoring (SoundCaptured)
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Control Key Pressed
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Start Date
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Last Date
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
-                Enable/Disable
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
+                Enable / Disable
               </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }} className="border">
+              <TableCell sx={{ fontSize: "1rem" }} className="border">
                 Actions
               </TableCell>
             </TableRow>
@@ -296,20 +305,23 @@ const TestDetails = () => {
                   {test.ProctoringFor?.mic?.inUse ? "Yes" : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.cam?.inUse ? "Yes" : "No"}
+                  {test.ProctoringFor?.webcam?.inUse ? "Yes" : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.tabSwitch?.inUse ? "Yes" : "No"}
+                  {test.ProctoringFor?.TabSwitch?.inUse ? "Yes" : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.multiPersonInFrame?.inUse ? "Yes" : "No"}
+                  {test.ProctoringFor?.multiplePersonInFrame?.inUse
+                    ? "Yes"
+                    : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.phoneinFrame?.inUse ? "Yes" : "No"}
+                  {test.ProctoringFor?.PhoneinFrame?.inUse ? "Yes" : "No"}
                 </TableCell>
                 <TableCell className="border">
-                  {test.ProctoringFor?.soundCaptured?.inUse ? "Yes" : "No"}
+                  {test.ProctoringFor?.ControlKeyPressed?.inUse ? "Yes" : "No"}
                 </TableCell>
+
                 <TableCell className="border">
                   {formatDate(test.startDate)}
                 </TableCell>
@@ -322,13 +334,13 @@ const TestDetails = () => {
                     onChange={() => handleToggle(test._id)}
                   />
                 </TableCell>
-                <TableCell className="border">
+                <TableCell className="border flex items-center">
                   <Button onClick={() => handleEdit(test._id)}>
                     <FaRegEdit className="text-xl" />
                   </Button>
-                  {/* <Button onClick={() => handleDeleteClick(test._id)}>
+                  <Button onClick={() => handleDeleteClick(test._id)}>
                     <MdDelete className="text-xl" />
-                  </Button> */}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

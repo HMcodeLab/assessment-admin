@@ -9,13 +9,16 @@ import * as XLSX from "xlsx"; // Import xlsx library
 
 const AllStudentDetails = () => {
   const { testId } = useParams(); // Access the testId from the URL
-  const [loading, setloading] = useState(false);
-  const adminToken = localStorage.getItem("authToken");
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const [allStudent, setAllStudent] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null); // Track selected student for deletion
+  const adminToken = localStorage.getItem("authToken");
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    setloading(true);
+    setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUsersResultForAssessment/${testId}`,
@@ -31,7 +34,7 @@ const AllStudentDetails = () => {
     } catch (error) {
       toast.error("Error in fetching All student details");
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -49,7 +52,6 @@ const AllStudentDetails = () => {
     navigate(`/student-test-report/${testId}/${studentId}`);
   };
 
-  // Utility function to count students by rank
   const countStudentsByRank = (studentsData) => {
     return studentsData.reduce((acc, student) => {
       acc[student.rank] = (acc[student.rank] || 0) + 1;
@@ -57,10 +59,8 @@ const AllStudentDetails = () => {
     }, {});
   };
 
-  // Calculate rank counts
   const rankCounts = countStudentsByRank(allStudent);
 
-  // Utility function to check the status of a student
   const getStatus = (student) => {
     if (student?.isSuspended) return "Suspended";
     if (student?.isAssessmentCompleted) return "Completed Successfully";
@@ -68,23 +68,16 @@ const AllStudentDetails = () => {
   };
 
   function calculateTimeDifference(createdAt, updatedAt) {
-    // Convert the timestamps to Date objects
     const startTime = new Date(createdAt);
     const endTime = new Date(updatedAt);
-
-    // Calculate the time difference in milliseconds
     const timeDifference = endTime - startTime;
-
-    // Convert the difference to seconds
     const timeDifferenceInSeconds = Math.floor(timeDifference / 1000);
-
-    // Calculate minutes and seconds
     const minutes = Math.floor(timeDifferenceInSeconds / 60);
     const seconds = timeDifferenceInSeconds % 60;
 
     return `${minutes} min , ${seconds} sec`;
-}
-  // Function to export data as XLSX
+  }
+
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       allStudent.map((student) => ({
@@ -93,17 +86,88 @@ const AllStudentDetails = () => {
         Contact: student?.phone_number,
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
-        marks:student?.totalMarks,
+        marks: student?.totalMarks,
         Rank: student?.rank,
-        time:calculateTimeDifference(student?.createdAt,student?.updatedAt),
+        time: calculateTimeDifference(student?.createdAt, student?.updatedAt),
         Status: getStatus(student),
       }))
     );
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Student Details");
-
-    // Create XLSX file and trigger download
     XLSX.writeFile(workbook, `student_details_${testId}.xlsx`);
+  };
+
+  const handleDeleteClick = (email) => {
+    setSelectedStudent(email);
+    setShowModal(true);
+  };
+
+// Confirm deletion and remove from state without reloading
+const handleDeleteConfirm = async () => {
+  if (!selectedStudent) return;
+  setDeleteLoading(true);
+  setShowModal(false);
+  try {
+    const response = await axios.delete(
+      `${process.env.REACT_APP_SERVER_DOMAIN}/deleteUserReport`,
+      {
+        data: {
+          moduleAssessmentid: testId,
+          email: selectedStudent,
+        },
+        headers: {
+          Authorization: `Bearer ${adminToken}`,
+        },
+      }
+    );
+    if (response) {
+      toast.success("Student Report Deleted Successfully");
+
+      // Remove the deleted student from the state
+      setAllStudent((prevStudents) =>
+        prevStudents.filter((student) => student.email !== selectedStudent)
+      );
+    }
+  } catch (error) {
+    toast.error("Error in Deleting student Report");
+  } finally {
+    setDeleteLoading(false);
+    setSelectedStudent(null);
+  }
+};
+
+  const handleDeleteCancel = () => {
+    setSelectedStudent(null);
+    setShowModal(false);
+  };
+
+  const AlertModal = ({ showModal, onClose, onConfirm }) => {
+    if (!showModal) return null;
+  
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <Toaster/>
+        <div className="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
+          <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+          <p className="mb-6">Are you sure you want to delete this report? This action cannot be undone.</p>
+          
+          <div className="flex justify-end space-x-4">
+            <button
+              onClick={onClose}
+              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -124,6 +188,8 @@ const AllStudentDetails = () => {
         <table className="min-w-full bg-white">
           <thead className="bg-gray-100">
             <tr>
+
+              <th className="px-4 py-2 text-left">SNo.</th>
               <th className="px-4 py-2 text-left">Student Name</th>
               <th className="px-4 py-2 text-left">Email ID</th>
               <th className="px-4 py-2 text-left">Contact No</th>
@@ -140,8 +206,9 @@ const AllStudentDetails = () => {
                 key={index}
                 className={`${student?.isSuspended && "bg-red-400"} ${
                   student?.isAssessmentCompleted && "bg-green-400"
-                }   `}
+                }`}
               >
+                <td className="border-t px-4 py-2">{index+1}</td>
                 <td className="border-t px-4 py-2">{student?.name}</td>
                 <td className="border-t px-4 py-2">{student?.email}</td>
                 <td className="border-t px-4 py-2">{student?.phone_number}</td>
@@ -151,11 +218,9 @@ const AllStudentDetails = () => {
                 </td>
                 <td className="border-t px-4 py-2">{student?.rank}</td>
                 <td className="border-t px-4 py-2">{getStatus(student)}</td>
-                <td
-                  onClick={() => handleView(student.email)}
-                  className="cursor-pointer border-t px-4 py-2"
-                >
-                  View
+                <td className="cursor-pointer border-t px-4 py-2">
+                  <p onClick={() => handleView(student.email)}>View</p>
+                  <p onClick={() => handleDeleteClick(student?.email)}>Delete</p>
                 </td>
               </tr>
             ))}
@@ -181,6 +246,13 @@ const AllStudentDetails = () => {
         <hr className="border-gray-300 mb-4" />
         <BarChart rankCount={rankCounts} />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <AlertModal
+        showModal={showModal}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   );
 };

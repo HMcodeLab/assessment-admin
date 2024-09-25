@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
+import TimeConversionExample from "./testReport/components/sectionalSummary/Other";
 
 const AddCandidates = () => {
   const [excelData, setExcelData] = useState([]);
@@ -46,25 +47,6 @@ const AddCandidates = () => {
     setSelectedModule(event.target.value); // Update state with selected value
   };
 
-  const fetchTestData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_DOMAIN}/addCandidatesForAssessment`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Admin ${adminToken}`,
-          },
-        }
-      );
-      setTestData(response?.data.data);
-    } catch (error) {
-      console.error(
-        "Error fetching test details:",
-        error.response ? error.response.data : error.message
-      );
-    }
-  };
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -139,8 +121,6 @@ const AddCandidates = () => {
       if (response.status === 201) {
         toast.success("File uploaded successfully!");
         handleClear();
-
-        fetchTestData(); // Fetch test data after successful upload
       } else {
         toast.error("Error uploading file.");
       }
@@ -166,6 +146,7 @@ const AddCandidates = () => {
   return (
     <div className="h-auto w-full bg-gray-600 p-5">
       <Toaster position="top-center" />
+      {/* <TimeConversionExample/> */}
       <div className="w-full xl:w-[30%] xl:mx-auto flex flex-col items-center justify-between mt-3 px-10 border rounded-lg shadow-2xl">
         <div className=" flex items-center py-4 gap-4">
           <p className="text-2xl font-semibold text-white">Add Candidates</p>
@@ -185,7 +166,7 @@ const AddCandidates = () => {
             className="px-12 py-2 w-[320px] rounded-lg focus:outline-none"
           >
             <option value="" disabled>
-              Select a module
+              Select an Assessment
             </option>{" "}
             {/* Default option */}
             {modules.map((module) => (

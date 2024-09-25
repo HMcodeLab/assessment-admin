@@ -48,12 +48,6 @@ const ProtectingScore = ({ProctoringScore}) => {
             {ProctoringScore?.PhoneinFrame}
           </td>
         </tr>
-        {/* <tr>
-          <td className="px-6 py-4 whitespace-nowrap">Sound Captured</td>
-          <td className="px-6 py-4 whitespace-nowrap text-red-500">
-            {ProctoringScore?.SoundCaptured}
-          </td>
-        </tr> */}
         <tr>
           <td className="px-6 py-4 whitespace-nowrap">Control key Pressed</td>
           <td className="px-6 py-4 whitespace-nowrap text-red-500">

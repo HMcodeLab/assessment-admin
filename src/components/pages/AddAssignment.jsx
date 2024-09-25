@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import axios from "axios";
-import { GoDownload } from "react-icons/go";
 import toast, { Toaster } from "react-hot-toast";
 
 const AddAssignment = () => {
@@ -15,14 +14,14 @@ const AddAssignment = () => {
     startDate: "",
     lastDate: "",
     timelimit: "",
-    isProtected: false,
+    isProtected: true,
     ProctoringFor: {
       mic: { inUse: false, maxRating: 1500 },
       webcam: { inUse: false, maxRating: 1500 },
       TabSwitch: { inUse: false, maxRating: 1500 },
       multiplePersonInFrame: { inUse: false, maxRating: 1500 },
       PhoneinFrame: { inUse: false, maxRating: 1500 },
-      SoundCaptured: { inUse: false, maxRating: 1500 },
+      ControlKeyPressed: { inUse: false, maxRating: 1500 },
     },
     Assessmentmodules: [{ moduleName: "", timelimit: "" }],
   };
@@ -70,11 +69,12 @@ const AddAssignment = () => {
     }));
   };
 
-
-    // Function to compare the current assessment with the initial state
-    const isAssessmentChanged = () => {
-      return JSON.stringify(assessment) !== JSON.stringify(initialAssessmentState);
-    };
+  // Function to compare the current assessment with the initial state
+  const isAssessmentChanged = () => {
+    return (
+      JSON.stringify(assessment) !== JSON.stringify(initialAssessmentState)
+    );
+  };
 
   const handleSubmit = async () => {
     if (!isAssessmentChanged()) {
@@ -94,7 +94,7 @@ const AddAssignment = () => {
           },
         }
       );
-      if(response){
+      if (response) {
         console.log("Response:", response?.data);
         toast.success("Assessment submitted successfully!");
         // Reset form after successful submission
@@ -106,20 +106,38 @@ const AddAssignment = () => {
         error.response ? error.response.data : error.message
       );
       toast.error("Failed to submit assessment.");
-    }finally{
+    } finally {
       setloading(false);
     }
   };
 
   const Loader = () => {
     return (
-        <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+      <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
     );
   };
 
+  const handleSelect = () => {
+    const allSelected = Object.keys(assessment?.ProctoringFor || {}).every(
+      (key) => assessment?.ProctoringFor[key].inUse
+    );
+  
+    // Toggle all 'inUse' fields based on the current selection status
+    setAssessment((prev) => ({
+      ...prev,
+      ProctoringFor: Object.keys(prev?.ProctoringFor || {}).reduce((acc, key) => {
+        acc[key] = {
+          ...prev.ProctoringFor[key],
+          inUse: !allSelected, // If all are selected, deselect them, otherwise select all
+        };
+        return acc;
+      }, {}),
+    }));
+  };
+  
+
   return (
     <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5 ">
-      
       <Toaster />
 
       <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8 space-y-8">
@@ -143,7 +161,18 @@ const AddAssignment = () => {
                     handleInputChange("assessmentName", e.target.value)
                   }
                 />
-
+                <label htmlFor="" className="text-xl font-semibold">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  placeholder="Assessment description"
+                  className="border w-full h-12 p-3"
+                  value={assessment?.assessmentDesc || ""}
+                  onChange={(e) =>
+                    handleInputChange("assessmentDesc", e.target.value)
+                  }
+                />
                 <label className="text-xl font-semibold">Total Marks</label>
                 <input
                   type="number"
@@ -196,10 +225,18 @@ const AddAssignment = () => {
                   }
                 />
 
-                <label className="text-xl font-semibold">
-                  Proctoring Options
-                </label>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="flex items-center justify-between text-xl font-semibold">
+                  <label>Proctoring Options</label>
+                  <p className="cursor-pointer" onClick={handleSelect}>
+                    {Object.keys(assessment?.ProctoringFor || {}).every(
+                      (key) => assessment?.ProctoringFor[key].inUse
+                    )
+                      ? "Deselect All"
+                      : "Select All"}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4 my-4">
                   {Object?.keys(assessment?.ProctoringFor).map((key) => (
                     <div key={key} className="space-y-2">
                       <div className="flex items-center gap-2">
@@ -220,19 +257,6 @@ const AddAssignment = () => {
                     </div>
                   ))}
                 </div>
-
-                <label htmlFor="" className="text-xl font-semibold">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  placeholder="Assessment description"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.assessmentDesc || ""}
-                  onChange={(e) =>
-                    handleInputChange("assessmentDesc", e.target.value)
-                  }
-                />
               </div>
 
               <label className="text-xl font-semibold">
@@ -294,7 +318,13 @@ const AddAssignment = () => {
               onClick={handleSubmit}
               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
             >
-              {loading ? <Loader/> : "Submit"}
+              {loading ? (
+                <div className="flex items-center gap-1">
+                  Submitting ... <Loader />
+                </div>
+              ) : (
+                "Submit"
+              )}
             </button>
           </div>
         </div>
