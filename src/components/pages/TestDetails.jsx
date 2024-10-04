@@ -59,9 +59,11 @@ const TestDetails = () => {
       })
       .catch((error) => {
         console.error("Error fetching test details:", error);
+      })
+      .finally(() => {
+        setloading(false); // Set loading to false when the request finishes
       });
-    setloading(false);
-  }, []);
+  }, [adminToken]);
 
   const handleToggle = (testId) => {
     const newVisibility = !enabledTests[testId];

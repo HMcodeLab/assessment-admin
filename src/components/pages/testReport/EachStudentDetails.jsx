@@ -8,6 +8,7 @@ import StrengthMain from "./components/strengthWeakness/StrengthMain";
 import TestAnalysis from "./components/Analysis/TestAnalysis";
 import ProtectingScore from "./components/ProtectingScore";
 import Carousel from "./components/SnapShots";
+import Loader from "../../Loader";
 
 const EachStudentDetails = () => {
   const { testId, studentId } = useParams();
@@ -75,12 +76,12 @@ const EachStudentDetails = () => {
 
   const Dot = ({ color }) => {
     return (
-      <span className={`h-4 w-4 ${color} rounded-full inline-block`}></span>
+      <span className={`xl:h-4 xl:w-4 md:w-2 md:h-2 ${color} rounded-full inline-block`}></span>
     );
   };
 
   if (load) {
-    return <h1>Loading...</h1>;
+    return <Loader/>;
   }
 
   return (
@@ -100,15 +101,15 @@ const EachStudentDetails = () => {
         <Box className="xl:px-[8rem] md:px-[1rem] py-8">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold">Hi {studentDetails?.name}</p>
-              <h1 className="text-2xl font-semibold">
+              <p className="font-semibold md:text-sm xl:text-lg">Hi {studentDetails?.name} ,</p>
+              <h1 className="xl:text-2xl md:text-md font-semibold">
                 Here Are Your Results For{" "}
                 <span className="text-green-500">Designing Assessment!</span>
               </h1>
             </div>
             <div className="flex gap-2 items-center">
               <Dot color={color.bgColor} />
-              <h2 className={`font-bold text-xl ${color.color}`}>
+              <h2 className={`xl:font-bold md:font-semibold xl:text-xl md:text-md ${color.color}`}>
                 {getStatus()}
               </h2>
             </div>

@@ -48,7 +48,7 @@ const ImageViewer = ({ images, open, close }) => {
         {/* Image Container */}
         <Box
           className={`flex items-center justify-center mx-auto my-auto rounded-xl ${
-            imageType === 'desktop' ? 'w-[90%] h-[98%]' : 'w-[50%] h-auto'
+            imageType === 'desktop' ? 'w-[90%] h-[98%]' : 'w-[20%] h-auto'
           } bg-white py-4 rounded`}
           sx={{ overflow: 'hidden' }}
         >
