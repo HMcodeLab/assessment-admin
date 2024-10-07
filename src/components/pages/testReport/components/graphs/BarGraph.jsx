@@ -1,105 +1,70 @@
 import React from "react";
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+const CustomBarChart = ({ rankCount = {}, lowestRank  }) => {
 
-const options = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: {
-      display: false,
-    },
-    title: {
-      display: false,
-    },
-  },
-  scales: {
-    y: {
-      title: {
-        display: true,
-        text: "Students",
-        font: {
-          size: 16,
-        },
-      },
-      beginAtZero: true,
-      ticks: {
-        display: false,
-      },
-      grid: {
-        display: false,
-      },
-      Label: "Rank",
-    },
-    x: {
-      title: {
-        display: true,
-        text: "Rank",
-        font: {
-          size: 16,
-        },
-      },
-      ticks: {
-        font: {
-          size: 12,
-          weight: "normal",
-        },
-      },
-      grid: {
-        display: false,
-      },
-    },
-  },
-};
-
-const BarChart = ({ rankCount = {} }) => {
-  // Ensure rankCount is an object
-  const safeRankCount =
-    rankCount && typeof rankCount === "object" ? rankCount : {};
-
-  // Generate an array of ranks (1-10)
-  const labels = Array.from({ length: 10 }, (_, i) => (i + 1).toString());
-
-  // Map the rank counts to the correct label (rank 1, rank 2, etc.)
-  const rankData = labels.map((label) => safeRankCount[label] || 0); // Default to 0 if the rank doesn't exist
-
-  const data = {
-    labels: labels,
-    datasets: [
-      {
-        label: "Rank",
-        data: rankData, // Use the dynamically generated rank data
-        backgroundColor: "rgba(54, 162, 235, 0.6)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
-      },
-    ],
+  const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="custom-tooltip" style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '10px' }}>
+          <p className="label">{`Rank : ${label}`}</p>
+          <p className="intro">{`Students : ${payload[0].value}`}</p>
+        </div>
+      );
+    }
+    return null;
   };
 
+  // Ensure rankCount is an object
+  const safeRankCount = rankCount && typeof rankCount === "object" ? rankCount : {};
+
+  // Generate an array of ranks (1-lowestRank), ensure lowestRank is valid
+  const labels = Array.from({ length: lowestRank }, (_, i) => (i + 1).toString());
+
+  // Map the rank counts to the correct label (rank 1, rank 2, etc.)
+  const rankData = labels.map((label) => safeRankCount[label] || 0);
+
+  // Create chart data for Recharts
+  const chartData = labels.map((label, i) => ({
+    name: `${label}`, 
+    rank: rankData[i]
+  }));
+
+    // Function to generate random colors
+    const getRandomColor = () => {
+      const letters = "0123456789ABCDEF";
+      let color = "#";
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    };
+
+    console.log(getRandomColor());
+    
+
+
+
   return (
-    <div className="flex justify-center items-center mt-8  bg-white shadow-2xl rounded-xl px-6 py-4 xl:w-[30%] border-t ">
-      <div className=" flex items-center justify-center py-10">
-        <Bar data={data} options={options} />
-      </div>
-    </div>
-  );
+    <div className="w-full sm:w-[90%] md:w-[100%] lg:w-[70%] xl:w-[50%] h-auto shadow-2xl rounded-2xl py-4 px-2 border-t  border-gray-100">
+    <ResponsiveContainer width="100%" height={400}>
+      <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 10 }} innerRadius={3}>
+        <XAxis 
+          dataKey="name" 
+          className="font-semibold"
+
+          label={{ value: 'Rank', position: 'insideBottom', offset: -10 }} 
+        />
+        <YAxis 
+        className="font-semibold"
+          label={{ value: 'Students', angle: -90, position: 'insideLeft', offset: 10 }}
+        />
+        <Tooltip content={<CustomTooltip />} />
+        <Bar dataKey="rank" fill={getRandomColor()} barSize={10} radius={[10, 10, 0, 0]} />
+      </BarChart>
+    </ResponsiveContainer>
+  </div>
+);
 };
 
-export default BarChart;
+export default CustomBarChart;

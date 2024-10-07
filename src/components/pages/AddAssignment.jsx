@@ -22,6 +22,7 @@ const AddAssignment = () => {
       multiplePersonInFrame: { inUse: false, maxRating: 1500 },
       PhoneinFrame: { inUse: false, maxRating: 1500 },
       ControlKeyPressed: { inUse: false, maxRating: 1500 },
+      invisiblecam:{inUse:false,maxRating:1500}
     },
     Assessmentmodules: [{ moduleName: "", timelimit: "" }],
   };

@@ -13,22 +13,22 @@ import {
 import axios from "axios";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-// import { adminToken } from "../../api";
-import ResultsAssessment from "./ResultsAssessment";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import Loader from "../Loader";
 
 
 const AssignmentResult = () => {
   const [testData, setTestData] = useState([]);
-  const [selectedTest, setSelectedTest] = useState(null);
-  const [showModal, setShowModal] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const adminToken = localStorage.getItem("authToken");
+  const [loading, setLoading] = useState(true)
   const navigate= useNavigate();
 
   useEffect(() => {
+    setLoading(true); // Set loading to true when the API request starts
+  
     axios
       .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
         headers: {
@@ -40,8 +40,12 @@ const AssignmentResult = () => {
       })
       .catch((error) => {
         console.error("Error fetching test details:", error);
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false when the request finishes
       });
   }, []);
+  
 
   const fetchData = async (testId) => {
     try {
@@ -79,38 +83,53 @@ const AssignmentResult = () => {
   };
   
 
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setSelectedTest(null);
-  };
-
   const handleDownload = () => {
-    const worksheet = XLSX.utils.json_to_sheet(testData, {
+  
+    // Customize the data
+    const customizedData = testData.map((item) => {
+      // Build the Proctoring array
+      const Proctoring = [
+        item.ProctoringFor?.mic?.inUse && "Mic",
+        item.ProctoringFor?.webcam?.inUse && "Webcam",
+        item.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
+        item.ProctoringFor?.multiplePersonInFrame?.inUse && "MultiplePersonInFrame",
+        item.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
+        item.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
+      ].filter(Boolean); // Remove any falsey values
+    
+      return {
+        Assessment: item.assessmentName,
+        Modules: item?.Assessmentmodules?.length,
+        Marks: item.maxMarks,
+        Time: item.timelimit,
+        Proctoring: Proctoring, 
+        expired:item?.lastDate
+      };
+    });
+  
+    const worksheet = XLSX.utils.json_to_sheet(customizedData, {
       header: [
-        "assessmentName",
-        "Assessmentmodules[0]?.module.moduleName",
-        "maxMarks",
-        "timelimit",
-        "ProctoringFor?.mic?.inUse",
-        "ProctoringFor?.cam?.inUse",
-        "ProctoringFor?.tabSwitch?.inUse",
-        "ProctoringFor?.multiPersonInFrame?.inUse",
-        "ProctoringFor?.phoneInFrame?.inUse",
-        "ProctoringFor?.soundCaptured?.inUse",
+        "Assessment",
+        "Modules",
+        "Marks",
+        "Time",
+        "Proctoring",
+        "Expiry Date"
       ],
     });
-
+  
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Test Details");
-
+  
     const excelBuffer = XLSX.write(workbook, {
       bookType: "xlsx",
       type: "array",
     });
+    
     const file = new Blob([excelBuffer], {
       type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     });
-
+  
     saveAs(file, "TestDetails.xlsx");
   };
 
@@ -161,6 +180,12 @@ const AssignmentResult = () => {
 
     return `${day} ${month} ${year} ${time}`;
   }
+
+if(loading){
+  return(
+    <Loader/>
+  )
+}
 
   return (
     <div className="p-5">

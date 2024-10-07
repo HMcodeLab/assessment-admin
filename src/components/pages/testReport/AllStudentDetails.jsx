@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
@@ -7,6 +7,9 @@ import tag from "../../../Assets/Tag.png";
 import BarChart from "./components/graphs/BarGraph";
 import { ImSpinner9 } from "react-icons/im";
 import * as XLSX from "xlsx"; // Import xlsx library
+import filteredIcon from "../../../Assets/arrow.png";
+import { MdMoreVert } from "react-icons/md";
+import Loader from "../../Loader";
 
 const AllStudentDetails = () => {
   const { testId } = useParams();
@@ -20,10 +23,15 @@ const AllStudentDetails = () => {
   const [restartloading, setRestartloading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [sortColumn, setSortColumn] = useState(null);
+  const [sortOrder, setSortOrder] = useState("asc");
   const [loadingStates, setLoadingStates] = useState({
     delete: false,
     restart: false,
   });
+
+  const [toggleOpen, setToggleOpen] = useState(null);
+  const dropdownRef = useRef(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -48,14 +56,25 @@ const AllStudentDetails = () => {
 
   useEffect(() => {
     fetchData();
+  }, [testId, adminToken]); // Added dependencies
+
+  // middle screen
+  // Handle dropdown click outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setToggleOpen(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <ImSpinner9 className="animate-spin text-3xl text-green-600" />
-      </div>
-    );
+    return <Loader />;
   }
 
   const filterByStatus = (student) => {
@@ -76,9 +95,46 @@ const AllStudentDetails = () => {
     );
   };
 
+  const handleSort = (column) => {
+    if (sortColumn === column) {
+      // If the same column is clicked, toggle the sort order
+      setSortOrder((prevOrder) => (prevOrder === "asc" ? "desc" : "asc"));
+    } else {
+      // If a new column is clicked, set that as the column and default to ascending
+      setSortColumn(column);
+      setSortOrder("asc");
+    }
+  };
+
+  const sortStudents = (students) => {
+    return students.sort((a, b) => {
+      let compareA, compareB;
+      if (sortColumn === "name") {
+        compareA = a.name.toLowerCase();
+        compareB = b.name.toLowerCase();
+      } else if (sortColumn === "email") {
+        compareA = a.email.toLowerCase();
+        compareB = b.email.toLowerCase();
+      } else if (sortColumn === "marks") {
+        compareA = a.totalMarks;
+        compareB = b.totalMarks;
+      } else {
+        return 0; // If no sorting column, return as-is
+      }
+
+      if (sortOrder === "asc") {
+        return compareA > compareB ? 1 : -1;
+      } else {
+        return compareA < compareB ? 1 : -1;
+      }
+    });
+  };
+
   const filteredStudents = allStudent
     .filter(filterByStatus)
     .filter(filterBySearch);
+
+  const sortedStudents = sortStudents(filteredStudents);
 
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
@@ -112,7 +168,7 @@ const AllStudentDetails = () => {
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
-      allStudent.map((student) => ({
+      filteredStudents?.map((student) => ({
         Name: student?.name,
         Email: student?.email,
         Contact: student?.phone_number,
@@ -197,7 +253,7 @@ const AllStudentDetails = () => {
               onClick={onConfirm}
               className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
             >
-              Delete
+              {deleteLoading ? "Deleting..." : "Delete"}
             </button>
           </div>
         </div>
@@ -207,6 +263,7 @@ const AllStudentDetails = () => {
 
   const handleRestartClick = async (email) => {
     setLoadingStates((prev) => ({ ...prev, restart: true }));
+    setRestartloading(true);
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_DOMAIN}/restartAssessment`,
@@ -216,21 +273,32 @@ const AllStudentDetails = () => {
       if (response) {
         toast.success("Assessment Restarted Successfully");
         // Remove the deleted student from the state
-
-        
-fetchData();
+        fetchData();
       }
     } catch (error) {
       toast.error("Error in Restarting Assessment");
       console.error("Restart Error:", error);
     } finally {
+      setRestartloading(false);
       setLoadingStates((prev) => ({ ...prev, restart: false }));
     }
   };
 
+  const handleToggle = (studentId) => {
+    setToggleOpen(toggleOpen === studentId ? null : studentId); // Toggle the specific student's dropdown
+  };
+
+  const handleAction = (action, student) => {
+    // Perform the action (e.g., View, Delete, Resume)
+    console.log(`Performing action: ${action} for student: ${student.name}`);
+
+    // Automatically close the dropdown after action is taken
+    setToggleOpen(null);
+  };
+
   return (
     <div className="flex flex-col justify-center mx-4 my-4">
-      <Toaster/>
+      <Toaster />
       <div className="flex justify-between items-center mb-2">
         <h2 className="text-xl font-semibold flex items-center gap-2">
           <img src={tag} alt="Tag" />
@@ -243,8 +311,8 @@ fetchData();
           Download
         </button>
       </div>
-      <div className="overflow-x-auto bg-white shadow-lg rounded-lg border-2 border-blue-400">
-        <div className="flex flex-row justify-between items-center px-2">
+      <div className="overflow-x-auto bg-white shadow-lg rounded-lg border-2 border-blue-400 ">
+        <div className="flex flex-row justify-between items-center px-2 ">
           <div className="p-4">
             <label htmlFor="statusFilter">Filter by Status: </label>
             <select
@@ -274,9 +342,17 @@ fetchData();
 
         <table className="min-w-full bg-white">
           <thead className="bg-gray-100">
-            <tr>
+            <tr className="md:hidden xl:table-row ">
               <th className="px-4 py-2 text-left">SNo.</th>
-              <th className="px-4 py-2 text-left">Student Name</th>
+              <th className="text-sm font-semibold px-2 py-3 text-left cursor-pointer">
+                Name{" "}
+                <img
+                  src={filteredIcon}
+                  alt="Filter"
+                  onClick={() => handleSort("name")}
+                  className="inline-block w-4 h-4 cursor-pointer"
+                />
+              </th>
               <th className="px-4 py-2 text-left">Email ID</th>
               <th className="px-4 py-2 text-left">Contact No</th>
               <th className="px-4 py-2 text-left">College</th>
@@ -285,44 +361,126 @@ fetchData();
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Action</th>
             </tr>
+            {/* Middle  Screen */}
+            <tr className="xl:hidden md:table-row">
+              <th className="px-4 py-2 text-left font-medium">SNO.</th>
+              <th className="px-4 py-2 text-left font-medium">
+                Name , Email , Phone
+              </th>
+              <th className="px-4 py-2 text-left font-medium">
+                College (year)
+              </th>
+              <th className="px-4 py-2 text-left font-medium">Rank</th>
+              <th className="px-4 py-2 text-left font-medium">Action</th>
+            </tr>
           </thead>
-          <tbody>
+          <tbody className="overflow-y-hidden ">
             {filteredStudents.map((student, index) => (
-              <tr
-                key={index}
-                className={`${student?.isSuspended && "bg-red-400"} ${
-                  student?.isAssessmentCompleted && "bg-green-400"
-                }`}
-              >
-                <td className="border px-4 py-2">{index + 1}</td>
-                <td className="border px-4 py-2">{student?.name}</td>
-                <td className="border px-4 py-2">{student?.email}</td>
-                <td className="border px-4 py-2">{student?.phone_number}</td>
-                <td className="border px-4 py-2">{student?.college_name}</td>
-                <td className="border px-4 py-2">{student?.year_of_passing}</td>
-                <td className="border px-4 py-2">{student?.rank}</td>
-                <td className="border px-4 py-2">{getStatus(student)}</td>
-                <td className="border px-4 py-2">
-                  <button
-                    onClick={() => handleView(student.email)}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              <>
+                <tr
+                  key={index}
+                  className={`md:hidden xl:table-row ${
+                    student?.isSuspended && "bg-red-400"
+                  } ${student?.isAssessmentCompleted && "bg-green-400"}`}
+                >
+                  <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 py-2">{student?.name}</td>
+                  <td className="border px-4 py-2">{student?.email}</td>
+                  <td className="border px-4 py-2">{student?.phone_number}</td>
+                  <td className="border px-4 py-2">{student?.college_name}</td>
+                  <td className="border px-4 py-2">
+                    {student?.year_of_passing}
+                  </td>
+                  <td className="border px-4 py-2">{student?.rank}</td>
+                  <td className="border px-4 py-2">{getStatus(student)}</td>
+                  <td className="border px-4 py-2">
+                    <button
+                      disabled={
+                        student?.isSuspended || student?.isAssessmentCompleted
+                          ? false
+                          : true
+                      }
+                      onClick={() => handleView(student.email)}
+                      className={` ${
+                        student.isSuspended || student.isAssessmentCompleted
+                          ? " hover:bg-blue-700 bg-blue-500"
+                          : "bg-blue-200"
+                      }  text-white font-bold py-2 px-4 rounded ml-2`}
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDeleteClick(student?.email)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
+                    >
+                      Delete
+                    </button>
+
+                    <button
+                      disabled={
+                        student?.isSuspended || student?.isAssessmentCompleted
+                          ? false
+                          : true
+                      }
+                      onClick={() => handleRestartClick(student?.email)}
+                      className={` ${
+                        student.isSuspended || student.isAssessmentCompleted
+                          ? " hover:bg-yellow-700 bg-yellow-500"
+                          : "bg-yellow-200"
+                      }  text-white font-bold py-2 px-4 rounded ml-2`}
+                    >
+                      {restartloading ? "Resuming ..." : "Resume"}
+                    </button>
+                  </td>
+                </tr>
+                <tr
+                  key={index}
+                  className={`xl:hidden z-20 xl:overflow-y-hidden md:overflow-hidden md:table-row font-normal text-sm ${
+                    student?.isSuspended && "bg-red-400"
+                  } ${student?.isAssessmentCompleted && "bg-green-400"}`}
+                >
+                  <td className="text-start px-6 font-normal">{index + 1}</td>
+                  <td className="flex flex-col text-start font-normal">
+                    <span>{student?.name}</span>
+                    <span>{student?.email}</span>
+                    <span>{student?.phone_number}</span>
+                  </td>
+                  <td className="px-4 py-2 text-left font-normal">
+                    {student?.college_name + ` (${student?.year_of_passing})`}
+                  </td>
+                  <td className="px-8 py-2 text-left font-normal">
+                    {student?.rank}
+                  </td>
+                  <td
+                    className="px-6 py-2 text-center font-normal cursor-pointer relative"
+                    onClick={() => handleToggle(student.email)}
                   >
-                    View
-                  </button>
-                  <button
-                    onClick={() => handleDeleteClick(student?.email)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-                  >
-                    Delete
-                  </button>
-                  <button
-                    onClick={() => handleRestartClick(student?.email)}
-                    className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded ml-2"
-                  >
-                    {restartloading ? "Restarting ..." : "Restart"}
-                  </button>
-                </td>
-              </tr>
+                    <MdMoreVert />
+                    {toggleOpen === student.email && (
+                      <ul className="absolute bg-white shadow-lg py-2 rounded-lg right-0 mt-1 text-sm">
+                        <li
+                          className="cursor-pointer px-2 py-1 rounded-md hover:bg-green-300"
+                          onClick={() => handleView(student.email)}
+                        >
+                          View
+                        </li>
+                        <li
+                          className="cursor-pointer px-2 py-1 rounded-md hover:bg-green-300"
+                          onClick={() => handleDeleteClick(student.email)}
+                        >
+                          Delete
+                        </li>
+                        <li
+                          className="cursor-pointer px-2 py-1 rounded-md hover:bg-green-300"
+                          onClick={() => handleRestartClick(student.email)}
+                        >
+                          Resume
+                        </li>
+                      </ul>
+                    )}
+                  </td>
+                </tr>
+              </>
             ))}
           </tbody>
         </table>
@@ -336,7 +494,7 @@ fetchData();
       </div>
 
       {/* Rank Chart */}
-      <div className="mt-8">
+      <div className="mt-10 mb-6">
         <div className="flex items-center mb-2">
           <img
             src={tag}
@@ -346,7 +504,10 @@ fetchData();
           <h2 className="text-lg font-bold text-black">Rank</h2>
         </div>
         <hr className="border-gray-300 mb-4" />
-        <BarChart rankCount={rankCounts} />
+        <BarChart
+          rankCount={rankCounts}
+          lowestRank={allStudent[allStudent.length - 1]?.rank}
+        />
       </div>
 
       <AlertModal
