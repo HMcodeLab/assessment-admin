@@ -1,0 +1,1074 @@
+{
+    "data":[
+        {
+            "ProctoringFor": {
+                "mic": {
+                    "inUse": true,
+                    "maxRating": 1500,
+                    "_id": "66f2c150d279a555e924f815"
+                },
+                "webcam": {
+                    "inUse": true,
+                    "maxRating": 1500,
+                    "_id": "66f2c150d279a555e924f816"
+                },
+                "TabSwitch": {
+                    "inUse": true,
+                    "maxRating": 1500,
+                    "_id": "66f2c150d279a555e924f817"
+                },
+                "multiplePersonInFrame": {
+                    "inUse": true,
+                    "maxRating": 1500,
+                    "_id": "66f2c150d279a555e924f818"
+                },
+                "PhoneinFrame": {
+                    "inUse": true,
+                    "maxRating": 1500,
+                    "_id": "66f2c150d279a555e924f819"
+                }
+            },
+            "_id": "66f2c150d279a555e924f814",
+            "assessmentName": "Amity",
+            "assessmentDesc": "",
+            "maxMarks": 90,
+            "startDate": "2024-09-23T19:09:00.000Z",
+            "lastDate": "2024-09-25T19:09:00.000Z",
+            "timelimit": 90,
+            "isProtected": false,
+            "isVisible": true,
+            "Assessmentmodules": [
+                {
+                    "module": {
+                        "_id": "66f2c150d279a555e924f810",
+                        "moduleName": "Apti",
+                        "timelimit": 44,
+                        "questions": [
+                            {
+                                "_id": "66f2c16bd279a555e924f86b",
+                                "question": "Direction: Read the following information and answer the following question:\r\ni) Z $ Y means Z is mother of Y\r\nii) Z # Y means Z is father of Y\r\niii) Z @ Y means Z is husband of Y\r\niv) Z % Y means Z is daughter of Y\r\nK@J$N#G indicate what relationship of K with G?",
+                                "options": {
+                                    "opt_1": "Paternal grandmother",
+                                    "opt_2": "Maternal grandmother",
+                                    "opt_3": "Paternal grandfather",
+                                    "opt_4": "Maternal grandfather"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f86e",
+                                "question": "Direction: Read the following information and answer the following question:\r\ni) Z $ Y means Z is mother of Y\r\nii) Z # Y means Z is father of Y\r\niii) Z @ Y means Z is husband of Y\r\niv) Z % Y means Z is daughter of Y\r\nIf T $ N @ P, how is P related to T?",
+                                "options": {
+                                    "opt_1": "Mother-in-law",
+                                    "opt_2": "Daughter in law",
+                                    "opt_3": "aunt",
+                                    "opt_4": "daughter"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f871",
+                                "question": "Six friends Pahul, Anuj, Kajal, Mudit, Surjit, and Abhinav are having different chocolates among Amul, Ferrero Rocher, Milk Chocolate, Mars Bar, Nestle, White Chocolate but not necessarily in the same order. The cost of each chocolate is multiple of 5 in Rupees and no two chocolates have same price. All friends like different colors among Black, Blue, Green, Pink, Red and White but not necessarily in the same order. A person can have only one brand of chocolates. Kajal has Ferrero Rocher chocolate and its cost is Rs.10 and he doesn’t like White color. Abhinav likes Green color. Anuj did not have Amul or Mars Bar. Surjit has a chocolate which costs Rs.20. The one person who likes Black color has Mars Bar. Pahul has Milk chocolate which costs Rs.25 and he likes Blue color. The cost of chocolate that Mudit have is less than that of Ferrero Rocher. The costliest chocolate is Nestle and its cost is thrice the cost of Ferrero Rocher and Anuj doesn’t have Nestle. The cost of Amul chocolate is 10 Rupees less than the cost of Nestle. The one who likes Pink color has White chocolate. One of the persons have a chocolate which costs thrice the amount of the one who likes Back color.\r\nSWhich among the following colors was liked by the one who has Amul\r\nchocolate?\r\n",
+                                "options": {
+                                    "opt_1": "Red",
+                                    "opt_2": "Green",
+                                    "opt_3": "White",
+                                    "opt_4": "Cannot be determine"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f874",
+                                "question": "Six friends Pahul, Anuj, Kajal, Mudit, Surjit, and Abhinav are having different chocolates among Amul, Ferrero Rocher, Milk Chocolate, Mars Bar, Nestle, White Chocolate but not necessarily in the same order. The cost of each chocolate is multiple of 5 in Rupees and no two chocolates have same price. All friends like different colors among Black, Blue, Green, Pink, Red and White but not necessarily in the same order. A person can have only one brand of chocolates. Kajal has Ferrero Rocher chocolate and its cost is Rs.10 and he doesn’t like White color. Abhinav likes Green color. Anuj did not have Amul or Mars Bar. Surjit has a chocolate which costs Rs.20. The one person who likes Black color has Mars Bar. Pahul has Milk chocolate which costs Rs.25 and he likes Blue color. The cost of chocolate that Mudit have is less than that of Ferrero Rocher. The costliest chocolate is Nestle and its cost is thrice the cost of Ferrero Rocher and Anuj doesn’t have Nestle. The cost of Amul chocolate is 10 Rupees less than the cost of Nestle. The one who likes Pink color has White chocolate. One of the persons have a chocolate which costs thrice the amount of the one who likes Back color.\r\nWhat is the cost of the Abhinav’s chocolate?",
+                                "options": {
+                                    "opt_1": "Rs.30",
+                                    "opt_2": "Rs.15",
+                                    "opt_3": "Rs.5",
+                                    "opt_4": "Rs.50"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f877",
+                                "question": "Six friends Pahul, Anuj, Kajal, Mudit, Surjit, and Abhinav are having different chocolates among Amul, Ferrero Rocher, Milk Chocolate, Mars Bar, Nestle, White Chocolate but not necessarily in the same order. The cost of each chocolate is multiple of 5 in Rupees and no two chocolates have same price. All friends like different colors among Black, Blue, Green, Pink, Red and White but not necessarily in the same order. A person can have only one brand of chocolates. Kajal has Ferrero Rocher chocolate and its cost is Rs.10 and he doesn’t like White color. Abhinav likes Green color. Anuj did not have Amul or Mars Bar. Surjit has a chocolate which costs Rs.20. The one person who likes Black color has Mars Bar. Pahul has Milk chocolate which costs Rs.25 and he likes Blue color. The cost of chocolate that Mudit have is less than that of Ferrero Rocher. The costliest chocolate is Nestle and its cost is thrice the cost of Ferrero Rocher and Anuj doesn’t have Nestle. The cost of Amul chocolate is 10 Rupees less than the cost of Nestle. The one who likes Pink color has White chocolate. One of the persons have a chocolate which costs thrice the amount of the one who likes Back color.\r\nWhich of the following combinations is correct?",
+                                "options": {
+                                    "opt_1": "White Chocolate-Rs-20",
+                                    "opt_2": "Amul-White",
+                                    "opt_3": "Surjit-Amul",
+                                    "opt_4": "Green- Ferrero Rocher"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f87a",
+                                "question": "Six friends Pahul, Anuj, Kajal, Mudit, Surjit, and Abhinav are having different chocolates among Amul, Ferrero Rocher, Milk Chocolate, Mars Bar, Nestle, White Chocolate but not necessarily in the same order. The cost of each chocolate is multiple of 5 in Rupees and no two chocolates have same price. All friends like different colors among Black, Blue, Green, Pink, Red and White but not necessarily in the same order. A person can have only one brand of chocolates. Kajal has Ferrero Rocher chocolate and its cost is Rs.10 and he doesn’t like White color. Abhinav likes Green color. Anuj did not have Amul or Mars Bar. Surjit has a chocolate which costs Rs.20. The one person who likes Black color has Mars Bar. Pahul has Milk chocolate which costs Rs.25 and he likes Blue color. The cost of chocolate that Mudit have is less than that of Ferrero Rocher. The costliest chocolate is Nestle and its cost is thrice the cost of Ferrero Rocher and Anuj doesn’t have Nestle. The cost of Amul chocolate is 10 Rupees less than the cost of Nestle. The one who likes Pink color has White chocolate. One of the persons have a chocolate which costs thrice the amount of the one who likes Back color.\r\nWhat is the cost of White Chocolate?",
+                                "options": {
+                                    "opt_1": "rs.10",
+                                    "opt_2": "rs.20",
+                                    "opt_3": "rs.15",
+                                    "opt_4": "rs.30"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f87d",
+                                "question": "Six friends Pahul, Anuj, Kajal, Mudit, Surjit, and Abhinav are having different chocolates among Amul, Ferrero Rocher, Milk Chocolate, Mars Bar, Nestle, White Chocolate but not necessarily in the same order. The cost of each chocolate is multiple of 5 in Rupees and no two chocolates have same price. All friends like different colors among Black, Blue, Green, Pink, Red and White but not necessarily in the same order. A person can have only one brand of chocolates. Kajal has Ferrero Rocher chocolate and its cost is Rs.10 and he doesn’t like White color. Abhinav likes Green color. Anuj did not have Amul or Mars Bar. Surjit has a chocolate which costs Rs.20. The one person who likes Black color has Mars Bar. Pahul has Milk chocolate which costs Rs.25 and he likes Blue color. The cost of chocolate that Mudit have is less than that of Ferrero Rocher. The costliest chocolate is Nestle and its cost is thrice the cost of Ferrero Rocher and Anuj doesn’t have Nestle. The cost of Amul chocolate is 10 Rupees less than the cost of Nestle. The one who likes Pink color has White chocolate. One of the persons have a chocolate which costs thrice the amount of the one who likes Back color.\r\nWho has the Chocolate which costs 30 rupees?",
+                                "options": {
+                                    "opt_1": "Kajal",
+                                    "opt_2": "Mudit",
+                                    "opt_3": "Surjit",
+                                    "opt_4": "Abhinav"
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f880",
+                                "question": "If A completes a work in 10 days and B in 15 days. How many days will they take together?",
+                                "options": {
+                                    "opt_1": 6,
+                                    "opt_2": 5,
+                                    "opt_3": 4,
+                                    "opt_4": 3
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f883",
+                                "question": "A number consists of two digits. The sum of the digits is 7. If 9 is added to the number, the digits are reversed. What is the number?",
+                                "options": {
+                                    "opt_1": 34,
+                                    "opt_2": 43,
+                                    "opt_3": 52,
+                                    "opt_4": 61
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f886",
+                                "question": "A shopkeeper marks his goods 40% above cost price and offers a discount of 25%. What is his profit percentage?",
+                                "options": {
+                                    "opt_1": 6.5,
+                                    "opt_2": 7.5,
+                                    "opt_3": 8.5,
+                                    "opt_4": 9.5
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f889",
+                                "question": "A car covers a certain distance at 60 km/h and returns at 40 km/h. What is the average speed for the entire journey?",
+                                "options": {
+                                    "opt_1": 48,
+                                    "opt_2": 50,
+                                    "opt_3": 54,
+                                    "opt_4": 56
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f88c",
+                                "question": "The difference between the compound interest and simple interest on Rs. 800 for 2 years at 10% per annum is?",
+                                "options": {
+                                    "opt_1": 3.2,
+                                    "opt_2": 2.4,
+                                    "opt_3": 1.6,
+                                    "opt_4": 0.8
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f88f",
+                                "question": "A person spends 80% of his income. If his income is increased by 25% and his expenditure by 10%, find the percentage increase in savings.",
+                                "options": {
+                                    "opt_1": 15,
+                                    "opt_2": 20,
+                                    "opt_3": 22,
+                                    "opt_4": 30
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f892",
+                                "question": "The ratio of the ages of A and B is 5:8. After 12 years, the ratio of their ages will be 2:3. What is B's present age?",
+                                "options": {
+                                    "opt_1": 16,
+                                    "opt_2": 24,
+                                    "opt_3": 20,
+                                    "opt_4": 30
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f895",
+                                "question": "A and B can complete a work in 6 days and 8 days respectively. They worked together for 3 days and then B left. In how many more days will A finish the remaining work?",
+                                "options": {
+                                    "opt_1": 2,
+                                    "opt_2": 3,
+                                    "opt_3": 1.5,
+                                    "opt_4": 1
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f898",
+                                "question": "A man buys 20 articles for Rs. 1200 and sells them at Rs. 75 each. What is his gain percent?",
+                                "options": {
+                                    "opt_1": 25,
+                                    "opt_2": 20,
+                                    "opt_3": 15,
+                                    "opt_4": 10
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f89b",
+                                "question": "If the digits of a two-digit number are interchanged, the number increases by 27. The difference between the digits is 3. What is the original number?",
+                                "options": {
+                                    "opt_1": 36,
+                                    "opt_2": 27,
+                                    "opt_3": 18,
+                                    "opt_4": 45
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f89e",
+                                "question": "Direction : Study the following information carefully and answer the questions given beside.\r\na)\tA shopkeeper bought some quantity of Wheat, Rice and Sugar in the ratio of 3:5:4. \r\nb)\tThe total cost price of Sugar is Rs. 15600. He sold Sugar at a discount of 13.33% and earned a profit of 41.66%.\r\nc)\tOn Rice (which was marked Rs. 81 per kg) he earned 5/3 Rs less profit per kg as compare to that on Sugar by selling Rice at 11.11 % discount. \r\nd)\tShopkeeper spent a total of Rs 50000 on buying these commodities, while he earned a total profit of Rs. 18000 on selling all bought commodities. \r\ne)\tMarked price of Wheat was 40% above cost price per kg.\r\n Note: Sugar was purchased at a rate of Rs. 52 per kg.\r\nFind the ratio of selling price per kg of Wheat to cost price per kg of Rice?",
+                                "options": {
+                                    "opt_1": 0.8840277777777777,
+                                    "opt_2": "65:57",
+                                    "opt_3": 0.55625,
+                                    "opt_4": "63:65"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8a1",
+                                "question": "Direction : Study the following information carefully and answer the questions given beside.\r\na)\tA shopkeeper bought some quantity of Wheat, Rice and Sugar in the ratio of 3:5:4. \r\nb)\tThe total cost price of Sugar is Rs. 15600. He sold Sugar at a discount of 13.33% and earned a profit of 41.66%.\r\nc)\tOn Rice (which was marked Rs. 81 per kg) he earned 5/3 Rs less profit per kg as compare to that on Sugar by selling Rice at 11.11 % discount. \r\nd)\tShopkeeper spent a total of Rs 50000 on buying these commodities, while he earned a total profit of Rs. 18000 on selling all bought commodities. \r\ne)\tMarked price of Wheat was 40% above cost price per kg.\r\n Note: Sugar was purchased at a rate of Rs. 52 per kg.\r\nIf shopkeeper gave an extra discount of 10% on Sugar, then his gain% or loss% was:",
+                                "options": {
+                                    "opt_1": "37.5 % profit",
+                                    "opt_2": "27.5 % profit",
+                                    "opt_3": "47.5 % loss",
+                                    "opt_4": "17.5 % loss"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8a4",
+                                "question": "Direction : Study the following information carefully and answer the questions given beside.\r\na)\tA shopkeeper bought some quantity of Wheat, Rice and Sugar in the ratio of 3:5:4. \r\nb)\tThe total cost price of Sugar is Rs. 15600. He sold Sugar at a discount of 13.33% and earned a profit of 41.66%.\r\nc)\tOn Rice (which was marked Rs. 81 per kg) he earned 5/3 Rs less profit per kg as compare to that on Sugar by selling Rice at 11.11 % discount. \r\nd)\tShopkeeper spent a total of Rs 50000 on buying these commodities, while he earned a total profit of Rs. 18000 on selling all bought commodities. \r\ne)\tMarked price of Wheat was 40% above cost price per kg.\r\n Note: Sugar was purchased at a rate of Rs. 52 per kg.\r\nFind the sum of the total quantity of Wheat and Rice (in Kg) bought by shopkeeper?\r\n",
+                                "options": {
+                                    "opt_1": 500,
+                                    "opt_2": 625,
+                                    "opt_3": 675,
+                                    "opt_4": 600
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8a7",
+                                "question": "Direction : Study the following information carefully and answer the questions given beside.\r\na)\tA shopkeeper bought some quantity of Wheat, Rice and Sugar in the ratio of 3:5:4. \r\nb)\tThe total cost price of Sugar is Rs. 15600. He sold Sugar at a discount of 13.33% and earned a profit of 41.66%.\r\nc)\tOn Rice (which was marked Rs. 81 per kg) he earned 5/3 Rs less profit per kg as compare to that on Sugar by selling Rice at 11.11 % discount. \r\nd)\tShopkeeper spent a total of Rs 50000 on buying these commodities, while he earned a total profit of Rs. 18000 on selling all bought commodities. \r\ne)\tMarked price of Wheat was 40% above cost price per kg.\r\n Note: Sugar was purchased at a rate of Rs. 52 per kg.\r\nCost price per kg of Sugar was what percent less than marked price per kg of Sugar?",
+                                "options": {
+                                    "opt_1": "650/19%",
+                                    "opt_2": "660/17%",
+                                    "opt_3": "660/19%",
+                                    "opt_4": "650/17%"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8aa",
+                                "question": "Direction : Study the following information carefully and answer the questions given beside.\r\na)\tA shopkeeper bought some quantity of Wheat, Rice and Sugar in the ratio of 3:5:4. \r\nb)\tThe total cost price of Sugar is Rs. 15600. He sold Sugar at a discount of 13.33% and earned a profit of 41.66%.\r\nc)\tOn Rice (which was marked Rs. 81 per kg) he earned 5/3 Rs less profit per kg as compare to that on Sugar by selling Rice at 11.11 % discount. \r\nd)\tShopkeeper spent a total of Rs 50000 on buying these commodities, while he earned a total profit of Rs. 18000 on selling all bought commodities. \r\ne)\tMarked price of Wheat was 40% above cost price per kg.\r\n Note: Sugar was purchased at a rate of Rs. 52 per kg.\r\nIf 25 kg of Rice was wasted away due to some reason. Find profit% or loss% by selling the remaining Rice as per given condition.",
+                                "options": {
+                                    "opt_1": "370/13% loss",
+                                    "opt_2": "380/17% profit",
+                                    "opt_3": "380/13% profit",
+                                    "opt_4": "370/17% profit"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8ad",
+                                "question": "Directions : In the following questions, set of Conclusion(s) is given and four statements are given as a), b), c), d). From this you have to take the statements to be true even if they seem to be at variance with commonly known facts and then decide which of the given statement logically follows.\r\nSome glass are not spoon.\r\nSome cricket is not ball.",
+                                "options": {
+                                    "opt_1": "Statements I: Some spoon are cement. No cricket is glass. All glass are ball.",
+                                    "opt_2": "Statements II: All spoon are cricket. Some cricket is glass. All glass are ball.",
+                                    "opt_3": "Statements III: No spoon is cricket. All cricket is glass. No glass is ball.",
+                                    "opt_4": "Statements IV: No spoon is cricket. No cricket is glass. All glass are ball."
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8b0",
+                                "question": "Directions : In the following questions, set of Conclusion(s) is given and four statements are given as a), b), c), d). From this you have to take the statements to be true even if they seem to be at variance with commonly known facts and then decide which of the given statement logically follows.\r\nSome men are scientist.\r\nSome thief are men",
+                                "options": {
+                                    "opt_1": "Statements I: All men are gold digger. Some gold digger are thief. No thief is scientist.",
+                                    "opt_2": "Statements II: Some men are gold digger. All gold digger are thief. All thief is scientist.",
+                                    "opt_3": "Statements III: All men are thief. No gold digger is men. Some thief is scientist.",
+                                    "opt_4": "Statements IV: All men are gold digger. No gold digger is thief. All thief is scientist"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8b3",
+                                "question": "Directions : In the following questions, set of Conclusion(s) is given and four statements are given as a), b), c), d). From this you have to take the statements to be true even if they seem to be at variance with commonly known facts and then decide which of the given statement logically follows.\r\nSome pen are not paper.\r\nSome pen are ink.",
+                                "options": {
+                                    "opt_1": "Statements I: All paper are ink. No ink is pen. Some pen are sheet.",
+                                    "opt_2": "Statements II: Some paper are ink. Some ink are crow. All pen are sheet.",
+                                    "opt_3": "Statements III: No paper is ink. All ink are crow. Some pen are sheet.",
+                                    "opt_4": "Statements IV: All paper are ink. Some ink is sheet. Some pen are sheet."
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8b6",
+                                "question": "Directions : In the following questions, set of Conclusion(s) is given and four statements are given as a), b), c), d). From this you have to take the statements to be true even if they seem to be at variance with commonly known facts and then decide which of the given statement logically follows.\r\nAll Donald being Micky is a possibility.\r\nAll Tom being Jerry is a possibility.\r\n",
+                                "options": {
+                                    "opt_1": "Statements I: All Donald is Jerry. All Jerry is Micky. No Micky is Tom.",
+                                    "opt_2": "Statements II: Some Donald is Jerry. No Jerry is Micky. Some Micky is Tom.",
+                                    "opt_3": "Statements III: Some Donald is Jerry. Some Jerry is Micky. No Micky is Tom.",
+                                    "opt_4": "Statements IV: All Donald is Jerry. No Jerry is Micky. All Micky is Tom."
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8b9",
+                                "question": "Directions : In the following questions, set of Conclusion(s) is given and four statements are given as a), b), c), d). From this you have to take the statements to be true even if they seem to be at variance with commonly known facts and then decide which of the given statement logically follows.\r\nSome Table is plastic.\r\nSome plastic are bench",
+                                "options": {
+                                    "opt_1": "Statements I: All Table are Chair. All Chairs is bench. Some benches are plastic.",
+                                    "opt_2": "Statements II: All Table is Chair. Some Chair is bench. All benches are plastic.",
+                                    "opt_3": "Statements III: No Table is Chair. All Chairs are bench. Some benches are plastic.",
+                                    "opt_4": "Statements IV: All Table is Chair. All Chairs are bench. All benches are plastic."
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8bc",
+                                "question": "Direction : Read the given information carefully and answer the given questions. Twelve friends are sitting in two parallel rows containing six people each in such a way that there is equal distance between adjacent persons. In row 1 Z, Y, X, W, V and U are seated and all of them are facing north and in row 2 K, J, I, H, G and F, are seated and are facing south, but not necessarily in the same order.\r\nThere are four persons sits to the right of I. I’s daughter is immediate neighbor of the one, who faces I. There are one person sits between I’s son and I’s daughter. J is married to U. I’s son-in-law sits third to the left of the one, who faces the person, who is immediate left of Z’s brother. Two persons sit between H and G. I’s brother sits second to the right of I’s sister. H does not sit one of the extreme ends. Z is brother-in law of Y. Z’s father sits second to the right of Z’s brother. V is married to H. only one person sits between Z’s brother and I’s mother. I’s son-in-law does not sit one of the extreme ends. Z’s sister-in-law faces H. Z’s sister-in-law sits third to the left of I’s daughter. K faces V, who sits one of the extreme left end. Y sits third to the right of V. J sits immediate right of the person, who faces I’s wife. I’s mother sits third to the left of the one, who faces the one, who sits immediate right of I’s son in-law. I’s brother-in-law sits fourth to the left of I’s wife. X sits diagonally opposite to the one, who is immediate right of F. Z is the son-in-law of W.\r\nWho sits immediate left of the one, who is the sister-in law of Z?",
+                                "options": {
+                                    "opt_1": "Y",
+                                    "opt_2": "X’s brother",
+                                    "opt_3": "J’s brother",
+                                    "opt_4": "V’s brother-in-law"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8bf",
+                                "question": "Direction : Read the given information carefully and answer the given questions. Twelve friends are sitting in two parallel rows containing six people each in such a way that there is equal distance between adjacent persons. In row 1 Z, Y, X, W, V and U are seated and all of them are facing north and in row 2 K, J, I, H, G and F, are seated and are facing south, but not necessarily in the same order.\r\nThere are four persons sits to the right of I. I’s daughter is immediate neighbor of the one, who faces I. There are one person sits between I’s son and I’s daughter. J is married to U. I’s son-in-law sits third to the left of the one, who faces the person, who is immediate left of Z’s brother. Two persons sit between H and G. I’s brother sits second to the right of I’s sister. H does not sit one of the extreme ends. Z is brother-in law of Y. Z’s father sits second to the right of Z’s brother. V is married to H. only one person sits between Z’s brother and I’s mother. I’s son-in-law does not sit one of the extreme ends. Z’s sister-in-law faces H. Z’s sister-in-law sits third to the left of I’s daughter. K faces V, who sits one of the extreme left end. Y sits third to the right of V. J sits immediate right of the person, who faces I’s wife. I’s mother sits third to the left of the one, who faces the one, who sits immediate right of I’s son in-law. I’s brother-in-law sits fourth to the left of I’s wife. X sits diagonally opposite to the one, who is immediate right of F. Z is the son-in-law of W.\r\n Who sits second to the left of the one, who faces the person, who sits second to the left of K?",
+                                "options": {
+                                    "opt_1": "J",
+                                    "opt_2": "None are true",
+                                    "opt_3": "Z",
+                                    "opt_4": "H’s husband"
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8c2",
+                                "question": "Direction : Read the given information carefully and answer the given questions. Twelve friends are sitting in two parallel rows containing six people each in such a way that there is equal distance between adjacent persons. In row 1 Z, Y, X, W, V and U are seated and all of them are facing north and in row 2 K, J, I, H, G and F, are seated and are facing south, but not necessarily in the same order.\r\nThere are four persons sits to the right of I. I’s daughter is immediate neighbor of the one, who faces I. There are one person sits between I’s son and I’s daughter. J is married to U. I’s son-in-law sits third to the left of the one, who faces the person, who is immediate left of Z’s brother. Two persons sit between H and G. I’s brother sits second to the right of I’s sister. H does not sit one of the extreme ends. Z is brother-in law of Y. Z’s father sits second to the right of Z’s brother. V is married to H. only one person sits between Z’s brother and I’s mother. I’s son-in-law does not sit one of the extreme ends. Z’s sister-in-law faces H. Z’s sister-in-law sits third to the left of I’s daughter. K faces V, who sits one of the extreme left end. Y sits third to the right of V. J sits immediate right of the person, who faces I’s wife. I’s mother sits third to the left of the one, who faces the one, who sits immediate right of I’s son in-law. I’s brother-in-law sits fourth to the left of I’s wife. X sits diagonally opposite to the one, who is immediate right of F. Z is the son-in-law of W.\r\nWho is grandmother of Y?",
+                                "options": {
+                                    "opt_1": "W’s mother-in-law",
+                                    "opt_2": "Person sits on one of the extreme left ends.",
+                                    "opt_3": "V’s mother-in-law",
+                                    "opt_4": "All are true"
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8c5",
+                                "question": "Direction : Read the given information carefully and answer the given questions. Twelve friends are sitting in two parallel rows containing six people each in such a way that there is equal distance between adjacent persons. In row 1 Z, Y, X, W, V and U are seated and all of them are facing north and in row 2 K, J, I, H, G and F, are seated and are facing south, but not necessarily in the same order.\r\nThere are four persons sits to the right of I. I’s daughter is immediate neighbor of the one, who faces I. There are one person sits between I’s son and I’s daughter. J is married to U. I’s son-in-law sits third to the left of the one, who faces the person, who is immediate left of Z’s brother. Two persons sit between H and G. I’s brother sits second to the right of I’s sister. H does not sit one of the extreme ends. Z is brother-in law of Y. Z’s father sits second to the right of Z’s brother. V is married to H. only one person sits between Z’s brother and I’s mother. I’s son-in-law does not sit one of the extreme ends. Z’s sister-in-law faces H. Z’s sister-in-law sits third to the left of I’s daughter. K faces V, who sits one of the extreme left end. Y sits third to the right of V. J sits immediate right of the person, who faces I’s wife. I’s mother sits third to the left of the one, who faces the one, who sits immediate right of I’s son in-law. I’s brother-in-law sits fourth to the left of I’s wife. X sits diagonally opposite to the one, who is immediate right of F. Z is the son-in-law of W.\r\nIf K related to Z’s sister-in-law in the same way as J related to I’s daughter. Which of the following is F related to, following the same pattern?",
+                                "options": {
+                                    "opt_1": "X’s brother",
+                                    "opt_2": "U",
+                                    "opt_3": "Z",
+                                    "opt_4": "None of these"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c16bd279a555e924f8c8",
+                                "question": "Direction : Read the given information carefully and answer the given questions. Twelve friends are sitting in two parallel rows containing six people each in such a way that there is equal distance between adjacent persons. In row 1 Z, Y, X, W, V and U are seated and all of them are facing north and in row 2 K, J, I, H, G and F, are seated and are facing south, but not necessarily in the same order.\r\nThere are four persons sits to the right of I. I’s daughter is immediate neighbor of the one, who faces I. There are one person sits between I’s son and I’s daughter. J is married to U. I’s son-in-law sits third to the left of the one, who faces the person, who is immediate left of Z’s brother. Two persons sit between H and G. I’s brother sits second to the right of I’s sister. H does not sit one of the extreme ends. Z is brother-in law of Y. Z’s father sits second to the right of Z’s brother. V is married to H. only one person sits between Z’s brother and I’s mother. I’s son-in-law does not sit one of the extreme ends. Z’s sister-in-law faces H. Z’s sister-in-law sits third to the left of I’s daughter. K faces V, who sits one of the extreme left end. Y sits third to the right of V. J sits immediate right of the person, who faces I’s wife. I’s mother sits third to the left of the one, who faces the one, who sits immediate right of I’s son in-law. I’s brother-in-law sits fourth to the left of I’s wife. X sits diagonally opposite to the one, who is immediate right of F. Z is the son-in-law of W.\r\nWho is the niece of K?",
+                                "options": {
+                                    "opt_1": "Y",
+                                    "opt_2": "G’s son",
+                                    "opt_3": "J’s wife",
+                                    "opt_4": "J’s sister-in-law"
+                                },
+                                "answer": "opt_4",
+                                "maxMarks": 2,
+                                "__v": 0
+                            }
+                        ],
+                        "createdAt": "2024-09-24T13:40:32.270Z",
+                        "updatedAt": "2024-09-24T13:40:59.530Z",
+                        "__v": 32
+                    },
+                    "_id": "66f2c150d279a555e924f81a"
+                },
+                {
+                    "module": {
+                        "_id": "66f2c150d279a555e924f811",
+                        "moduleName": "MBA",
+                        "timelimit": 45,
+                        "questions": [
+                            {
+                                "_id": "66f2c177d279a555e924f8d0",
+                                "question": "What is the most critical aspect to consider in change management for large-scale organizational transformation?",
+                                "options": {
+                                    "opt_1": "Employee resistance",
+                                    "opt_2": "Budget constraints",
+                                    "opt_3": "Lack of stakeholder engagement",
+                                    "opt_4": "Unclear vision and strategy"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8d3",
+                                "question": "Which financial strategy is most effective during periods of high inflation in emerging markets?",
+                                "options": {
+                                    "opt_1": "Hedging against currency depreciation",
+                                    "opt_2": "Increasing capital expenditure",
+                                    "opt_3": "Reducing interest rate exposure",
+                                    "opt_4": "Increasing product prices"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8d6",
+                                "question": "What is the key challenge in implementing AI-driven customer service models?",
+                                "options": {
+                                    "opt_1": "Integration with existing systems",
+                                    "opt_2": "High customer expectations",
+                                    "opt_3": "Lack of AI understanding among customers",
+                                    "opt_4": "Privacy concerns"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8d9",
+                                "question": "Which of the following best explains the concept of 'strategic drift' in business management?",
+                                "options": {
+                                    "opt_1": "Gradual misalignment with external environment",
+                                    "opt_2": "Sudden shifts in corporate culture",
+                                    "opt_3": "Mismatch between market trends and business practices",
+                                    "opt_4": "Loss of competitive advantage"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8dc",
+                                "question": "Which leadership style is most suitable for managing cross-functional teams in a dynamic business environment?",
+                                "options": {
+                                    "opt_1": "Transformational leadership",
+                                    "opt_2": "Democratic leadership",
+                                    "opt_3": "Autocratic leadership",
+                                    "opt_4": "Laissez-faire leadership"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8df",
+                                "question": "What is the primary risk in mergers and acquisitions involving multinational corporations?",
+                                "options": {
+                                    "opt_1": "Cultural integration issues",
+                                    "opt_2": "Legal challenges",
+                                    "opt_3": "Regulatory compliance issues",
+                                    "opt_4": "Tax complications"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c177d279a555e924f8e2",
+                                "question": "How does regulatory compliance impact the operational strategy of multinational companies?",
+                                "options": {
+                                    "opt_1": "Increased operational costs",
+                                    "opt_2": "Operational inefficiency",
+                                    "opt_3": "Increased supply chain complexity",
+                                    "opt_4": "Market volatility"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8e5",
+                                "question": "Which marketing strategy is most effective in leveraging consumer data for brand loyalty?",
+                                "options": {
+                                    "opt_1": "Personalized marketing",
+                                    "opt_2": "Targeted advertising",
+                                    "opt_3": "Influencer marketing",
+                                    "opt_4": "Content marketing"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8e8",
+                                "question": "What is the most significant challenge in implementing corporate social responsibility initiatives globally?",
+                                "options": {
+                                    "opt_1": "Varying global standards",
+                                    "opt_2": "Employee resistance",
+                                    "opt_3": "Short-term profitability concerns",
+                                    "opt_4": "Lack of stakeholder engagement"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8eb",
+                                "question": "How does cultural diversity influence decision-making in international business operations?",
+                                "options": {
+                                    "opt_1": "Enhanced creativity in problem-solving",
+                                    "opt_2": "Increased conflict among teams",
+                                    "opt_3": "Faster decision-making",
+                                    "opt_4": "Lower cohesion in teams"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8ee",
+                                "question": "Which of the following is a critical factor in managing stakeholder expectations during corporate restructuring?",
+                                "options": {
+                                    "opt_1": "Clear communication channels",
+                                    "opt_2": "Effective project management",
+                                    "opt_3": "Stakeholder engagement",
+                                    "opt_4": "Setting realistic expectations"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8f1",
+                                "question": "What is the most challenging aspect of international market entry for companies in the technology sector?",
+                                "options": {
+                                    "opt_1": "Regulatory hurdles",
+                                    "opt_2": "Cultural differences",
+                                    "opt_3": "Intellectual property protection",
+                                    "opt_4": "Market saturation"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8f4",
+                                "question": "How does blockchain technology impact supply chain transparency and accountability?",
+                                "options": {
+                                    "opt_1": "Enhances trust and traceability",
+                                    "opt_2": "Increases data security",
+                                    "opt_3": "Increases costs",
+                                    "opt_4": "Reduces inefficiencies"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8f7",
+                                "question": "Which economic theory best explains the correlation between global trade policies and currency fluctuation?",
+                                "options": {
+                                    "opt_1": "Purchasing Power Parity",
+                                    "opt_2": "Comparative Advantage",
+                                    "opt_3": "Supply and Demand theory",
+                                    "opt_4": "Monetary Policy theory"
+                                },
+                                "answer": "opt_2",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8fa",
+                                "question": "What is the most significant barrier to implementing digital transformation strategies in traditional industries?",
+                                "options": {
+                                    "opt_1": "Resistance to change",
+                                    "opt_2": "Lack of skilled talent",
+                                    "opt_3": "Outdated technology infrastructure",
+                                    "opt_4": "Lack of digital literacy among management"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f8fd",
+                                "question": "Which approach is most effective in minimizing the risks associated with venture capital investments?",
+                                "options": {
+                                    "opt_1": "Diversification of portfolio",
+                                    "opt_2": "Leveraging industry expertise",
+                                    "opt_3": "Using predictive analytics for decision making",
+                                    "opt_4": "Co-investing with strategic partners"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f900",
+                                "question": "How does the Triple Bottom Line framework influence corporate strategy in multinational enterprises?",
+                                "options": {
+                                    "opt_1": "It promotes long-term sustainability",
+                                    "opt_2": "It drives immediate financial performance",
+                                    "opt_3": "It increases short-term profitability",
+                                    "opt_4": "It enhances regulatory compliance"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f903",
+                                "question": "What is the primary challenge in developing sustainable business models for renewable energy sectors?",
+                                "options": {
+                                    "opt_1": "Capital-intensive technologies",
+                                    "opt_2": "Government policy uncertainty",
+                                    "opt_3": "Technological innovation",
+                                    "opt_4": "High operational costs"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f906",
+                                "question": "Which method is most effective in aligning corporate governance with environmental, social, and governance (ESG) criteria?",
+                                "options": {
+                                    "opt_1": "ESG integration in board decision-making",
+                                    "opt_2": "Increased shareholder activism",
+                                    "opt_3": "Strengthened audit practices",
+                                    "opt_4": "Sustainability reporting"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f909",
+                                "question": "How do shifts in consumer behavior influence product lifecycle management in fast-moving consumer goods (FMCG) companies?",
+                                "options": {
+                                    "opt_1": "Shortened product lifecycles",
+                                    "opt_2": "Increased demand for personalized products",
+                                    "opt_3": "Extended product warranty periods",
+                                    "opt_4": "Expansion of distribution networks"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f90c",
+                                "question": "Which risk management strategy is most effective in mitigating the impact of currency fluctuations on international operations?",
+                                "options": {
+                                    "opt_1": "Currency hedging",
+                                    "opt_2": "Currency speculation",
+                                    "opt_3": "Currency swaps",
+                                    "opt_4": "Foreign currency loans"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f90f",
+                                "question": "What is the most critical consideration when managing a diversified investment portfolio during economic downturns?",
+                                "options": {
+                                    "opt_1": "Risk diversification",
+                                    "opt_2": "Capital preservation",
+                                    "opt_3": "Increasing liquidity",
+                                    "opt_4": "Short-term bond investment"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f912",
+                                "question": "How do geopolitical risks influence the capital allocation decisions of multinational corporations?",
+                                "options": {
+                                    "opt_1": "Impact on foreign direct investment",
+                                    "opt_2": "Changes in tax policies",
+                                    "opt_3": "Political instability",
+                                    "opt_4": "Trade sanctions"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f915",
+                                "question": "Which corporate governance model best supports the long-term sustainability of family-owned enterprises?",
+                                "options": {
+                                    "opt_1": "Stewardship model",
+                                    "opt_2": "Agency theory model",
+                                    "opt_3": "Shareholder-centric model",
+                                    "opt_4": "Stakeholder theory model"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f918",
+                                "question": "What is the primary factor driving the adoption of agile methodologies in global project management?",
+                                "options": {
+                                    "opt_1": "Increased project complexity",
+                                    "opt_2": "Increased client demands",
+                                    "opt_3": "Global talent management",
+                                    "opt_4": "Faster product delivery cycles"
+                                },
+                                "answer": "opt_3",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f91b",
+                                "question": "How does artificial intelligence (AI) reshape consumer behavior analysis in digital marketing?",
+                                "options": {
+                                    "opt_1": "Real-time data analysis",
+                                    "opt_2": "Predictive behavioral insights",
+                                    "opt_3": "Targeted customer segmentation",
+                                    "opt_4": "Enhanced user experience"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f91e",
+                                "question": "What is the most effective approach to balancing innovation with regulatory compliance in fintech startups?",
+                                "options": {
+                                    "opt_1": "Implementing sandbox environments",
+                                    "opt_2": "Engaging with regulators early",
+                                    "opt_3": "Relying on legal counsel",
+                                    "opt_4": "Delaying innovation until regulations are clear"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f921",
+                                "question": "How do shifts in macroeconomic policies affect the debt financing strategies of publicly traded companies?",
+                                "options": {
+                                    "opt_1": "Increased interest rates",
+                                    "opt_2": "Decreased inflation rates",
+                                    "opt_3": "Global market volatility",
+                                    "opt_4": "Expanding fiscal policies"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f924",
+                                "question": "Which operational strategy is most effective in reducing carbon emissions across global supply chains?",
+                                "options": {
+                                    "opt_1": "Adopting renewable energy sources",
+                                    "opt_2": "Optimizing logistics operations",
+                                    "opt_3": "Improving energy efficiency",
+                                    "opt_4": "Investing in carbon offset programs"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f927",
+                                "question": "How does intellectual property protection influence the competitive advantage of firms in technology-intensive industries?",
+                                "options": {
+                                    "opt_1": "Maintains market leadership",
+                                    "opt_2": "Increases barriers to entry",
+                                    "opt_3": "Limits competitors' access to markets",
+                                    "opt_4": "Ensures continuous innovation"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f92a",
+                                "question": "What is the most significant challenge in developing a global pricing strategy for a multinational corporation?",
+                                "options": {
+                                    "opt_1": "Currency volatility",
+                                    "opt_2": "Market segmentation",
+                                    "opt_3": "Price discrimination",
+                                    "opt_4": "Tariff barriers"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f92d",
+                                "question": "Which strategy is most effective in managing the trade-offs between short-term profitability and long-term sustainability in corporate finance?",
+                                "options": {
+                                    "opt_1": "Balancing dividend payouts",
+                                    "opt_2": "Maximizing shareholder returns",
+                                    "opt_3": "Cost-cutting measures",
+                                    "opt_4": "Sustainability investments"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f930",
+                                "question": "How do advancements in AI and automation disrupt traditional human resource management practices?",
+                                "options": {
+                                    "opt_1": "Reduces the need for traditional HR roles",
+                                    "opt_2": "Improves talent acquisition",
+                                    "opt_3": "Increases employee satisfaction",
+                                    "opt_4": "Creates bias in recruitment"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c178d279a555e924f933",
+                                "question": "What is the primary risk in leveraging big data analytics for competitive advantage in highly regulated industries?",
+                                "options": {
+                                    "opt_1": "Data privacy concerns",
+                                    "opt_2": "Misuse of customer data",
+                                    "opt_3": "Inaccurate data insights",
+                                    "opt_4": "Regulatory non-compliance"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f936",
+                                "question": "Which leadership model is most effective in driving innovation within large multinational organizations?",
+                                "options": {
+                                    "opt_1": "Servant leadership",
+                                    "opt_2": "Transformational leadership",
+                                    "opt_3": "Charismatic leadership",
+                                    "opt_4": "Democratic leadership"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f939",
+                                "question": "How does corporate social responsibility (CSR) impact shareholder value in companies with diverse global operations?",
+                                "options": {
+                                    "opt_1": "Enhances brand loyalty",
+                                    "opt_2": "Increases operational costs",
+                                    "opt_3": "Drains financial resources",
+                                    "opt_4": "Dilutes shareholder equity"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f93c",
+                                "question": "Which financial metric is most crucial in assessing the long-term viability of a high-growth startup?",
+                                "options": {
+                                    "opt_1": "Cash burn rate",
+                                    "opt_2": "Revenue growth",
+                                    "opt_3": "Net profit margin",
+                                    "opt_4": "Customer acquisition cost"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f93f",
+                                "question": "How do cross-border mergers influence the financial reporting and tax strategies of multinational enterprises?",
+                                "options": {
+                                    "opt_1": "Complex tax regulations",
+                                    "opt_2": "Currency conversion challenges",
+                                    "opt_3": "Consolidated financial statements",
+                                    "opt_4": "Double taxation risks"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f942",
+                                "question": "Which strategic approach is most effective in managing brand equity in an era of digital transformation?",
+                                "options": {
+                                    "opt_1": "Integrated marketing communication",
+                                    "opt_2": "Omnichannel strategy",
+                                    "opt_3": "Personalized branding",
+                                    "opt_4": "Influencer marketing"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f945",
+                                "question": "What is the primary challenge in managing intellectual property (IP) across different regulatory environments in global markets?",
+                                "options": {
+                                    "opt_1": "Varying IP laws",
+                                    "opt_2": "Enforcement inconsistency",
+                                    "opt_3": "Weak IP protection in developing countries",
+                                    "opt_4": "Conflicting patent laws"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f948",
+                                "question": "Which capital structure strategy is most effective in minimizing the cost of capital for firms in volatile markets?",
+                                "options": {
+                                    "opt_1": "Debt-equity optimization",
+                                    "opt_2": "Debt financing",
+                                    "opt_3": "Equity financing",
+                                    "opt_4": "Leveraging hybrid capital"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f94b",
+                                "question": "What is the most significant impact of digital disruption on global supply chain management?",
+                                "options": {
+                                    "opt_1": "Increased supply chain agility",
+                                    "opt_2": "Supply chain cost reduction",
+                                    "opt_3": "Outsourcing and automation",
+                                    "opt_4": "Decreased supply chain visibility"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f94e",
+                                "question": "How does behavioral economics influence strategic decision-making in consumer-centric industries?",
+                                "options": {
+                                    "opt_1": "Consumer biases shape pricing strategies",
+                                    "opt_2": "Reduces decision-making bias",
+                                    "opt_3": "Leads to irrational consumer choices",
+                                    "opt_4": "Improves long-term forecasting"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f951",
+                                "question": "What is the most critical factor in maintaining competitive advantage in highly fragmented markets?",
+                                "options": {
+                                    "opt_1": "Innovation and R&D investments",
+                                    "opt_2": "Market segmentation strategies",
+                                    "opt_3": "Operational efficiency",
+                                    "opt_4": "Customer loyalty programs"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            },
+                            {
+                                "_id": "66f2c179d279a555e924f954",
+                                "question": "Which risk management strategy is most effective in mitigating geopolitical risks for multinational corporations?",
+                                "options": {
+                                    "opt_1": "Political risk insurance",
+                                    "opt_2": "Geographic diversification",
+                                    "opt_3": "Hedging currency risks",
+                                    "opt_4": "Strategic alliances"
+                                },
+                                "answer": "opt_1",
+                                "maxMarks": 2,
+                                "__v": 0
+                            }
+                        ],
+                        "createdAt": "2024-09-24T13:40:32.270Z",
+                        "updatedAt": "2024-09-24T13:41:13.302Z",
+                        "__v": 45
+                    },
+                    "_id": "66f2c150d279a555e924f81b"
+                }
+            ],
+            "createdAt": "2024-09-24T13:40:32.281Z",
+            "updatedAt": "2024-09-24T13:40:32.281Z",
+            "__v": 0
+        }
+    ]
+}

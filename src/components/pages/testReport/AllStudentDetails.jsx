@@ -216,6 +216,8 @@ const AllStudentDetails = () => {
       if (response) {
         toast.success("Assessment Restarted Successfully");
         // Remove the deleted student from the state
+
+        
 fetchData();
       }
     } catch (error) {
