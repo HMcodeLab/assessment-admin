@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ImageViewer from "../ImageViewer";
+import ImageViewer from "./ImageViewer";
 import { FaAngleLeft,FaAngleRight } from "react-icons/fa";
 
 const Carousel = ({ userScreenshots }) => {

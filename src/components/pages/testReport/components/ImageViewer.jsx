@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Modal, IconButton } from '@mui/material';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import CloseIcon from '@mui/icons-material/Close';
 
 const ImageViewer = ({ images, open, close }) => {
   const [currentIndex, setCurrentIndex] = useState(0); // Track the current image
@@ -37,6 +38,7 @@ const ImageViewer = ({ images, open, close }) => {
       className="cursor-pointer flex items-center justify-center"
     >
       <Box className="relative flex items-center justify-center w-full h-full">
+
         {/* Previous button */}
         <IconButton
           onClick={handlePrev}
@@ -59,7 +61,12 @@ const ImageViewer = ({ images, open, close }) => {
             className="w-full h-auto object-cover"
           />
         </Box>
-
+        <IconButton
+          onClick={close}
+          className="absolute -right-6 -top-80 transform -translate-y-1/2 text-white bg-black bg-opacity-50 hover:bg-opacity-75"
+        >
+          <CloseIcon className='text-white' />
+        </IconButton>
         {/* Next button */}
         <IconButton
           onClick={handleNext}

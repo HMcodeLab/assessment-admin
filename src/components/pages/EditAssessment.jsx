@@ -96,25 +96,28 @@ const EditAssignment = () => {
     }));
   };
 
-  // Improved date format to catch invalid date formats
-  const formatDate = (dateString) => {
+  // Improved date format to catch invalid date formats with UTC time
+  const formatDateForInput = (dateString) => {
     if (!dateString) return "";
-
+  
     const date = new Date(dateString);
-
+  
     // Check if the date is valid
     if (isNaN(date.getTime())) {
       return "";
     }
-
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-
+  
+    // Use UTC methods to ensure the input shows the correct UTC time
+    const year = date.getUTCFullYear();
+    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+    const day = String(date.getUTCDate()).padStart(2, "0");
+    const hours = String(date.getUTCHours()).padStart(2, "0");
+    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
+  
+  
 
   // Function to compare the current assessment with the initial state
   const isAssessmentChanged = () => {
@@ -130,10 +133,28 @@ const EditAssignment = () => {
     try {
       const updatedAssessment = {
         ...assessment,
-        startDate: new Date(assessment.startDate).toISOString(), // Convert to ISO if required
-        lastDate: new Date(assessment.lastDate).toISOString(), // Convert to ISO if required
+        startDate: new Date(
+          Date.UTC(
+            new Date(assessment.startDate).getFullYear(),
+            new Date(assessment.startDate).getMonth(),
+            new Date(assessment.startDate).getDate(),
+            new Date(assessment.startDate).getHours(),
+            new Date(assessment.startDate).getMinutes()
+          )
+        ).toISOString(),
+  
+        lastDate: new Date(
+          Date.UTC(
+            new Date(assessment.lastDate).getFullYear(),
+            new Date(assessment.lastDate).getMonth(),
+            new Date(assessment.lastDate).getDate(),
+            new Date(assessment.lastDate).getHours(),
+            new Date(assessment.lastDate).getMinutes()
+          )
+        ).toISOString(),
       };
-      console.log("Submitting assessment:", assessment); // Log to verify payload
+
+      console.log("Submitting assessment:", updatedAssessment); // Log to verify payload
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_DOMAIN}/editModuleAssessment/${testId}`,
         updatedAssessment,
@@ -155,6 +176,7 @@ const EditAssignment = () => {
       setloading(false);
     }
   };
+
   const Loader = () => {
     return (
       <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
@@ -233,29 +255,22 @@ const EditAssignment = () => {
                   Date For Assessment
                 </label>
                 <div className="flex flex-row gap-3">
-                  <label className="flex flex-col justify-center font-mono">
-                    FROM
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="border w-full h-12 p-3"
-                    value={formatDate(assessment?.startDate) || ""} // Make sure formatDate is correct
-                    onChange={(e) =>
-                      handleInputChange("startDate", e.target.value)
-                    } // Handle the change
-                  />
-                  <label className="flex flex-col justify-center font-mono">
-                    TO
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="border w-full h-12 p-3"
-                    value={formatDate(assessment?.lastDate) || ""} // Make sure formatDate is correct
-                    onChange={(e) =>
-                      handleInputChange("lastDate", e.target.value)
-                    } // Handle the change
-                  />
-                </div>
+  <label className="flex flex-col justify-center font-mono">FROM</label>
+  <input
+    type="datetime-local"
+    className="border w-full h-12 p-3"
+    value={formatDateForInput(assessment?.startDate) || ""}
+    onChange={(e) => handleInputChange("startDate", e.target.value)}
+  />
+  <label className="flex flex-col justify-center font-mono">TO</label>
+  <input
+    type="datetime-local"
+    className="border w-full h-12 p-3"
+    value={formatDateForInput(assessment?.lastDate) || ""}
+    onChange={(e) => handleInputChange("lastDate", e.target.value)}
+  />
+</div>
+
 
                 <label className="text-xl font-semibold">
                   Time Limit (mins)

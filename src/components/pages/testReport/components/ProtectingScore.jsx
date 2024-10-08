@@ -49,6 +49,12 @@ const ProtectingScore = ({ProctoringScore}) => {
           </td>
         </tr>
         <tr>
+          <td className="px-6 py-4 whitespace-nowrap">Invisible Camera</td>
+          <td className="px-6 py-4 whitespace-nowrap text-red-500">
+            {ProctoringScore?.invisiblecam}
+          </td>
+        </tr>
+        <tr>
           <td className="px-6 py-4 whitespace-nowrap">Control key Pressed</td>
           <td className="px-6 py-4 whitespace-nowrap text-red-500">
             {ProctoringScore?.ControlKeyPressed || 0}
