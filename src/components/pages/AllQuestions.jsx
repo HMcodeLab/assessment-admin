@@ -19,42 +19,44 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import data from '../../Assets/dummy.json'
 
 const AllQuestions = ({ open, onClose, testModules = [] }) => {
   const [modules, setModules] = useState(testModules);
   const [selectedModule, setSelectedModule] = useState(null);
+// console.log(data.data[0].Assessmentmodules[0].module.questions[0]);
 
-  useEffect(() => {
-    setModules(testModules); // Update modules when testModules prop changes
-  }, [testModules]);
+  // useEffect(() => {
+  //   setModules(testModules); 
+  // }, [testModules]);
 
   // Handle module selection
-  const handleModuleChange = (event) => {
-    const moduleId = event.target.value;
-    const selected = modules.find((mod) => mod.module._id === moduleId);
-    setSelectedModule(selected || null); // Set the selected module or null
-  };
+  // const handleModuleChange = (event) => {
+  //   const moduleId = event.target.value;
+  //   const selected = modules.find((mod) => mod.module._id === moduleId);
+  //   setSelectedModule(selected || null); // Set the selected module or null
+  // };
 
   // Handle downloading the questions to an Excel file
-  const handleDownload = () => {
-    if (!selectedModule || !selectedModule.questions) return;
+  // const handleDownload = () => {
+  //   if (!selectedModule || !selectedModule.questions) return;
 
-    const ws = XLSX.utils.json_to_sheet(
-      selectedModule.questions.map((question, index) => ({
-        SNo: index + 1,
-        "Question Text": question.question,
-        "Opt-1": question.options.opt_1,
-        "Opt-2": question.options.opt_2,
-        "Opt-3": question.options.opt_3,
-        "Opt-4": question.options.opt_4,
-        Answer: question.answer,
-      }))
-    );
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Questions");
-    const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
-    saveAs(new Blob([wbout], { type: "application/octet-stream" }), "questions.xlsx");
-  };
+  //   const ws = XLSX.utils.json_to_sheet(
+  //     selectedModule.questions.map((question, index) => ({
+  //       SNo: index + 1,
+  //       "Question Text": question.question,
+  //       "Opt-1": question.options.opt_1,
+  //       "Opt-2": question.options.opt_2,
+  //       "Opt-3": question.options.opt_3,
+  //       "Opt-4": question.options.opt_4,
+  //       Answer: question.answer,
+  //     }))
+  //   );
+  //   const wb = XLSX.utils.book_new();
+  //   XLSX.utils.book_append_sheet(wb, ws, "Questions");
+  //   const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+  //   saveAs(new Blob([wbout], { type: "application/octet-stream" }), "questions.xlsx");
+  // };
 
   return (
     <Modal
@@ -89,7 +91,7 @@ const AllQuestions = ({ open, onClose, testModules = [] }) => {
           <IconButton onClick={onClose}>
             <IoMdArrowRoundBack />
           </IconButton>
-          <FormControl variant="outlined" style={{ minWidth: 200 }}>
+          {/* <FormControl variant="outlined" style={{ minWidth: 200 }}>
             <InputLabel>Select Module</InputLabel>
             <Select
               value={selectedModule ? selectedModule.module._id : ""}
@@ -102,16 +104,16 @@ const AllQuestions = ({ open, onClose, testModules = [] }) => {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
-          <div
+          </FormControl> */}
+          {/* <div
             onClick={handleDownload}
             className="flex flex-row gap-2 justify-center items-center text-xl font-semibold border p-2 rounded-xl bg-green-500 hover:bg-green-600 cursor-pointer"
           >
             <MdOutlineFileDownload /> Download Questions
-          </div>
+          </div> */}
         </div>
 
-        {selectedModule && selectedModule.questions ? (
+        {/* {selectedModule && selectedModule.questions ? ( */}
           <TableContainer>
             <Table>
               <TableHead>
@@ -126,23 +128,27 @@ const AllQuestions = ({ open, onClose, testModules = [] }) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {selectedModule.questions.map((question, index) => (
+
+                {data.data[0].Assessmentmodules[0].module.questions.map((question, index) => (
+                  
                   <TableRow key={index}>
+                    {/* {console.log(question)} */}
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{question.question}</TableCell>
+
+                    <TableCell className="text-justify ">{question.question}</TableCell>
                     <TableCell>{question.options.opt_1}</TableCell>
                     <TableCell>{question.options.opt_2}</TableCell>
                     <TableCell>{question.options.opt_3}</TableCell>
-                    <TableCell>{question.options.opt_4}</TableCell>
+                    <TableCell>{question.options.opt_4}</TableCell> 
                     <TableCell>{question.answer}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-        ) : (
+        {/* ) : (
           <div>Select a module to view questions</div>
-        )}
+        )} */}
       </Box>
     </Modal>
   );
