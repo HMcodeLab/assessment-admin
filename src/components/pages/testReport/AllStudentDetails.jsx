@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { FaEyeSlash,FaEye,FaTrash,FaStopwatch } from "react-icons/fa";
+// import { FaEyeSlash, FaEye, FaTrash, FaStopwatch } from "react-icons/fa";
 import tag from "../../../Assets/Tag.png";
 import BarChart from "./components/graphs/BarGraph";
 import * as XLSX from "xlsx"; // Import xlsx library
@@ -28,6 +28,7 @@ const AllStudentDetails = () => {
     delete: false,
     restart: false,
   });
+  const [autoRefresh, setAutoRefresh] = useState(false);
 
   const [toggleOpen, setToggleOpen] = useState(null);
   const dropdownRef = useRef(null);
@@ -53,18 +54,27 @@ const AllStudentDetails = () => {
     }
   };
 
+  function handleAutoRefresh() {
+    setAutoRefresh(!autoRefresh);
+  }
+  let temp=true
   useEffect(() => {
     // Fetch data immediately on mount
+   if(temp){
     fetchData();
+    temp=false
+   }
 
-    // Set up the interval for refreshing data
-    const interval = setInterval(() => {
-      fetchData();
-    }, 15000); // Set to 5000ms (5 seconds)
+    if (autoRefresh) {
+      // Set up the interval for refreshing data
+      const interval = setInterval(() => {
+        fetchData();
+      }, 15000); // Set to 15000ms (15 seconds)
 
-    // Cleanup the interval when the component unmounts
-    return () => clearInterval(interval);
-  }, [testId, adminToken]);
+      // Cleanup the interval when the component unmounts or autoRefresh changes
+      return () => clearInterval(interval);
+    }
+  }, [autoRefresh, testId, adminToken]);
 
   // middle screen
   // Handle dropdown click outside
@@ -114,35 +124,35 @@ const AllStudentDetails = () => {
     }
   };
 
-  const sortStudents = (students) => {
-    return students.sort((a, b) => {
-      let compareA, compareB;
-      if (sortColumn === "name") {
-        compareA = a.name.toLowerCase();
-        compareB = b.name.toLowerCase();
-      } else if (sortColumn === "email") {
-        compareA = a.email.toLowerCase();
-        compareB = b.email.toLowerCase();
-      } else if (sortColumn === "marks") {
-        compareA = a.totalMarks;
-        compareB = b.totalMarks;
-      } else {
-        return 0; // If no sorting column, return as-is
-      }
+  // const sortStudents = (students) => {
+  //   return students.sort((a, b) => {
+  //     let compareA, compareB;
+  //     if (sortColumn === "name") {
+  //       compareA = a.name.toLowerCase();
+  //       compareB = b.name.toLowerCase();
+  //     } else if (sortColumn === "email") {
+  //       compareA = a.email.toLowerCase();
+  //       compareB = b.email.toLowerCase();
+  //     } else if (sortColumn === "marks") {
+  //       compareA = a.totalMarks;
+  //       compareB = b.totalMarks;
+  //     } else {
+  //       return 0; // If no sorting column, return as-is
+  //     }
 
-      if (sortOrder === "asc") {
-        return compareA > compareB ? 1 : -1;
-      } else {
-        return compareA < compareB ? 1 : -1;
-      }
-    });
-  };
+  //     if (sortOrder === "asc") {
+  //       return compareA > compareB ? 1 : -1;
+  //     } else {
+  //       return compareA < compareB ? 1 : -1;
+  //     }
+  //   });
+  // };
 
   const filteredStudents = allStudent
     .filter(filterByStatus)
     .filter(filterBySearch);
 
-  const sortedStudents = sortStudents(filteredStudents);
+  // const sortedStudents = sortStudents(filteredStudents);
 
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
@@ -162,8 +172,6 @@ const AllStudentDetails = () => {
     if (student?.isAssessmentCompleted) return "Completed Successfully";
     return "Ongoing";
   };
-
-  
 
   function calculateTimeDifference(createdAt, updatedAt) {
     const startTime = new Date(createdAt);
@@ -298,13 +306,13 @@ const AllStudentDetails = () => {
     setToggleOpen(toggleOpen === studentId ? null : studentId); // Toggle the specific student's dropdown
   };
 
-  const handleAction = (action, student) => {
-    // Perform the action (e.g., View, Delete, Resume)
-    console.log(`Performing action: ${action} for student: ${student.name}`);
+  // const handleAction = (action, student) => {
+  //   // Perform the action (e.g., View, Delete, Resume)
+  //   console.log(`Performing action: ${action} for student: ${student.name}`);
 
-    // Automatically close the dropdown after action is taken
-    setToggleOpen(null);
-  };
+  //   // Automatically close the dropdown after action is taken
+  //   setToggleOpen(null);
+  // };
 
   return (
     <div className="flex flex-col justify-center mx-4 my-4">
@@ -314,6 +322,15 @@ const AllStudentDetails = () => {
           <img src={tag} alt="Tag" />
           Student Details
         </h2>
+        <div className="flex items-center gap-2">
+          <span>Auto Refresh </span>
+          <button
+          className={`${autoRefresh ? "border-2 border-green-500 hover:bg-green-500 text-green-500 ":"border-2 border-red-500 text-red-500 hover:bg-red-500"} hover:text-white   font-bold py-1 px-4 text-sm  rounded`}
+          onClick={handleAutoRefresh}
+        >
+          {autoRefresh ? "OFF" : "ON"}
+        </button>
+        </div>
         <button
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
           onClick={exportToExcel}
@@ -441,7 +458,9 @@ const AllStudentDetails = () => {
                           : "bg-yellow-200"
                       }  text-white font-bold py-2 px-4 rounded ml-2`}
                     >
-                      {restartloading && loadingStates ? "Resuming ..." : "Resume"}
+                      {restartloading && loadingStates
+                        ? "Resuming ..."
+                        : "Resume"}
                     </button>
                   </td>
                 </tr>

@@ -48,9 +48,13 @@ const EachStudentDetails = () => {
     return "Ongoing";
   }, [studentDetails]); // Dependencies of getStatus
 
+  let temp = true;
   useEffect(() => {
-    fetchData();
-  }, [fetchData]); // Now fetchData is safely a dependency
+    if (temp) {
+      fetchData();
+      temp = false;
+    }
+  }, []); // Now fetchData is safely a dependency
 
   useEffect(() => {
     if (studentDetails) {
@@ -76,12 +80,14 @@ const EachStudentDetails = () => {
 
   const Dot = ({ color }) => {
     return (
-      <span className={`xl:h-4 xl:w-4 md:w-2 md:h-2 ${color} rounded-full inline-block`}></span>
+      <span
+        className={`xl:h-4 xl:w-4 md:w-2 md:h-2 ${color} rounded-full inline-block`}
+      ></span>
     );
   };
 
   if (load) {
-    return <Loader/>;
+    return <Loader />;
   }
 
   return (
@@ -101,7 +107,9 @@ const EachStudentDetails = () => {
         <Box className="xl:px-[8rem] md:px-[1rem] py-8">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold md:text-sm xl:text-lg">Hi {studentDetails?.name} ,</p>
+              <p className="font-semibold md:text-sm xl:text-lg">
+                Hi {studentDetails?.name} ,
+              </p>
               <h1 className="xl:text-2xl md:text-md font-semibold">
                 Here Are Your Results For{" "}
                 <span className="text-green-500">Designing Assessment!</span>
@@ -109,7 +117,9 @@ const EachStudentDetails = () => {
             </div>
             <div className="flex gap-2 items-center">
               <Dot color={color.bgColor} />
-              <h2 className={`xl:font-bold md:font-semibold xl:text-xl md:text-md ${color.color}`}>
+              <h2
+                className={`xl:font-bold md:font-semibold xl:text-xl md:text-md ${color.color}`}
+              >
                 {getStatus()}
               </h2>
             </div>

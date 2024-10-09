@@ -4,11 +4,11 @@ import { ImSpinner9 } from "react-icons/im";
 
 const FeedBack = () => {
   const adminToken = localStorage.getItem("authToken");
-  const [loading, setloading] = useState(false)
+  const [loading, setloading] = useState(false);
   const [feedbacks, setfeedbacks] = useState([]);
 
   const fetchData = async () => {
-    setloading(true)
+    setloading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUserFeedbacks`,
@@ -24,20 +24,24 @@ const FeedBack = () => {
       }
     } catch (error) {
       console.log("Error in fetching feedbacks form", error);
-    }finally{
-        setloading(false)
+    } finally {
+      setloading(false);
     }
   };
 
+  let temp = true;
   useEffect(() => {
-    fetchData();
+    if (temp) {
+      fetchData();
+      temp = false;
+    }
   }, []);
 
-if(loading){
-    return(
-        <ImSpinner9 className="animate-spin text-green-600 size-[8vh] mx-auto my-[25%]"/>
-    )
-}
+  if (loading) {
+    return (
+      <ImSpinner9 className="animate-spin text-green-600 size-[8vh] mx-auto my-[25%]" />
+    );
+  }
 
   return (
     <div className="flex flex-col items-center p-4">
@@ -85,10 +89,7 @@ if(loading){
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="4"
-                  className="text-center py-4 px-6 text-gray-500"
-                >
+                <td colSpan="4" className="text-center py-4 px-6 text-gray-500">
                   No feedbacks available.
                 </td>
               </tr>

@@ -41,28 +41,31 @@ const TestDetails = () => {
   const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
 
 
-
+let temp=true
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
-        headers: {
-          Authorization: "Bearer " + adminToken,
-        },
-      })
-      .then((response) => {
-        setTestData(response?.data.data);
-        const initialEnabledTests = {};
-        response?.data.data.forEach((test) => {
-          initialEnabledTests[test._id] = test.isVisible;
+    if(temp){      
+      axios
+        .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
+          headers: {
+            Authorization: "Bearer " + adminToken,
+          },
+        })
+        .then((response) => {
+          setTestData(response?.data.data);
+          const initialEnabledTests = {};
+          response?.data.data.forEach((test) => {
+            initialEnabledTests[test._id] = test.isVisible;
+          });
+          setEnabledTests(initialEnabledTests);
+        })
+        .catch((error) => {
+          console.error("Error fetching test details:", error);
+        })
+        .finally(() => {
+          setloading(false); // Set loading to false when the request finishes
         });
-        setEnabledTests(initialEnabledTests);
-      })
-      .catch((error) => {
-        console.error("Error fetching test details:", error);
-      })
-      .finally(() => {
-        setloading(false); // Set loading to false when the request finishes
-      });
+        temp=false
+    }
   }, [adminToken]);
 
   const handleToggle = (testId) => {

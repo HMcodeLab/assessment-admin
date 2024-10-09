@@ -25,10 +25,11 @@ const AssignmentResult = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setLoading] = useState(true)
   const navigate= useNavigate();
-
+let temp=true
   useEffect(() => {
     setLoading(true); // Set loading to true when the API request starts
-  
+  if(temp){
+    
     axios
       .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
         headers: {
@@ -44,6 +45,8 @@ const AssignmentResult = () => {
       .finally(() => {
         setLoading(false); // Set loading to false when the request finishes
       });
+      temp=false
+  }
   }, []);
   
 

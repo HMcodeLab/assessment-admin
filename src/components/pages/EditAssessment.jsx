@@ -28,10 +28,11 @@ const EditAssignment = () => {
       console.error("Error fetching assessment data:", error);
     }
   };
-
+  let temp = true;
   useEffect(() => {
-    if (testId) {
+    if (testId && temp) {
       fetchAssessmentData();
+      temp = false;
     }
   }, [testId]);
 
@@ -99,25 +100,23 @@ const EditAssignment = () => {
   // Improved date format to catch invalid date formats with UTC time
   const formatDateForInput = (dateString) => {
     if (!dateString) return "";
-  
+
     const date = new Date(dateString);
-  
+
     // Check if the date is valid
     if (isNaN(date.getTime())) {
       return "";
     }
-  
+
     // Use UTC methods to ensure the input shows the correct UTC time
     const year = date.getUTCFullYear();
     const month = String(date.getUTCMonth() + 1).padStart(2, "0");
     const day = String(date.getUTCDate()).padStart(2, "0");
     const hours = String(date.getUTCHours()).padStart(2, "0");
     const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-  
+
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
-  
-  
 
   // Function to compare the current assessment with the initial state
   const isAssessmentChanged = () => {
@@ -142,7 +141,7 @@ const EditAssignment = () => {
             new Date(assessment.startDate).getMinutes()
           )
         ).toISOString(),
-  
+
         lastDate: new Date(
           Date.UTC(
             new Date(assessment.lastDate).getFullYear(),
@@ -177,11 +176,11 @@ const EditAssignment = () => {
     }
   };
 
-  const Loader = () => {
-    return (
-      <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-    );
-  };
+  // const Loader = () => {
+  //   return (
+  //     <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+  //   );
+  // };
   const handleSelect = () => {
     const allSelected = Object.keys(assessment?.ProctoringFor || {}).every(
       (key) => assessment?.ProctoringFor[key].inUse
@@ -255,22 +254,29 @@ const EditAssignment = () => {
                   Date For Assessment
                 </label>
                 <div className="flex flex-row gap-3">
-  <label className="flex flex-col justify-center font-mono">FROM</label>
-  <input
-    type="datetime-local"
-    className="border w-full h-12 p-3"
-    value={formatDateForInput(assessment?.startDate) || ""}
-    onChange={(e) => handleInputChange("startDate", e.target.value)}
-  />
-  <label className="flex flex-col justify-center font-mono">TO</label>
-  <input
-    type="datetime-local"
-    className="border w-full h-12 p-3"
-    value={formatDateForInput(assessment?.lastDate) || ""}
-    onChange={(e) => handleInputChange("lastDate", e.target.value)}
-  />
-</div>
-
+                  <label className="flex flex-col justify-center font-mono">
+                    FROM
+                  </label>
+                  <input
+                    type="datetime-local"
+                    className="border w-full h-12 p-3"
+                    value={formatDateForInput(assessment?.startDate) || ""}
+                    onChange={(e) =>
+                      handleInputChange("startDate", e.target.value)
+                    }
+                  />
+                  <label className="flex flex-col justify-center font-mono">
+                    TO
+                  </label>
+                  <input
+                    type="datetime-local"
+                    className="border w-full h-12 p-3"
+                    value={formatDateForInput(assessment?.lastDate) || ""}
+                    onChange={(e) =>
+                      handleInputChange("lastDate", e.target.value)
+                    }
+                  />
+                </div>
 
                 <label className="text-xl font-semibold">
                   Time Limit (mins)

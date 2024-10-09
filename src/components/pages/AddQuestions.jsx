@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import toast,{Toaster} from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { GoDownload } from "react-icons/go";
 
 const AddQuestions = () => {
@@ -35,9 +35,12 @@ const AddQuestions = () => {
       console.log(error);
     }
   };
-
+  let temp = true;
   useEffect(() => {
-    fetchData();
+    if (temp) {
+      fetchData();
+      temp = false;
+    }
   }, []);
 
   // Handle assessment (module) selection
@@ -64,28 +67,33 @@ const AddQuestions = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission behavior
-  setloading(true);
+    setloading(true);
     const fileInput = document.getElementById("fileUpload");
     const file = fileInput.files[0];
-  
+
     if (!selectedAssessment || !selectedModule || !file) {
-      toast.error("Please select an assessment, a module, and a file to upload.");
+      toast.error(
+        "Please select an assessment, a module, and a file to upload."
+      );
       setloading(false);
       return;
     }
-  
+
     // Check if the uploaded file is an Excel file
-    const allowedFileTypes = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.ms-excel"];
+    const allowedFileTypes = [
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "application/vnd.ms-excel",
+    ];
     if (!allowedFileTypes.includes(file.type)) {
       toast.error("Only Excel files (.xlsx, .xls) are allowed.");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("moduleAssessmentid", selectedAssessment); // Ensure this matches server's expected name
     formData.append("moduleId", selectedModule); // Ensure this matches server's expected name
     formData.append("questions", file); // Ensure 'file' matches server's expected field name
-  
+
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/addQuestionsToModuleAssessment`,
@@ -107,17 +115,20 @@ const AddQuestions = () => {
     } catch (error) {
       console.error("Error adding questions:", error);
       toast.error("Error adding questions. Please try again.");
-    }finally{
+    } finally {
       setloading(false);
     }
   };
-  
 
   return (
     <div className="p-5">
-      <Toaster/>
-      <form onSubmit={handleSubmit} method="POST" className="flex flex-col items-center gap-3 mb-5">
-      <a
+      <Toaster />
+      <form
+        onSubmit={handleSubmit}
+        method="POST"
+        className="flex flex-col items-center gap-3 mb-5"
+      >
+        <a
           href="/PAPAssessmentTemplate.xlsx"
           download
           className=" bg-gray-400  flex flex-row gap-2 items-center justify-center py-2 shadow-sm rounded-lg text-lg font-semibold w-[14vw]"
@@ -148,7 +159,10 @@ const AddQuestions = () => {
             ))}
           </select>
 
-          <label htmlFor="submodule" className="whitespace-nowrap font-semibold">
+          <label
+            htmlFor="submodule"
+            className="whitespace-nowrap font-semibold"
+          >
             Select Submodule (Module):
           </label>
           <select
@@ -168,7 +182,10 @@ const AddQuestions = () => {
             ))}
           </select>
 
-          <label htmlFor="fileUpload" className="whitespace-nowrap font-semibold">
+          <label
+            htmlFor="fileUpload"
+            className="whitespace-nowrap font-semibold"
+          >
             Choose File:
           </label>
           <input
@@ -178,9 +195,9 @@ const AddQuestions = () => {
             accept=".xls,.xlsx"
             className="p-2 rounded border border-gray-300"
           />
-        <button type="submit" className="p-2 bg-blue-500 text-white rounded">
-          {loading ? "Submiting ...":"Submit"}
-        </button>
+          <button type="submit" className="p-2 bg-blue-500 text-white rounded">
+            {loading ? "Submiting ..." : "Submit"}
+          </button>
         </div>
       </form>
     </div>

@@ -37,8 +37,12 @@ const AddCandidates = () => {
       console.log(error);
     }
   };
+  let temp=true
   useEffect(() => {
-    fetchData();
+    if(temp){
+      fetchData();
+      temp=false
+    }
   }, []);
 
   // console.log(modules);
