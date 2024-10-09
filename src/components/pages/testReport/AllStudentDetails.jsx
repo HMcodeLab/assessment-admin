@@ -2,10 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
-import { FaChevronRight } from "react-icons/fa";
+import { FaEyeSlash,FaEye,FaTrash,FaStopwatch } from "react-icons/fa";
 import tag from "../../../Assets/Tag.png";
 import BarChart from "./components/graphs/BarGraph";
-import { ImSpinner9 } from "react-icons/im";
 import * as XLSX from "xlsx"; // Import xlsx library
 import filteredIcon from "../../../Assets/arrow.png";
 import { MdMoreVert } from "react-icons/md";
@@ -55,8 +54,17 @@ const AllStudentDetails = () => {
   };
 
   useEffect(() => {
+    // Fetch data immediately on mount
     fetchData();
-  }, [testId, adminToken]); // Added dependencies
+
+    // Set up the interval for refreshing data
+    const interval = setInterval(() => {
+      fetchData();
+    }, 15000); // Set to 5000ms (5 seconds)
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(interval);
+  }, [testId, adminToken]);
 
   // middle screen
   // Handle dropdown click outside
@@ -357,6 +365,7 @@ const AllStudentDetails = () => {
               <th className="px-4 py-2 text-left">Contact No</th>
               <th className="px-4 py-2 text-left">College</th>
               <th className="px-4 py-2 text-left">Passed Out</th>
+              <th className="px-4 py-2 text-left">Marks</th>
               <th className="px-4 py-2 text-left">Rank</th>
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Action</th>
@@ -391,9 +400,10 @@ const AllStudentDetails = () => {
                   <td className="border px-4 py-2">
                     {student?.year_of_passing}
                   </td>
+                  <td className="border px-4 py-2">{student?.totalMarks}</td>
                   <td className="border px-4 py-2">{student?.rank}</td>
                   <td className="border px-4 py-2">{getStatus(student)}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-4 py-2 flex ">
                     <button
                       disabled={
                         student?.isSuspended || student?.isAssessmentCompleted
@@ -407,13 +417,13 @@ const AllStudentDetails = () => {
                           : "bg-blue-200"
                       }  text-white font-bold py-2 px-4 rounded ml-2`}
                     >
-                      View
+                      V
                     </button>
                     <button
                       onClick={() => handleDeleteClick(student?.email)}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
                     >
-                      Delete
+                      D
                     </button>
 
                     <button
@@ -429,7 +439,7 @@ const AllStudentDetails = () => {
                           : "bg-yellow-200"
                       }  text-white font-bold py-2 px-4 rounded ml-2`}
                     >
-                      {restartloading ? "Resuming ..." : "Resume"}
+                      {restartloading && loadingStates ? "Resuming ..." : "Resume"}
                     </button>
                   </td>
                 </tr>
