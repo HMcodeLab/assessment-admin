@@ -141,7 +141,7 @@ const AddCandidates = () => {
             console.log(`${name} ${email} was unsuccessful in receiving the mail`);
           }
         });
-  
+  // 
         handleClear();
       } else {
         toast.error(`Error: ${response.statusText}`);
