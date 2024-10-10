@@ -2,14 +2,13 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
-import TimeConversionExample from "./testReport/components/sectionalSummary/Other";
+
 
 const AddCandidates = () => {
   const [excelData, setExcelData] = useState([]);
   const [excelFile, setExcelFile] = useState(null);
   const [modules, setModules] = useState([]);
   const [selectedModule, setSelectedModule] = useState("");
-  const [testData, setTestData] = useState([]);
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
@@ -97,47 +96,65 @@ const AddCandidates = () => {
   const handleSubmit = async () => {
     setloading(true);
     if (!selectedModule) {
-      toast.error("Please select any one module");
+      toast.error("Please select a module");
       setloading(false);
       return;
     }
     if (!excelFile) {
-      toast.error("Please upload an Excel file first.");
+      toast.error("Please upload an Excel file.");
       setloading(false);
       return;
     }
-
+  
     try {
       const formData = new FormData();
-      formData.append("candidates", excelFile); // Append the file itself
-      formData.append("moduleAssessmentid", selectedModule); // Add other data if needed
-
+      formData.append("candidates", excelFile);
+      formData.append("moduleAssessmentid", selectedModule);
+  
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/addCandidatesForAssessment`,
-        formData, // Send the form data with the file
+        formData,
         {
           headers: {
-            Authorization: `Admin ${adminToken}`,
+            Authorization: `Bearer ${adminToken}`,
+          },
+          onUploadProgress: (progressEvent) => {
+            const percentage = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
           },
         }
       );
-
+  
       if (response.status === 201) {
-        toast.success("File uploaded successfully!");
+        toast.success("File uploaded successfully");
+  
+        // Check the response structure and loop through the 'results' array
+        const results = response.data?.results || [];
+  
+        results.forEach(result => {
+          const { success, message, data } = result;
+          const { email, name } = data;
+          if (success) {
+            console.log(`${name} ${email} successfully received the mail`);
+          } else {
+            console.log(`${name} ${email} was unsuccessful in receiving the mail`);
+          }
+        });
+  
         handleClear();
       } else {
-        toast.error("Error uploading file.");
+        toast.error(`Error: ${response.statusText}`);
       }
     } catch (error) {
-      toast.error("Error uploading file.");
-      console.error(
-        "Upload error:",
-        error.response ? error.response.data : error.message
-      );
+      const errorMessage = error.response?.data?.message || "Error uploading file.";
+      toast.error(errorMessage);
+      console.error("Upload error:", error.response ? error.response.data : error.message);
     } finally {
       setloading(false);
     }
   };
+  
 
   const handleDownloadExcel = () => {
     const url = "/CandidatesForAssessment.xlsx";
