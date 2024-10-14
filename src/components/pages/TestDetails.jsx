@@ -43,7 +43,7 @@ const TestDetails = () => {
 
 let temp=true
   useEffect(() => {
-    if(temp){      
+    if(temp && adminToken){      
       axios
         .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
           headers: {
@@ -66,7 +66,7 @@ let temp=true
         });
         temp=false
     }
-  }, [adminToken]);
+  }, []);
 
   const handleToggle = (testId) => {
     const newVisibility = !enabledTests[testId];
@@ -108,8 +108,12 @@ let temp=true
 
   const handleViewQuestions = (testId)=>{
     setSelectedTestId(testId)
-    setQuestionsModalOpen(!questionsModalOpen);
+    setQuestionsModalOpen(true);
   }
+
+  function handleModalClose(){
+   setQuestionsModalOpen(false);
+  } 
 
   const handleDeleteConfirm = async () => {
     try {
@@ -332,7 +336,7 @@ if(loading){
                   <Button onClick={() => handleDeleteClick(test._id)}>
                     <MdDelete className="text-xl" />
                   </Button>
-                  <Button onClick={() => handleViewQuestions(test.Assessmentmodules)}>
+                  <Button onClick={() => handleViewQuestions(test._id)}>
                     <MdVisibilityOff className="text-xl" />
                   </Button>
                 </TableCell>
@@ -342,7 +346,7 @@ if(loading){
         </Table>
       </TableContainer>
       {
-        questionsModalOpen && <AllQuestions open={()=>setQuestionsModalOpen(true)} onClose={()=>setQuestionsModalOpen(false)} testModules={selectedTestId} />
+        questionsModalOpen && <AllQuestions open={questionsModalOpen} onClose={handleModalClose} testId={selectedTestId} />
       }
 
       <Pagination

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "../Loader";
 
 
 const AddCandidates = () => {
@@ -12,6 +13,7 @@ const AddCandidates = () => {
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
+
 
   const fetchData = async () => {
     try {
@@ -122,6 +124,8 @@ const AddCandidates = () => {
             const percentage = Math.round(
               (progressEvent.loaded * 100) / progressEvent.total
             );
+           console.log(percentage);
+           
           },
         }
       );
@@ -132,28 +136,39 @@ const AddCandidates = () => {
         // Check the response structure and loop through the 'results' array
         const results = response.data?.results || [];
   
-        results.forEach(result => {
-          const { success, message, data } = result;
-          const { email, name } = data;
-          if (success) {
-            console.log(`${name} ${email} successfully received the mail`);
+        results.forEach((result) => {
+          const { success, data } = result;
+  
+          // Add validation for data before destructuring
+          if (data && data.email && data.name) {
+            const { email, name } = data;
+            if (success) {
+              console.log(`${name} ${email} successfully received the mail`);
+            } else {
+              console.log(`${name} ${email} was unsuccessful in receiving the mail`);
+            }
           } else {
-            console.log(`${name} ${email} was unsuccessful in receiving the mail`);
+            console.warn("Missing data for a result:", result);
           }
         });
-  // 
+  
         handleClear();
       } else {
         toast.error(`Error: ${response.statusText}`);
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Error uploading file.";
+      const errorMessage =
+        error.response?.data?.message || "Error uploading file.";
       toast.error(errorMessage);
-      console.error("Upload error:", error.response ? error.response.data : error.message);
+      console.error(
+        "Upload error:",
+        error.response ? error.response.data : error.message
+      );
     } finally {
       setloading(false);
     }
   };
+  
   
 
   const handleDownloadExcel = () => {
@@ -164,11 +179,17 @@ const AddCandidates = () => {
     link.click();
   };
 
+if(loading){
+  return(
+    <Loader/>
+  )
+}
+
   return (
     <div className="h-auto w-full bg-gray-600 p-5">
       <Toaster position="top-center" />
       {/* <TimeConversionExample/> */}
-      <div className="w-full xl:w-[30%] xl:mx-auto flex flex-col items-center justify-between mt-3 px-10 border rounded-lg shadow-2xl">
+      <div className="max-w-[25rem] xl:w-[30%] mx-auto flex flex-col items-center  justify-between mt-3 px-10 border rounded-lg shadow-2xl">
         <div className=" flex items-center py-4 gap-4">
           <p className="text-2xl font-semibold text-white">Add Candidates</p>
           <button
@@ -184,7 +205,7 @@ const AddCandidates = () => {
             id="module"
             value={selectedModule}
             onChange={handleChange}
-            className="px-12 py-2 w-[320px] rounded-lg focus:outline-none"
+            className="px-12 py-2 w-[20rem] rounded-lg focus:outline-none"
           >
             <option value="" disabled>
               Select an Assessment

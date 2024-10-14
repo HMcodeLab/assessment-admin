@@ -10,7 +10,8 @@ const EditAssignment = () => {
   const [loading, setloading] = useState(false);
   const [initialAssessment, setInitialAssessment] = useState(null);
   const [assessment, setAssessment] = useState(null);
-
+  const [prevstartdate, setprevstartdate] = useState(true);
+  const [prevlastdate, setprevlastdate] = useState(true);
   const fetchAssessmentData = async () => {
     try {
       const response = await axios.get(
@@ -37,6 +38,12 @@ const EditAssignment = () => {
   }, [testId]);
 
   const handleInputChange = (field, value) => {
+    if (field === "lastDate") {
+      setprevlastdate(false);
+    }
+    if (field === "startDate") {
+      setprevstartdate(false);
+    }
     setAssessment((prev) => ({
       ...prev,
       [field]: value, // Keep the date value as is
@@ -128,29 +135,46 @@ const EditAssignment = () => {
       toast.error("No changes made to the assessment.");
       return;
     }
+    if (!prevlastdate && prevstartdate) {
+      toast.error("Also change start date");
+      return;
+    }
+    if (!prevstartdate && prevlastdate) {
+      toast.error("Also change last date");
+      return;
+    }
     setloading(true);
     try {
+      if (initialAssessment.startDate !== assessment.startDate) {
+        setAssessment({
+          ...assessment,
+          startDate: new Date(
+            Date.UTC(
+              new Date(assessment.startDate).getFullYear(),
+              new Date(assessment.startDate).getMonth(),
+              new Date(assessment.startDate).getDate(),
+              new Date(assessment.startDate).getHours(),
+              new Date(assessment.startDate).getMinutes()
+            )
+          ).toISOString(),
+        });
+      }
+      if (initialAssessment.lastDate !== assessment.lastDate) {
+        setAssessment({
+          ...assessment,
+          lastDate: new Date(
+            Date.UTC(
+              new Date(assessment.lastDate).getFullYear(),
+              new Date(assessment.lastDate).getMonth(),
+              new Date(assessment.lastDate).getDate(),
+              new Date(assessment.lastDate).getHours(),
+              new Date(assessment.lastDate).getMinutes()
+            )
+          ).toISOString(),
+        });
+      }
       const updatedAssessment = {
         ...assessment,
-        startDate: new Date(
-          Date.UTC(
-            new Date(assessment.startDate).getFullYear(),
-            new Date(assessment.startDate).getMonth(),
-            new Date(assessment.startDate).getDate(),
-            new Date(assessment.startDate).getHours(),
-            new Date(assessment.startDate).getMinutes()
-          )
-        ).toISOString(),
-
-        lastDate: new Date(
-          Date.UTC(
-            new Date(assessment.lastDate).getFullYear(),
-            new Date(assessment.lastDate).getMonth(),
-            new Date(assessment.lastDate).getDate(),
-            new Date(assessment.lastDate).getHours(),
-            new Date(assessment.lastDate).getMinutes()
-          )
-        ).toISOString(),
       };
 
       console.log("Submitting assessment:", updatedAssessment); // Log to verify payload
@@ -165,6 +189,8 @@ const EditAssignment = () => {
         }
       );
       if (response) {
+        setprevlastdate(true);
+        setprevstartdate(true);
         toast.success("Assessment updated successfully!");
         fetchAssessmentData();
       }
