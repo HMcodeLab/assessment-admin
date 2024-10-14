@@ -43,13 +43,6 @@ const ResultsAssessment = ({ show, onClose, student }) => {
     setError(null);
   };
 
-  const closeDetailsModal = () => {
-    setDetailsModalOpen(false);
-    setSelectedStudent(null);
-    setStudentDetails(null);
-    setError(null);
-  };
-
   return (
     <>
       <Modal

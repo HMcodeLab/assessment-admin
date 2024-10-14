@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
-import Loader from "../Loader";
 
 
 const AddCandidates = () => {
@@ -119,14 +118,7 @@ const AddCandidates = () => {
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
-          },
-          onUploadProgress: (progressEvent) => {
-            const percentage = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-           console.log(percentage);
-           
-          },
+          }
         }
       );
   
@@ -179,11 +171,6 @@ const AddCandidates = () => {
     link.click();
   };
 
-if(loading){
-  return(
-    <Loader/>
-  )
-}
 
   return (
     <div className="h-auto w-full bg-gray-600 p-5">

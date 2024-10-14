@@ -150,40 +150,40 @@ let temp=true
     page * rowsPerPage + rowsPerPage
   );
 
-  function formatDate(dateString) {
-    const dateObj = new Date(dateString);
+// format date
+function formatDate(dateString) {
+  const dateObj = new Date(dateString); // Keep this as a Date object
 
-    const day = String(dateObj.getDate()).padStart(2, "0");
-    const year = dateObj.getFullYear();
+  const day = String(dateObj.getUTCDate()).padStart(2, "0");
+  const year = dateObj.getUTCFullYear();
 
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const month = monthNames[dateObj.getMonth()];
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = monthNames[dateObj.getUTCMonth()];
 
-    let hours = dateObj.getHours();
-    const minutes = String(dateObj.getMinutes()).padStart(2, "0");
+  let hours = dateObj.getUTCHours();
+  const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
 
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
+  const ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
 
-    const time = `${hours}.${minutes}${ampm}`;
+  const time = `${hours}.${minutes}${ampm}`;
 
-    return `${day} ${month} ${year} ${time}`;
-  }
-
+  return `${day} ${month} ${year} ${time}`;
+}
 if(loading){
   return(
     <Loader/>

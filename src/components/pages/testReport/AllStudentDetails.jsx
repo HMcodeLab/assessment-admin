@@ -404,9 +404,9 @@ const AllStudentDetails = () => {
           </thead>
           <tbody className="overflow-y-hidden ">
             {filteredStudents.map((student, index) => (
-              <>
+              <React.Fragment key={index}>
                 <tr
-                  key={index}
+                 
                   className={`md:hidden xl:table-row ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
@@ -511,7 +511,7 @@ const AllStudentDetails = () => {
                     )}
                   </td>
                 </tr>
-              </>
+              </React.Fragment>
             ))}
           </tbody>
         </table>
