@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { GoDownload } from "react-icons/go";
+import Loader from "../Loader";
 
 const AddQuestions = () => {
   const [Allmodules, setAllmodules] = useState([]);
@@ -10,6 +11,7 @@ const AddQuestions = () => {
   const [submodulearray, setsubmodulearray] = useState([]);
   const [selectedModule, setSelectedModule] = useState(""); // For moduleid
   const adminToken = localStorage.getItem("authToken");
+  const [loader, setloader] = useState(true);
 
   // Fetch all assessments and their submodules (modules)
   const fetchData = async () => {
@@ -33,6 +35,8 @@ const AddQuestions = () => {
       }
     } catch (error) {
       console.log(error);
+    }finally{
+      setloader(false)
     }
   };
   let temp = true;
@@ -120,12 +124,16 @@ const AddQuestions = () => {
     }
   };
 
+  if(loader){
+    return(
+      <Loader/>
+    )
+  }
+
   return (
     <div className="p-5">
       <Toaster />
       <form
-        onSubmit={handleSubmit}
-        method="POST"
         className="flex flex-col items-center gap-3 mb-5"
       >
         <a
@@ -195,7 +203,7 @@ const AddQuestions = () => {
             accept=".xls,.xlsx"
             className="p-2 rounded border border-gray-300"
           />
-          <button type="submit" className="p-2 bg-blue-500 text-white rounded">
+          <button type="submit" className="p-2 bg-blue-500 text-white rounded" onClick={handleSubmit}>
             {loading ? "Submiting ..." : "Submit"}
           </button>
         </div>

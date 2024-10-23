@@ -12,8 +12,8 @@ import Loader from "../../Loader";
 
 const AllStudentDetails = () => {
   const { testId } = useParams();
-  const location = useLocation()
-  const {assessmentName}=location.state;
+  const location = useLocation();
+  const { assessmentName } = location.state;
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [allStudent, setAllStudent] = useState([]);
@@ -59,13 +59,13 @@ const AllStudentDetails = () => {
   function handleAutoRefresh() {
     setAutoRefresh(!autoRefresh);
   }
-  let temp=true
+  let temp = true;
   useEffect(() => {
     // Fetch data immediately on mount
-   if(temp){
-    fetchData();
-    temp=false
-   }
+    if (temp) {
+      fetchData();
+      temp = false;
+    }
 
     if (autoRefresh) {
       // Set up the interval for refreshing data
@@ -130,7 +130,6 @@ const AllStudentDetails = () => {
     .filter(filterByStatus)
     .filter(filterBySearch);
 
-
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
   };
@@ -141,32 +140,16 @@ const AllStudentDetails = () => {
       return acc;
     }, {});
   };
-  const countStudentsByMarks = (studentsData) => {
-    return studentsData.reduce((acc, student) => {
-      acc[student.totalMarks] = (acc[student.totalMarks] || 0) + 1;
-      return acc;
-    }, {});
-  };
+
 
   const rankCounts = countStudentsByRank(allStudent);
-  const marksCounts = countStudentsByMarks(allStudent);
+  
 
   const getStatus = (student) => {
     if (student?.isSuspended) return "Suspended";
     if (student?.isAssessmentCompleted) return "Completed Successfully";
     return "Ongoing";
   };
-
-  function calculateTimeDifference(createdAt, updatedAt) {
-    const startTime = new Date(createdAt);
-    const endTime = new Date(updatedAt);
-    const timeDifference = endTime - startTime;
-    const timeDifferenceInSeconds = Math.floor(timeDifference / 1000);
-    const minutes = Math.floor(timeDifferenceInSeconds / 60);
-    const seconds = timeDifferenceInSeconds % 60;
-
-    return `${minutes} min , ${seconds} sec`;
-  }
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
@@ -177,8 +160,6 @@ const AllStudentDetails = () => {
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
         marks: student?.totalMarks,
-        Rank: student?.rank,
-        time: calculateTimeDifference(student?.createdAt, student?.updatedAt),
         Status: getStatus(student),
       }))
     );
@@ -290,14 +271,6 @@ const AllStudentDetails = () => {
     setToggleOpen(toggleOpen === studentId ? null : studentId); // Toggle the specific student's dropdown
   };
 
-  // const handleAction = (action, student) => {
-  //   // Perform the action (e.g., View, Delete, Resume)
-  //   console.log(`Performing action: ${action} for student: ${student.name}`);
-
-  //   // Automatically close the dropdown after action is taken
-  //   setToggleOpen(null);
-  // };
-
   return (
     <div className="flex flex-col justify-center mx-4 my-4">
       <Toaster />
@@ -309,11 +282,15 @@ const AllStudentDetails = () => {
         <div className="flex items-center gap-2">
           <span>Auto Refresh </span>
           <button
-          className={`${autoRefresh ? "border-2 border-green-500 hover:bg-green-500 text-green-500 ":"border-2 border-red-500 text-red-500 hover:bg-red-500"} hover:text-white   font-bold py-1 px-4 text-sm  rounded`}
-          onClick={handleAutoRefresh}
-        >
-          {autoRefresh ? "OFF" : "ON"}
-        </button>
+            className={`${
+              autoRefresh
+                ? "border-2 border-green-500 hover:bg-green-500 text-green-500 "
+                : "border-2 border-red-500 text-red-500 hover:bg-red-500"
+            } hover:text-white   font-bold py-1 px-4 text-sm  rounded`}
+            onClick={handleAutoRefresh}
+          >
+            {autoRefresh ? "OFF" : "ON"}
+          </button>
         </div>
         <button
           className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
@@ -390,7 +367,6 @@ const AllStudentDetails = () => {
             {filteredStudents.map((student, index) => (
               <React.Fragment key={index}>
                 <tr
-                 
                   className={`md:hidden xl:table-row ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
@@ -522,7 +498,6 @@ const AllStudentDetails = () => {
         <BarChart
           rankCount={rankCounts}
           lowestRank={allStudent[allStudent.length - 1]?.rank}
-          marksCounts={marksCounts}
         />
       </div>
 

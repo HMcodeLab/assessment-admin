@@ -76,11 +76,18 @@ const AddAssignment = () => {
       JSON.stringify(assessment) !== JSON.stringify(initialAssessmentState)
     );
   };
-
+  const requiredFields = ['assessmentName', 'maxMarks', 'timelimit',];
   const handleSubmit = async () => {
     if (!isAssessmentChanged()) {
       toast.error("No changes made to the assessment.");
       return;
+    }
+
+    for (let field of requiredFields) {
+      if (!assessment[field]) {
+        toast.error(`The ${field} field is required.`);
+        return;
+      }
     }
     setloading(true);
     try {
@@ -184,6 +191,19 @@ const AddAssignment = () => {
                     handleInputChange("maxMarks", e.target.value)
                   }
                 />
+                 <label className="text-xl font-semibold">
+                  Time Limit (mins)
+                </label>
+                <input
+                  type="number"
+                  placeholder="Time Limit"
+                  className="border w-full h-12 p-3"
+                  value={assessment?.timelimit || ""}
+                  onChange={(e) =>
+                    handleInputChange("timelimit", e.target.value)
+                  }
+                />
+
 
                 <label className="text-xl font-semibold">
                   Date For Assessment
@@ -213,19 +233,7 @@ const AddAssignment = () => {
                   />
                 </div>
 
-                <label className="text-xl font-semibold">
-                  Time Limit (mins)
-                </label>
-                <input
-                  type="number"
-                  placeholder="Time Limit"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.timelimit || ""}
-                  onChange={(e) =>
-                    handleInputChange("timelimit", e.target.value)
-                  }
-                />
-
+               
                 <div className="flex items-center justify-between text-xl font-semibold">
                   <label>Proctoring Options</label>
                   <p className="cursor-pointer" onClick={handleSelect}>

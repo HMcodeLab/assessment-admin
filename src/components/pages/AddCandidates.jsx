@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
+import Loader from "../Loader";
 
 
 const AddCandidates = () => {
@@ -12,6 +13,7 @@ const AddCandidates = () => {
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
+  const [loader, setloader] = useState(true);
 
 
   const fetchData = async () => {
@@ -35,6 +37,8 @@ const AddCandidates = () => {
       // console.log(response);
     } catch (error) {
       console.log(error);
+    }finally{
+      setloader(false);
     }
   };
   let temp=true
@@ -175,6 +179,12 @@ const AddCandidates = () => {
     link.click();
   };
 
+if(loader){
+  return(
+    <Loader/>
+  )
+}
+
 
   return (
     <div className="h-auto w-full bg-gray-600 p-5">
@@ -226,6 +236,7 @@ const AddCandidates = () => {
           )}
           <button
             onClick={handleSubmit}
+            disabled ={loading ? true : false}
             className="w-[100%] rounded-lg p-2 px-4 bg-green-400 hover:bg-green-500 text-white hover:font-semibold"
           >
             {loading ? "Submitting" : "Submit"}

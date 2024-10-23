@@ -249,6 +249,8 @@ if(loading){
                       "MultiplePersonInFrame",
                     test.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
                     test.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
+                    test.ProctoringFor?.ControlKeyPressed?.inUse && "ControlKeyPressed",
+                    test.ProctoringFor?.invisiblecam?.inUse && "invisiblecam",
                   ]
                     .filter(Boolean) // Remove falsy values
                     .join(" , ")}{" "}
