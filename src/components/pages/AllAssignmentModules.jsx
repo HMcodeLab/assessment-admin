@@ -69,13 +69,13 @@ let temp=true
 
   
 
-  const handleViewClick = async (testId) => {
+  const handleViewClick = async (testId,assessmentName) => {
     try {
       const response = await fetchData(testId);
       const students = response?.data || []; // Get students from response
       // console.log(response)
       if (students.length > 0) {
-        navigate(`/test-report/${testId}`);
+        navigate(`/test-report/${testId}`, { state: { assessmentName:assessmentName } });
       } else {
         toast.error("No Students are available");
       }
@@ -262,7 +262,7 @@ if(loading){
                 </TableCell>
                 <TableCell sx={{ fontSize: "1rem", cursor: "pointer" }}>
                   <Button
-                    onClick={() => handleViewClick(test._id)}
+                    onClick={() => handleViewClick(test._id,test.assessmentName)}
                     variant="outlined"
                   >
                     View

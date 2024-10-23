@@ -43,6 +43,49 @@ const FeedBack = () => {
     );
   }
 
+  // format date
+function formatDate(dateString) {
+  const dateObj = new Date(dateString); // Keep this as a Date object
+
+  const day = String(dateObj.getUTCDate()).padStart(2, "0");
+  const year = dateObj.getUTCFullYear();
+
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const month = monthNames[dateObj.getUTCMonth()];
+
+  let hours = dateObj.getUTCHours();
+  const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
+
+  const ampm = hours >= 12 ? "pm" : "am";
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+
+  const time = `${hours}.${minutes}${ampm}`;
+
+  return `${day} ${month} ${year} ${time}`;
+}
+
+
+// let filteredDate=[]
+// function handleDateFilter(){
+//   feedbacks.map((date)=>{
+//     date:date.createdAt
+//   })
+// }
+
   return (
     <div className="flex flex-col items-center p-4">
       <h1 className="text-center text-3xl text-green-500 font-bold mb-6">
@@ -53,7 +96,10 @@ const FeedBack = () => {
           <thead className="bg-green-500 text-white">
             <tr>
               <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                Id
+                SNO.
+              </th>
+              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
+                Date
               </th>
               <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
                 Name
@@ -74,7 +120,10 @@ const FeedBack = () => {
                   className="border-b transition duration-300 ease-in-out hover:bg-gray-100"
                 >
                   <td className="py-4 px-6 whitespace-nowrap">
-                    {feedback?._id}
+                    {index+1}
+                  </td>
+                  <td className="py-4 px-6 whitespace-nowrap">
+                    {formatDate(feedback?.createdAt)}
                   </td>
                   <td className="py-4 px-6 whitespace-nowrap">
                     {feedback?.name}
@@ -82,7 +131,7 @@ const FeedBack = () => {
                   <td className="py-4 px-6 whitespace-nowrap">
                     {feedback?.email}
                   </td>
-                  <td className="py-4 px-6 whitespace-nowrap">
+                  <td className="py-4 px-6">
                     {feedback?.feedback}
                   </td>
                 </tr>

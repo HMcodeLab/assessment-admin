@@ -149,17 +149,21 @@ const AddCandidates = () => {
         toast.error(`Error: ${response.statusText}`);
       }
     } catch (error) {
+      // Log the error only after all operations complete
       const errorMessage =
         error.response?.data?.message || "Error uploading file.";
+      
+      // Log error in the console after all the operations
+      console.error("Upload error:", error.response?.data || error.message);
+      
+      // Show a toast for the error as well
       toast.error(errorMessage);
-      console.error(
-        "Upload error:",
-        error.response ? error.response.data : error.message
-      );
     } finally {
       setloading(false);
+      handleClear();
     }
   };
+  
   
   
 

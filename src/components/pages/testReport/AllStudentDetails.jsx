@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 // import { FaEyeSlash, FaEye, FaTrash, FaStopwatch } from "react-icons/fa";
@@ -12,6 +12,8 @@ import Loader from "../../Loader";
 
 const AllStudentDetails = () => {
   const { testId } = useParams();
+  const location = useLocation()
+  const {assessmentName}=location.state;
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [allStudent, setAllStudent] = useState([]);
@@ -124,35 +126,10 @@ const AllStudentDetails = () => {
     }
   };
 
-  // const sortStudents = (students) => {
-  //   return students.sort((a, b) => {
-  //     let compareA, compareB;
-  //     if (sortColumn === "name") {
-  //       compareA = a.name.toLowerCase();
-  //       compareB = b.name.toLowerCase();
-  //     } else if (sortColumn === "email") {
-  //       compareA = a.email.toLowerCase();
-  //       compareB = b.email.toLowerCase();
-  //     } else if (sortColumn === "marks") {
-  //       compareA = a.totalMarks;
-  //       compareB = b.totalMarks;
-  //     } else {
-  //       return 0; // If no sorting column, return as-is
-  //     }
-
-  //     if (sortOrder === "asc") {
-  //       return compareA > compareB ? 1 : -1;
-  //     } else {
-  //       return compareA < compareB ? 1 : -1;
-  //     }
-  //   });
-  // };
-
   const filteredStudents = allStudent
     .filter(filterByStatus)
     .filter(filterBySearch);
 
-  // const sortedStudents = sortStudents(filteredStudents);
 
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
@@ -164,8 +141,15 @@ const AllStudentDetails = () => {
       return acc;
     }, {});
   };
+  const countStudentsByMarks = (studentsData) => {
+    return studentsData.reduce((acc, student) => {
+      acc[student.totalMarks] = (acc[student.totalMarks] || 0) + 1;
+      return acc;
+    }, {});
+  };
 
   const rankCounts = countStudentsByRank(allStudent);
+  const marksCounts = countStudentsByMarks(allStudent);
 
   const getStatus = (student) => {
     if (student?.isSuspended) return "Suspended";
@@ -200,7 +184,7 @@ const AllStudentDetails = () => {
     );
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Student Details");
-    XLSX.writeFile(workbook, `student_details_${testId}.xlsx`);
+    XLSX.writeFile(workbook, `${assessmentName}.xlsx`);
   };
 
   const handleDeleteClick = (email) => {
@@ -538,6 +522,7 @@ const AllStudentDetails = () => {
         <BarChart
           rankCount={rankCounts}
           lowestRank={allStudent[allStudent.length - 1]?.rank}
+          marksCounts={marksCounts}
         />
       </div>
 
