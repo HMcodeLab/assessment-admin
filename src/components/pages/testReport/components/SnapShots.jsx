@@ -11,7 +11,7 @@ const Carousel = ({ userScreenshots }) => {
   // Determine whether the image is a desktop or mobile screenshot based on aspect ratio
   const handleImageLoad = (e) => {
     const { naturalWidth, naturalHeight } = e.target;
-
+// dgjhf
     // Determine whether the image is a desktop or mobile screenshot based on aspect ratio
     if (naturalWidth > naturalHeight) {
       setImageType('desktop');
