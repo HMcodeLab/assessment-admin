@@ -160,6 +160,7 @@ const AllStudentDetails = () => {
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
         marks: student?.totalMarks,
+        promptCount:Object.values(student?.ProctoringScore).reduce((sum, value) => sum + value, 0),
         Status: getStatus(student),
       }))
     );
