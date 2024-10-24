@@ -26,6 +26,7 @@ const AllStudentDetails = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedDate, setSelectedDate] = useState("");
   const [loadingStates, setLoadingStates] = useState({
     delete: false,
     restart: false,
@@ -115,6 +116,27 @@ const AllStudentDetails = () => {
     );
   };
 
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value); // Set the selected date
+  };
+  // Format date for dropdown display and comparison
+  const formatDate = (dateString) => {
+    const dateObj = new Date(dateString);
+    const day = String(dateObj.getUTCDate()).padStart(2, "0");
+    const year = dateObj.getUTCFullYear();
+    const month = String(dateObj.getUTCMonth() + 1).padStart(2, "0"); // Months are zero-indexed
+    return `${day}-${month}-${year}`;
+  };
+
+  // Get a list of unique dates from the feedbacks
+  const uniqueDates = [
+    ...new Set(allStudent.map((student) => formatDate(student.updatedAt))),
+  ];
+
+  // Filter feedbacks by the selected date
+  const filteredByDate = (student) =>
+    selectedDate === "" || formatDate(student.updatedAt) === selectedDate;
+
   const handleSort = (column) => {
     if (sortColumn === column) {
       // If the same column is clicked, toggle the sort order
@@ -128,7 +150,8 @@ const AllStudentDetails = () => {
 
   const filteredStudents = allStudent
     .filter(filterByStatus)
-    .filter(filterBySearch);
+    .filter(filterBySearch)
+    .filter(filteredByDate);
 
   const handleView = (studentId) => {
     navigate(`/student-test-report/${testId}/${studentId}`);
@@ -141,9 +164,7 @@ const AllStudentDetails = () => {
     }, {});
   };
 
-
   const rankCounts = countStudentsByRank(allStudent);
-  
 
   const getStatus = (student) => {
     if (student?.isSuspended) return "Suspended";
@@ -160,7 +181,10 @@ const AllStudentDetails = () => {
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
         marks: student?.totalMarks,
-        promptCount:Object.values(student?.ProctoringScore).reduce((sum, value) => sum + value, 0),
+        promptCount: Object.values(student?.ProctoringScore).reduce(
+          (sum, value) => sum + value,
+          0
+        ),
         Status: getStatus(student),
       }))
     );
@@ -318,6 +342,25 @@ const AllStudentDetails = () => {
               </option>
             </select>
           </div>
+          <div className="">
+            <label htmlFor="date" className="mr-4 text-green-500 font-semibold">
+              Select Date:
+            </label>
+            <select
+              id="date"
+              value={selectedDate}
+              onChange={handleDateChange}
+              className="border border-gray-300 rounded-lg p-2"
+            >
+              <option value="">All Dates</option>{" "}
+              {/* Option to show all feedbacks */}
+              {uniqueDates.map((date, index) => (
+                <option key={index} value={date}>
+                  {date}
+                </option>
+              ))}
+            </select>
+          </div>
           <div>
             <input
               type="text"
@@ -342,6 +385,7 @@ const AllStudentDetails = () => {
                   className="inline-block w-4 h-4 cursor-pointer"
                 />
               </th>
+              <th className="px-4 py-2 text-left">Test Date</th>
               <th className="px-4 py-2 text-left">Email ID</th>
               <th className="px-4 py-2 text-left">Contact No</th>
               <th className="px-4 py-2 text-left">College</th>
@@ -373,6 +417,9 @@ const AllStudentDetails = () => {
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
                 >
                   <td className="border px-4 py-2">{index + 1}</td>
+                  <td className="border px-4 py-2">
+                    {formatDate(student?.updatedAt)}
+                  </td>
                   <td className="border px-4 py-2">{student?.name}</td>
                   <td className="border px-4 py-2">{student?.email}</td>
                   <td className="border px-4 py-2">{student?.phone_number}</td>
