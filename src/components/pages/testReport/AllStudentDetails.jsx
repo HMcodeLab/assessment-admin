@@ -372,9 +372,12 @@ const AllStudentDetails = () => {
           </div>
         </div>
 
-        <table className="min-w-full bg-white">
+        <table className="w-full bg-white">
           <thead className="bg-gray-100">
-            <tr className="md:hidden xl:table-row ">
+            {/* Large Screen (XL) */}
+            <tr className="hidden xl:table-row">
+              {" "}
+              {/* Only visible on XL screens */}
               <th className="px-4 py-2 text-left">SNo.</th>
               <th className="text-sm font-semibold px-2 py-3 text-left cursor-pointer">
                 Name{" "}
@@ -395,8 +398,11 @@ const AllStudentDetails = () => {
               <th className="px-4 py-2 text-left">Status</th>
               <th className="px-4 py-2 text-left">Action</th>
             </tr>
-            {/* Middle  Screen */}
-            <tr className="xl:hidden md:table-row">
+
+            {/* Medium Screen (MD) */}
+            <tr className="table-row xl:hidden">
+              {" "}
+              {/* Visible on MD but hidden on XL */}
               <th className="px-4 py-2 text-left font-medium">SNO.</th>
               <th className="px-4 py-2 text-left font-medium">
                 Name , Email , Phone
@@ -408,19 +414,19 @@ const AllStudentDetails = () => {
               <th className="px-4 py-2 text-left font-medium">Action</th>
             </tr>
           </thead>
-          <tbody className="overflow-y-hidden ">
+
+          <tbody>
             {filteredStudents.map((student, index) => (
               <React.Fragment key={index}>
+                {/* Row for XL screens */}
                 <tr
-                  className={`md:hidden xl:table-row ${
+                  className={`hidden xl:table-row ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
                 >
                   <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">
-                    {formatDate(student?.updatedAt)}
-                  </td>
                   <td className="border px-4 py-2">{student?.name}</td>
+                  <td className="border px-4 py-2 text-nowrap">{formatDate(student?.updatedAt)}</td>
                   <td className="border px-4 py-2">{student?.email}</td>
                   <td className="border px-4 py-2">{student?.phone_number}</td>
                   <td className="border px-4 py-2">{student?.college_name}</td>
@@ -431,14 +437,14 @@ const AllStudentDetails = () => {
                   <td className="border px-4 py-2">{student?.rank}</td>
                   <td className="border px-4 py-2">{getStatus(student)}</td>
                   <td className="border px-4 py-2 flex ">
-                    <button
+                  <button
                       disabled={
                         student?.isSuspended || student?.isAssessmentCompleted
                           ? false
                           : true
                       }
                       onClick={() => handleView(student.email)}
-                      className={` ${
+                      className={ `${
                         student.isSuspended || student.isAssessmentCompleted
                           ? " hover:bg-blue-700 bg-blue-500"
                           : "bg-blue-200"
@@ -460,7 +466,7 @@ const AllStudentDetails = () => {
                           : true
                       }
                       onClick={() => handleRestartClick(student?.email)}
-                      className={` ${
+                      className={ `${
                         student.isSuspended || student.isAssessmentCompleted
                           ? " hover:bg-yellow-700 bg-yellow-500"
                           : "bg-yellow-200"
@@ -472,9 +478,10 @@ const AllStudentDetails = () => {
                     </button>
                   </td>
                 </tr>
+
+                {/* Row for MD screens */}
                 <tr
-                  key={index}
-                  className={`xl:hidden z-20 xl:overflow-y-hidden md:overflow-hidden md:table-row font-normal text-sm ${
+                  className={`table-row xl:hidden ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
                 >

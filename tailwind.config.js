@@ -25,7 +25,16 @@ module.exports = {
       },
       animation: {
         l45: 'l45 1s infinite',
-      }
+      },
+      screens: {
+        xsm: { min: "320px", max: "480px" },
+        sm: { min: "481px", max: "994px" },
+        md: { min: "995px", max: "1001px" },
+        lg: { min: "1002px", max: "1599px" },
+        xl: { min: "1600px", max: "1999px" }, 
+        "2xl": { min: "2000px" },
+        // fold: { min: "660px", max: "690px" },
+      },
     },
   },
   plugins: [],

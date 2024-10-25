@@ -16,7 +16,7 @@ import {
 // Register necessary components for Chart.js
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, PointElement, LineElement, ArcElement);
 
-function Dashboard() {
+function  Dashboard() {
   // Set default data to prevent undefined errors
   const [barData, setBarData] = useState({
     labels: [],

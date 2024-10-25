@@ -26,12 +26,11 @@ const Sidebar = () => {
     <>
       <aside
         id="cta-button-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${
-          openSidebar ? "translate-x-0" : "-translate-x-full"
-        } sm:translate-x-0`}
+        className={`fixed top-0 left-0 z-40 h-screen transition-transform translate-x-0
+         sm:translate-x-0 md:translate-x-0 `}
         aria-label="Sidebar"
       >
-        <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div className="h-full px-3 py-8 overflow-y-hidden bg-gray-50 dark:bg-gray-800">
           {/* Close button */}
           <div
             className="text-white font-semibold flex justify-end cursor-pointer"
@@ -44,7 +43,7 @@ const Sidebar = () => {
             <li>
               <Link
                 to="/dashboard"
-                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 active:bg-gray-400 dark:hover:bg-gray-700 group"
               >
                 <img src={logo} alt="brand logo" />
               </Link>

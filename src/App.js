@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Sidebar from "./components/sidebar/Sidebar";
 import Dashboard from "./components/pages/Dashboard";
 import AddAssignment from "./components/pages/AddAssignment";
@@ -17,85 +22,58 @@ import AddQuestions from "./components/pages/AddQuestions";
 import AllStudentDetails from "./components/pages/testReport/AllStudentDetails";
 import EachStudentDetails from "./components/pages/testReport/EachStudentDetails";
 import FeedBack from "./components/pages/FeedBack";
+import NotFoundPage from "./components/NotFound";
 
 function App() {
   const { isAuthenticated } = useAuth();
 
   return (
     <Router>
-      <div className="flex flex-col h-screen overflow-hidden"> 
-        <div className="flex flex-1 overflow-hidden"> {/* Ensures no overflow unless necessary */}
-          {isAuthenticated && (
-            <div className="w-64">
-              <Sidebar />
-            </div>
-          )}
+      <div className="flex h-screen">
+        {/* Sidebar */}
+        {isAuthenticated && (
+          <div className="fixed top-0 left-0 h-full w-64 bg-white z-40">
+            <Sidebar />
+          </div>
+        )}
 
-          <div
-            className={
-              isAuthenticated
-                ? "flex-1 flex flex-col overflow-hidden"  // Removed overflow-y-auto here
-                : "w-full flex flex-col overflow-hidden"  // Ensures content does not overflow unless necessary
-            }
-          >
-            {isAuthenticated && <Navbar />}
+        {/* Main Content */}
+        <div
+          className={
+            isAuthenticated
+              ? "flex-1 flex flex-col ml-64 h-full overflow-x-hidden"
+              : "w-full flex flex-col h-full overflow-x-hidden"
+          }
+        >
+          {/* Navbar */}
+          {isAuthenticated && <Navbar />}
 
-            <div className="flex-1 overflow-auto px-0"> {/* Enable overflow only when needed */}
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<Register />} />
+          {/* Main Section */}
+          <div className="flex-1 overflow-auto scroll-smooth pl-6">
+            <Routes>
+              {/* Redirect to dashboard if authenticated */}
+              <Route
+                path="/login"
+                element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+              />
 
-                {/* Protect routes using PrivateRoute */}
-                <Route
-                  path="/"
-                  element={<PrivateRoute element={Dashboard} />}
-                />
-                <Route
-                  path="/dashboard"
-                  element={<PrivateRoute element={Dashboard} />}
-                />
-                <Route
-                  path="/add-assignment"
-                  element={<PrivateRoute element={AddAssignment} />}
-                />
-                <Route
-                  path="/assessmentresult"
-                  element={<PrivateRoute element={AssignmentResult} />}
-                />
-                <Route
-                  path="/add-candidates"
-                  element={<PrivateRoute element={AddCandidates} />}
-                />
-                <Route
-                  path="/edit-assessment/:testId"
-                  element={<PrivateRoute element={EditAssessment} />}
-                />
-                <Route
-                  path="/testdetails"
-                  element={<PrivateRoute element={TestDetails} />}
-                />
-                <Route
-                  path="/profile"
-                  element={<PrivateRoute element={AdminProfile} />}
-                />
-                 <Route
-                  path="/AddQuestions"
-                  element={<PrivateRoute element={AddQuestions} />}
-                />
-                 <Route
-                  path="/test-report/:testId"
-                  element={<PrivateRoute element={AllStudentDetails} />}
-                />
-                 <Route
-                  path="/student-test-report/:testId/:studentId"
-                  element={<PrivateRoute element={EachStudentDetails} />}
-                />
-                 <Route
-                  path="/feedback"
-                  element={<PrivateRoute element={FeedBack} />}
-                />
-              </Routes>
-            </div>
+              {/* Protected Routes */}
+              <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
+              <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
+              <Route path="/add-assignment" element={<PrivateRoute element={AddAssignment} />} />
+              <Route path="/assessmentresult" element={<PrivateRoute element={AssignmentResult} />} />
+              <Route path="/add-candidates" element={<PrivateRoute element={AddCandidates} />} />
+              <Route path="/edit-assessment/:testId" element={<PrivateRoute element={EditAssessment} />} />
+              <Route path="/testdetails" element={<PrivateRoute element={TestDetails} />} />
+              <Route path="/profile" element={<PrivateRoute element={AdminProfile} />} />
+              <Route path="/AddQuestions" element={<PrivateRoute element={AddQuestions} />} />
+              <Route path="/test-report/:testId" element={<PrivateRoute element={AllStudentDetails} />} />
+              <Route path="/student-test-report/:testId/:studentId" element={<PrivateRoute element={EachStudentDetails} />} />
+              <Route path="/feedback" element={<PrivateRoute element={FeedBack} />} />
+
+              {/* 404 Route */}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
           </div>
         </div>
       </div>

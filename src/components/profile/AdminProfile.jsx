@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { jwtDecode } from "jwt-decode";
 
 const AdminProfile = () => {
   const adminToken = localStorage.getItem("authToken");
@@ -8,13 +9,10 @@ const AdminProfile = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isEditing, setIsEditing] = useState(false); // State for editing mode
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    mobile: "",
-    profile: "",
-  });
+
+  const adminEmail= jwtDecode(adminToken).email;
+  console.log(adminEmail);
+  
 
   // Fetch Admin Details
   const fetchAdminDetails = async () => {
@@ -27,7 +25,7 @@ const AdminProfile = () => {
             Authorization: `Bearer ${adminToken}`,
           },
           params: {
-            email: "example@gmail.com",
+            email: adminEmail,
           },
         }
       );
@@ -35,13 +33,6 @@ const AdminProfile = () => {
       if (response.status === 200) {
         const admin = response.data.data;
         setAdminData(admin);
-        setFormData({
-          firstName: admin.firstName,
-          lastName: admin.lastName,
-          email: admin.email,
-          mobile: admin.mobile,
-          profile: admin.profile,
-        });
         toast.success("Admin details fetched successfully!");
       } else {
         toast.error("Failed to fetch admin details.");
@@ -64,7 +55,7 @@ const AdminProfile = () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_DOMAIN}/updateAdmin`,
-        formData,
+        adminData,
         {
           headers: {
             "Content-Type": "application/json",
@@ -115,15 +106,15 @@ const AdminProfile = () => {
   // Handle form changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setAdminData({
+      ...adminData,
       [name]: value,
     });
   };
 
   return (
     <div className="min-h-screen flex justify-center bg-gray-100 py-[7vh]">
-      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full h-[70vh] py-12">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full h-[40%] py-12">
         <h1 className="text-3xl font-bold text-green-600 mb-6 text-center">
           Admin Profile
         </h1>
@@ -131,7 +122,7 @@ const AdminProfile = () => {
           <div>
             {isEditing ? (
               // Input fields for editing
-              <div>
+              <div className="flex flex-col gap-2">
                 <div className="mb-4">
                   <label className="text-xl font-semibold text-gray-700">
                     First Name:
@@ -139,7 +130,7 @@ const AdminProfile = () => {
                   <input
                     type="text"
                     name="firstName"
-                    value={formData.firstName}
+                    value={adminData.firstName}
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />
@@ -151,7 +142,7 @@ const AdminProfile = () => {
                   <input
                     type="text"
                     name="lastName"
-                    value={formData.lastName}
+                    value={adminData.lastName}
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />
@@ -163,7 +154,7 @@ const AdminProfile = () => {
                   <input
                     type="email"
                     name="email"
-                    value={formData.email}
+                    value={adminData.email}
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />
@@ -175,7 +166,7 @@ const AdminProfile = () => {
                   <input
                     type="text"
                     name="mobile"
-                    value={formData.mobile}
+                    value={adminData.mobile}
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />
@@ -187,7 +178,7 @@ const AdminProfile = () => {
                   <input
                     type="text"
                     name="profile"
-                    value={formData.profile}
+                    value={adminData.profile}
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />

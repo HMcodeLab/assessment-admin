@@ -4,7 +4,6 @@ import * as XLSX from "xlsx";
 import toast, { Toaster } from "react-hot-toast";
 import Loader from "../Loader";
 
-
 const AddCandidates = () => {
   const [excelData, setExcelData] = useState([]);
   const [excelFile, setExcelFile] = useState(null);
@@ -14,7 +13,7 @@ const AddCandidates = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
   const [loader, setloader] = useState(true);
-
+  const [errorCount, seterrorCount] = useState(false)
 
   const fetchData = async () => {
     try {
@@ -37,15 +36,15 @@ const AddCandidates = () => {
       // console.log(response);
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setloader(false);
     }
   };
-  let temp=true
+  let temp = true;
   useEffect(() => {
-    if(temp){
+    if (temp) {
       fetchData();
-      temp=false
+      temp = false;
     }
   }, []);
 
@@ -54,7 +53,6 @@ const AddCandidates = () => {
   const handleChange = (event) => {
     setSelectedModule(event.target.value); // Update state with selected value
   };
-
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -110,66 +108,81 @@ const AddCandidates = () => {
       setloading(false);
       return;
     }
-  
+
     try {
       const formData = new FormData();
       formData.append("candidates", excelFile);
       formData.append("moduleAssessmentid", selectedModule);
-  
+
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/addCandidatesForAssessment`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${adminToken}`,
-          }
+          },
         }
       );
-  
+
       if (response.status === 201) {
         toast.success("File uploaded successfully");
-  
-        // Check the response structure and loop through the 'results' array
+
         const results = response.data?.results || [];
-  
+        console.log("API Results:", results);
+
+        // Create a map of row numbers to emails for successful candidates
+        const rowToEmailMap = {};
         results.forEach((result) => {
-          const { success, data } = result;
-  
-          // Add validation for data before destructuring
-          if (data && data.email && data.name) {
-            const { email, name } = data;
-            if (success) {
-              console.log(`${name} ${email} successfully received the mail`);
-            } else {
-              console.log(`${name} ${email} was unsuccessful in receiving the mail`);
-            }
-          } else {
-            console.warn("Missing data for a result:", result);
+          if (result.success && result.data?.email) {
+            rowToEmailMap[result.row] = result.data.email;
           }
         });
-  
-        handleClear();
+
+        // Filter unsuccessful entries and add matched emails from rowToEmailMap
+        const unsuccessfulData = results
+          .filter((result) => result.success === false)
+          .map((result) => {
+            const rowNum = result.row;
+
+            const matchingCandidate = excelData[rowNum - 2]; // Assuming row numbers start from 1
+
+            // Extract data from the matching candidate, if found
+            return {
+              "SNO.": rowNum,
+              email: matchingCandidate
+                ? matchingCandidate.email
+                : "Email not found", // Get email from excelData
+              name: matchingCandidate
+                ? matchingCandidate.name
+                : "Name not found", // Get name from excelData
+              phone: matchingCandidate
+                ? matchingCandidate.phone_number
+                : "Phone not found", // Get phone from excelData
+              college: matchingCandidate
+                ? matchingCandidate.college_name
+                : "College not found", // Get college from excelData
+              yearOfPassing: matchingCandidate
+                ? matchingCandidate.year_of_passing
+                : "Year not found", // Get year from excelData
+            };
+          });
+
+unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
+
+        // Set unsuccessful data to the table display
+        setExcelData(unsuccessfulData);
       } else {
         toast.error(`Error: ${response.statusText}`);
       }
     } catch (error) {
-      // Log the error only after all operations complete
       const errorMessage =
         error.response?.data?.message || "Error uploading file.";
-      
-      // Log error in the console after all the operations
       console.error("Upload error:", error.response?.data || error.message);
-      
-      // Show a toast for the error as well
       toast.error(errorMessage);
     } finally {
       setloading(false);
-      handleClear();
     }
   };
-  
-  
-  
 
   const handleDownloadExcel = () => {
     const url = "/CandidatesForAssessment.xlsx";
@@ -179,12 +192,9 @@ const AddCandidates = () => {
     link.click();
   };
 
-if(loader){
-  return(
-    <Loader/>
-  )
-}
-
+  if (loader) {
+    return <Loader />;
+  }
 
   return (
     <div className="h-auto w-full bg-gray-600 p-5">
@@ -236,7 +246,7 @@ if(loader){
           )}
           <button
             onClick={handleSubmit}
-            disabled ={loading ? true : false}
+            disabled={loading ? true : false}
             className="w-[100%] rounded-lg p-2 px-4 bg-green-400 hover:bg-green-500 text-white hover:font-semibold"
           >
             {loading ? "Submitting" : "Submit"}
@@ -247,7 +257,7 @@ if(loader){
       <h1 className="text-center  my-4 text-2xl underline text-white font-semibold">
         All Candidates Details
       </h1>
-      <div className="mt-10  w-full overflow-x-auto scroll-smooth bg-white p-5 rounded-lg">
+      <div className={`mt-10  w-full overflow-x-auto scroll-smooth bg-white p-5 rounded-lg`}>
         {excelData.length > 0 ? (
           <table className="w-full table-auto text-center">
             <thead>
@@ -259,7 +269,7 @@ if(loader){
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className={`${errorCount ? "bg-red-500 text-white" :""}`}>
               {excelData.map((row, index) => (
                 <tr key={index}>
                   {Object.values(row).map((value, i) => (
