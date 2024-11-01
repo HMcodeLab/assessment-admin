@@ -1,31 +1,32 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import { ImSpinner9 } from "react-icons/im";
+import { IoIosMore } from "react-icons/io";
 
-const FeedBack = () => {
-  const adminToken = localStorage.getItem("authToken");
-  const [loading, setloading] = useState(false);
-  const [feedbacks, setfeedbacks] = useState([]);
+const StudentFeed = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [feedbacks, setFeedbacks] = useState([]);
   const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
+  const adminToken = localStorage.getItem("authToken");
 
+  // Fetch data from server
   const fetchData = async () => {
-    setloading(true);
+    setLoading(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUserFeedbacks`,
         {
-          headers: {
-            Authorization: `Bearer ${adminToken}`,
-          },
+          headers: { Authorization: `Bearer ${adminToken}` },
         }
       );
       if (response && response.data) {
-        setfeedbacks(response.data.feedbacks);
+        setFeedbacks(response.data.feedbacks);
       }
     } catch (error) {
       console.log("Error in fetching feedbacks form", error);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -33,8 +34,10 @@ const FeedBack = () => {
     fetchData();
   }, []);
 
-  const handleDateChange = (event) => {
-    setSelectedDate(event.target.value); // Set the selected date
+  // Handle date change directly with date parameter
+  const handleDateChange = (date) => {
+    setSelectedDate(date === "All Dates" ? "" : date);
+    setIsDropdownOpen(false); // Close dropdown after selecting
   };
 
   // Format date for dropdown display and comparison
@@ -46,7 +49,7 @@ const FeedBack = () => {
     return `${day}-${month}-${year}`;
   };
 
-  // Get a list of unique dates from the feedbacks
+  // Get a list of unique dates from feedbacks
   const uniqueDates = [
     ...new Set(feedbacks.map((feedback) => formatDate(feedback.createdAt))),
   ];
@@ -59,126 +62,106 @@ const FeedBack = () => {
           (feedback) => formatDate(feedback.createdAt) === selectedDate
         );
 
+  // Format date for displaying feedbacks
+  function formatDateShow(dateString) {
+    const dateObj = new Date(dateString);
+    const day = String(dateObj.getUTCDate()).padStart(2, "0");
+    const year = dateObj.getUTCFullYear();
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June", "July",
+      "August", "September", "October", "November", "December"
+    ];
+    const month = monthNames[dateObj.getUTCMonth()];
+    let hours = dateObj.getUTCHours();
+    const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12 || 12;
+
+    return `${day} ${month} ${year}, ${hours}.${minutes}${ampm}`;
+  }
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   if (loading) {
     return (
       <ImSpinner9 className="animate-spin text-green-600 size-[8vh] mx-auto my-[25%]" />
     );
   }
 
-  function formatDateShow(dateString) {
-    const dateObj = new Date(dateString); // Keep this as a Date object
-  
-    const day = String(dateObj.getUTCDate()).padStart(2, "0");
-    const year = dateObj.getUTCFullYear();
-  
-    const monthNames = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const month = monthNames[dateObj.getUTCMonth()];
-  
-    let hours = dateObj.getUTCHours();
-    const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
-  
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-  
-    const time = `${hours}.${minutes}${ampm}`;
-  
-    return `${day} ${month} ${year} , ${time}`;
-  }
-
   return (
-    <div className="flex flex-col items-center p-4">
-      <h1 className="text-center text-3xl text-green-500 font-bold mb-6">
-        Student Feedback Form
-      </h1>
+    <>
+      <div className="relative h-[80px] p-4 bg-gray-100 rounded-t-lg">
+        <div className="absolute right-4">
+          <button
+            onClick={toggleDropdown}
+            className="px-2 py-1 border-2 rounded-2xl flex justify-between gap-2 items-center"
+          >
+            <img src="time.png" alt="" />
+            {selectedDate || "All Dates"}
+            <img
+              src="down.png"
+              alt=""
+              className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+            />
+          </button>
 
-      {/* Date dropdown */}
-      <div className="mb-6">
-        <label htmlFor="date" className="mr-4 text-green-500 font-semibold">
-          Select Date:
-        </label>
-        <select
-          id="date"
-          value={selectedDate}
-          onChange={handleDateChange}
-          className="border border-gray-300 rounded-lg p-2"
-        >
-          <option value="">All Dates</option>{" "}
-          {/* Option to show all feedbacks */}
-          {uniqueDates.map((date, index) => (
-            <option key={index} value={date}>
-              {date}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="w-full overflow-x-auto">
-        <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-          <thead className="bg-green-500 text-white">
-            <tr>
-              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                SNO.
-              </th>
-              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                Date
-              </th>
-              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                Name
-              </th>
-              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                Email
-              </th>
-              <th className="py-3 px-6 text-left text-sm font-semibold uppercase tracking-wider">
-                Feedback
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFeedbacks.length > 0 ? (
-              filteredFeedbacks.map((feedback, index) => (
-                <tr
-                  key={index}
-                  className="border-b transition duration-300 ease-in-out hover:bg-gray-100"
+          {/* Dropdown Menu */}
+          {isDropdownOpen && (
+            <div className="absolute right-0 w-48 bg-white rounded-lg shadow-lg">
+              <ul className="text-sm text-gray-700">
+                <li
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleDateChange("All Dates")}
                 >
-                  <td className="py-4 px-6 whitespace-nowrap">{index + 1}</td>
-                  <td className="py-4 px-6 whitespace-nowrap">
-                    {formatDateShow(feedback.createdAt)}
-                  </td>
-                  <td className="py-4 px-6 whitespace-nowrap">
-                    {feedback.name}
-                  </td>
-                  <td className="py-4 px-6 whitespace-nowrap">
-                    {feedback.email}
-                  </td>
-                  <td className="py-4 px-6">{feedback.feedback}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="5" className="text-center py-4 px-6 text-gray-500">
-                  No feedbacks available for the selected date.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+                  All Dates
+                </li>
+                {uniqueDates.map((date, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleDateChange(date)}
+                  >
+                    {date}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      
+      {/* Feedback by students */}
+      <div className="h-[80vh] p-3 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1fc074] scrollbar-track-[#15262d] bg-gray-100">
+        <div className="flex flex-col gap-3">
+          {filteredFeedbacks.map((item, index) => (
+            <div
+              key={index}
+              className="flex flex-col w-full rounded-[13px] p-2 bg-white gap-2 shadow-lg"
+            >
+              <h1 className="font-semibold text-lg text-blue-950 flex items-end ">
+                {item.feedback.slice(0,200)} 
+                <IoIosMore className="cursor-pointer "/>
+              </h1>
+              <ul>
+                <li className="text-sm font-semibold text-blue-950">
+                  <span className="text-slate-400 text-sm font-semibold">Name </span>: {item.name}
+                </li>
+                <li className="text-sm font-semibold text-blue-950">
+                  <span className="text-slate-400 text-sm font-semibold">Email </span>: {item.email}
+                </li>
+                <li className="text-sm font-semibold text-blue-950">
+                  <span className="text-slate-400 text-sm font-semibold">Date </span>: {formatDateShow(item.createdAt)}
+                </li>
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
-export default FeedBack;
+export default StudentFeed;
+

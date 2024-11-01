@@ -35,8 +35,8 @@ const AddQuestions = () => {
       }
     } catch (error) {
       console.log(error);
-    }finally{
-      setloader(false)
+    } finally {
+      setloader(false);
     }
   };
   let temp = true;
@@ -97,7 +97,6 @@ const AddQuestions = () => {
     formData.append("moduleAssessmentid", selectedAssessment); // Ensure this matches server's expected name
     formData.append("moduleId", selectedModule); // Ensure this matches server's expected name
     formData.append("questions", file); // Ensure 'file' matches server's expected field name
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/addQuestionsToModuleAssessment`,
@@ -124,37 +123,33 @@ const AddQuestions = () => {
     }
   };
 
-  if(loader){
-    return(
-      <Loader/>
-    )
+  if (loader) {
+    return <Loader />;
   }
 
   return (
-    <div className="p-5">
+    <div className="p-5 overflow-hidden">
       <Toaster />
-      <form
-        className="flex flex-col items-center gap-3 mb-5"
-      >
-        <a
+      <form className="flex items-center justify-center gap-5  md:flex-col lg:flex-row ">
+        {/* <a
           href="/PAPAssessmentTemplate.xlsx"
           download
           className=" bg-gray-400  flex flex-row gap-2 items-center justify-center py-2 shadow-sm rounded-lg text-lg font-semibold w-[14vw]"
         >
           <GoDownload /> <span>Format</span>
-        </a>
-        <div className="flex flex-col border-2 justify-center px-4 py-2 gap-2 ">
+        </a> */}
+        <div className="flex flex-col gap-4 p-10 bg-white rounded-xl 2xl:w-full md:w-full sm:w-full lg:w-full xl:w-full shadow-md">
           <label htmlFor="module" className="whitespace-nowrap font-semibold">
-            Select Assessment:
+            Select An Assesment
           </label>
           <select
             name="module"
             id="module"
             value={selectedAssessment}
             onChange={handleAssessmentChange}
-            className="p-2 rounded border border-gray-300"
+            className="px-4 py-2 w-full rounded-md border-2 border-gray-400 focus:outline-none placeholder-gray-400"
           >
-            <option value="" disabled>
+            <option value="" disabled className="text-gray-400">
               Select an assessment
             </option>
             {Allmodules?.map((assessment) => (
@@ -169,19 +164,19 @@ const AddQuestions = () => {
 
           <label
             htmlFor="submodule"
-            className="whitespace-nowrap font-semibold"
+            className="whitespace-nowrap font-semibold "
           >
-            Select Submodule (Module):
+            Select Module
           </label>
           <select
             name="submodule"
             id="submodule"
             value={selectedModule}
             onChange={handleSubmoduleChange}
-            className="p-2 rounded border border-gray-300"
+            className="px-4 py-2 w-full focus:outline-none rounded-md border-2 border-gray-400 placeholder-gray-400"
           >
             <option value="" disabled>
-              Select a submodule
+              Select Module
             </option>
             {submodulearray?.map((submodule) => (
               <option key={submodule._id} value={submodule._id}>
@@ -194,20 +189,64 @@ const AddQuestions = () => {
             htmlFor="fileUpload"
             className="whitespace-nowrap font-semibold"
           >
-            Choose File:
+            Choose File
           </label>
           <input
             // onChange={handleFileChange}
             type="file"
             id="fileUpload"
             accept=".xls,.xlsx"
-            className="p-2 rounded border border-gray-300"
+            className="border-2 border-gray-400 p-1 rounded-md placeholder-gray-400"
           />
-          <button type="submit" className="p-2 bg-blue-500 text-white rounded" onClick={handleSubmit}>
-            {loading ? "Submiting ..." : "Submit"}
+          <button
+            type="submit"
+            className="p-4 bg-[#1fc074] rounded text-white w-1/2 font-semibold mx-auto "
+            onClick={handleSubmit}
+          >
+            {loading ? "Add Questioning ..." : "Add Question"}
           </button>
         </div>
+      <div className="flex flex-col gap-2 p-2 bg-white rounded-xl 2xl:w-full md:w-full sm:w-full lg:w-full xl:w-full">
+        <div>
+          <img src="image.png" alt="" className="w-full rounded-md shadow-lg" />
+        </div>
+        {/* image information */}
+        <div>
+          <div className="flex flex-col bg-[#f0f2f5] p-3 gap-2 rounded-md shadow-lg">
+            <div className="flex items-center justify-start gap-3 ">
+              <img src="excel.png" alt="" />
+              <div>
+                <h1>PAPAssessmentTemplate</h1>
+                <p className="text-xs text-gray-500">
+                  14 MB,Microsoft Excel Workout
+                </p>
+              </div>
+            </div>
+            <hr className="w-full " />
+            <button
+              onClick={() => {
+                const link = document.createElement("a");
+                link.href = "/PAPAssessmentTemplate.xlsx";
+                link.download = "PAPAssessmentTemplate.xlsx";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="bg-white w-full p-3 text-black rounded-md flex items-center justify-center gap-2 shadow-sm text-lg font-semibold"
+            >
+              <GoDownload /> <span>Download</span>
+            </button>
+          </div>
+        </div>
+      </div>
       </form>
+      <div className="flex items-center justify-between px-10">
+        {" "}
+        <p className="text-white">-</p>
+        <p className="xl:px-10 text-end">
+          *Download the template, fill in the questions, and upload it.
+        </p>
+      </div>
     </div>
   );
 };

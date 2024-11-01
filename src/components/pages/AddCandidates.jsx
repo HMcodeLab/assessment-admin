@@ -197,7 +197,7 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
   }
 
   return (
-    <div className="h-auto w-full bg-gray-600 p-5">
+    <div className="h-auto w-full bg-gray-600 p-5 rounded-md">
       <Toaster position="top-center" />
       {/* <TimeConversionExample/> */}
       <div className="max-w-[25rem] xl:w-[30%] mx-auto flex flex-col items-center  justify-between mt-3 px-10 border rounded-lg shadow-2xl">

@@ -1,11 +1,23 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { FaRegCircleUser } from "react-icons/fa6";
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from "react";
+import { FaUserCircle } from "react-icons/fa";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+
+// Import images
+import dashboardIcon from "../../Assets/dashboard-dark.png";
+import editAssessmentIcon from "../../Assets/edit-assessment.jpg";
+import accountIcon from "../../Assets/account.png";
+import studentResultIcon from "../../Assets/student-result.png";
+import addAssessmentIcon from "../../Assets/addassesment.png";
+import candidateIcon from "../../Assets/candidate.png";
+import questionIcon from "../../Assets/question.png";
+import studentIcon from "../../Assets/student.png";
+import defaultIcon from "../../Assets/Tag.png";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+  const location = useLocation();
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -14,11 +26,15 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     navigate("/login");
-    window.location.reload(); // Force a complete page refresh
+    window.location.reload();
+  };
+
+  const handleProfile = () => {
+    navigate("/profile");
+    window.location.reload();
   };
 
   useEffect(() => {
-    // Close dropdown when clicking outside
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
@@ -31,21 +47,50 @@ const Navbar = () => {
     };
   }, []);
 
+  const getPageTitleIcon = () => {
+    if (location.pathname.startsWith("/edit-assessment/")) {
+      return { title: "Edit Assessment", icon: editAssessmentIcon };
+    }
+    if (location.pathname.startsWith("/profile")) {
+      return { title: "Admin Profile", icon: accountIcon };
+    }
+    if (location.pathname.startsWith("/test-report/")) {
+      return { title: "Student Assessment Result", icon: studentResultIcon };
+    }
+    if (location.pathname.startsWith("/student-test-report/")) {
+      return { title: "Student Test Report", icon: studentResultIcon };
+    }
+    switch (location.pathname) {
+      case "/dashboard":
+        return { title: "Dashboard", icon: dashboardIcon };
+      case "/add-assignment":
+        return { title: "Add Assignment", icon: addAssessmentIcon };
+      case "/add-candidates":
+        return { title: "Add Candidate", icon: candidateIcon };
+      case "/testdetails":
+        return { title: "Update Assessment", icon: editAssessmentIcon };
+      case "/add-questions":
+        return { title: "Add Questions", icon: questionIcon };
+      case "/assessment-result":
+        return { title: "Assessment Result", icon: studentResultIcon };
+      case "/studentfeedback":
+        return { title: "Student Feedback", icon: studentIcon };
+      default:
+        return { title: "Page Not Found", icon: defaultIcon };
+    }
+  };
+
   return (
-    <div className="bg-green-500 h-[10vh] shadow-md w-full flex justify-between items-center px-10">
-      <div className="text-white text-2xl font-bold flex items-center pl-[15vw]">Assessment Dashboard</div>
-
-      {/* User Profile Section */}
+    <nav className="flex items-center justify-between p-5">
+      <div className="flex items-center gap-2">
+        <img src={getPageTitleIcon().icon} alt="Page Icon" className="w-6" />
+        <h1 className="text-3xl">{getPageTitleIcon().title}</h1>
+      </div>
       <div className="relative" ref={dropdownRef}>
-        <FaRegCircleUser
-          className="w-10 h-10 cursor-pointer text-white"
-          onClick={handleDropdownToggle}
-        />
-
-        {/* Dropdown Menu */}
+        <FaUserCircle className="text-4xl cursor-pointer" onClick={handleDropdownToggle} />
         {isDropdownOpen && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
-            <Link href="/profile" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+          <div className="absolute right-4 mt-0 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
+            <Link className="block px-4 py-2 text-gray-800 hover:bg-gray-100" onClick={handleProfile}>
               User Profile
             </Link>
             <Link
@@ -57,7 +102,7 @@ const Navbar = () => {
           </div>
         )}
       </div>
-    </div>
+    </nav>
   );
 };
 

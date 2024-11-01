@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaTimes } from "react-icons/fa";
+import { FaCirclePlus } from "react-icons/fa6";
+import { ImCross } from "react-icons/im";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 
@@ -22,7 +23,7 @@ const AddAssignment = () => {
       multiplePersonInFrame: { inUse: false, maxRating: 1500 },
       PhoneinFrame: { inUse: false, maxRating: 1500 },
       ControlKeyPressed: { inUse: false, maxRating: 1500 },
-      invisiblecam:{inUse:false,maxRating:1500}
+      invisiblecam: { inUse: false, maxRating: 1500 },
     },
     Assessmentmodules: [{ moduleName: "", timelimit: "" }],
   };
@@ -76,8 +77,10 @@ const AddAssignment = () => {
       JSON.stringify(assessment) !== JSON.stringify(initialAssessmentState)
     );
   };
-  const requiredFields = ['assessmentName', 'maxMarks', 'timelimit',];
-  const handleSubmit = async () => {
+  const requiredFields = ["assessmentName", "maxMarks", "timelimit"];
+
+  const handleSubmit = async (event) => {
+    event.preventDefault(); // Prevent default form submission
     if (!isAssessmentChanged()) {
       toast.error("No changes made to the assessment.");
       return;
@@ -118,175 +121,157 @@ const AddAssignment = () => {
       setloading(false);
     }
   };
-
-  const Loader = () => {
-    return (
-      <div className="w-6 h-6 border-t-4 border-blue-500 rounded-full animate-spin"></div>
-    );
-  };
-
   const handleSelect = () => {
     const allSelected = Object.keys(assessment?.ProctoringFor || {}).every(
       (key) => assessment?.ProctoringFor[key].inUse
     );
-  
+
     // Toggle all 'inUse' fields based on the current selection status
     setAssessment((prev) => ({
       ...prev,
-      ProctoringFor: Object.keys(prev?.ProctoringFor || {}).reduce((acc, key) => {
-        acc[key] = {
-          ...prev.ProctoringFor[key],
-          inUse: !allSelected, // If all are selected, deselect them, otherwise select all
-        };
-        return acc;
-      }, {}),
+      ProctoringFor: Object.keys(prev?.ProctoringFor || {}).reduce(
+        (acc, key) => {
+          acc[key] = {
+            ...prev.ProctoringFor[key],
+            inUse: !allSelected, // If all are selected, deselect them, otherwise select all
+          };
+          return acc;
+        },
+        {}
+      ),
     }));
   };
-  
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5 ">
+    <div className=" bg-gray-100 flex items-center justify-center mt-0 px-4 py-4 h-auto">
       <Toaster />
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full ">
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div className="flex gap-4 items-center">
+            <label className=" text-gray-700 text-nowrap font-semibold">
+              Assessment Name
+            </label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="Assessment Name"
+              value={assessment?.assessmentName || ""}
+              onChange={(e) =>
+                handleInputChange("assessmentName", e.target.value)
+              }
+            />
+          </div>
+          <div className="flex gap-4 items-center">
+            <label className=" text-gray-700 font-semibold">Description</label>
+            <textarea
+              className="w-full px-3 py-2 border rounded-md"
+              placeholder="Description"
+              value={assessment?.assessmentDesc || ""}
+              onChange={(e) =>
+                handleInputChange("assessmentDesc", e.target.value)
+              }
+            ></textarea>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-1 items-center gap-4">
+            <div className="flex items-center gap-2 text-nowrap">
+              <label className=" text-gray-700 font-semibold">Total Marks</label>
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="Maximum Marks"
+                value={assessment?.maxMarks || ""}
+                onChange={(e) => handleInputChange("maxMarks", e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <label className=" text-gray-700 text-nowrap font-semibold">
+                Time Limit (mins)
+              </label>
+              <input
+                type="number"
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="Time Limit"
+                value={assessment?.timelimit || ""}
+                onChange={(e) => handleInputChange("timelimit", e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="flex gap-2 flex-col">
+            <label className=" text-gray-700 font-semibold">Date For Assessment</label>
+            <div className="grid grid-cols-2 gap-2">
+              
+            <div className="flex items-center md:items-start md:flex-col">
+              <span>FROM</span>
+              <input
+                type="datetime-local"
+                className="w-full px-12 py-2 border rounded-md"
+                placeholder="From"
+                value={assessment?.startDate || ""}
+                onChange={(e) => handleInputChange("startDate", e.target.value)}
+              />
+            </div>
+            <div className="flex items-center md:items-start md:flex-col">
+              <span>TO</span>
+              <input
+                type="datetime-local"
+                className="w-full px-12 py-2 border rounded-md"
+                placeholder="To"
+                value={assessment?.lastDate || ""}
+                onChange={(e) => handleInputChange("lastDate", e.target.value)}
+              />
+            </div>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-xl font-semibold text-gray-700">
+            <label className="">Proctoring Options</label>
+            <p className="cursor-pointer" onClick={handleSelect}>
+              {Object.keys(assessment?.ProctoringFor || {}).every(
+                (key) => assessment?.ProctoringFor[key].inUse
+              )
+                ? "Deselect All"
+                : "Select All"}
+            </p>
+          </div>
 
-      <div className="w-full max-w-3xl bg-white shadow-lg rounded-lg p-8 space-y-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center underline">
-          Assessment Submissions
-        </h1>
-        <div className="space-y-8">
-          <div className="space-y-4 border p-3">
-            <div className="space-y-4">
-              <div className="flex flex-col gap-4">
-                <label className="text-xl font-semibold flex flex-row justify-between">
-                  <p>Assessment Name </p>
-                </label>
-
-                <input
-                  type="text"
-                  placeholder="Assessment Name"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.assessmentName || ""}
-                  onChange={(e) =>
-                    handleInputChange("assessmentName", e.target.value)
-                  }
-                />
-                <label htmlFor="" className="text-xl font-semibold">
-                  Description
-                </label>
-                <input
-                  type="text"
-                  placeholder="Assessment description"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.assessmentDesc || ""}
-                  onChange={(e) =>
-                    handleInputChange("assessmentDesc", e.target.value)
-                  }
-                />
-                <label className="text-xl font-semibold">Total Marks</label>
-                <input
-                  type="number"
-                  placeholder="Max Marks"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.maxMarks || ""}
-                  onChange={(e) =>
-                    handleInputChange("maxMarks", e.target.value)
-                  }
-                />
-                 <label className="text-xl font-semibold">
-                  Time Limit (mins)
-                </label>
-                <input
-                  type="number"
-                  placeholder="Time Limit"
-                  className="border w-full h-12 p-3"
-                  value={assessment?.timelimit || ""}
-                  onChange={(e) =>
-                    handleInputChange("timelimit", e.target.value)
-                  }
-                />
-
-
-                <label className="text-xl font-semibold">
-                  Date For Assessment
-                </label>
-                <div className="flex flex-row gap-3">
-                  <label className="flex flex-col justify-center font-mono">
-                    FROM
-                  </label>
+          <div className="grid xl:grid-cols-3 gap-3 my-4 grid-cols-2 ">
+            {Object?.keys(assessment?.ProctoringFor).map((key) => (
+              <div key={key} className="space-y-2">
+                <div className="flex items-center gap-2">
                   <input
-                    type="datetime-local"
-                    className="border w-full h-12 p-3 "
-                    value={assessment?.startDate || ""}
+                    className="cursor-pointer rounded-full form-checkbox h-5 w-5 text-blue-500 transition duration-150 ease-in-out"
+                    type="checkbox"
+                    checked={assessment?.ProctoringFor[key].inUse}
                     onChange={(e) =>
-                      handleInputChange("startDate", e.target.value)
+                      handleProctoringChange(key, "inUse", e.target.checked)
                     }
                   />
-                  <label className="flex flex-col justify-center font-mono">
-                    TO
-                  </label>
-                  <input
-                    type="datetime-local"
-                    className="border w-full h-12 p-3"
-                    value={assessment?.lastDate || ""}
-                    onChange={(e) =>
-                      handleInputChange("lastDate", e.target.value)
-                    }
-                  />
-                </div>
-
-               
-                <div className="flex items-center justify-between text-xl font-semibold">
-                  <label>Proctoring Options</label>
-                  <p className="cursor-pointer" onClick={handleSelect}>
-                    {Object.keys(assessment?.ProctoringFor || {}).every(
-                      (key) => assessment?.ProctoringFor[key].inUse
-                    )
-                      ? "Deselect All"
-                      : "Select All"}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-3 gap-4 my-4">
-                  {Object?.keys(assessment?.ProctoringFor).map((key) => (
-                    <div key={key} className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <input
-                          className="cursor-pointer rounded-full form-checkbox h-5 w-5 text-blue-500 transition duration-150 ease-in-out"
-                          type="checkbox"
-                          checked={assessment?.ProctoringFor[key].inUse}
-                          onChange={(e) =>
-                            handleProctoringChange(
-                              key,
-                              "inUse",
-                              e.target.checked
-                            )
-                          }
-                        />
-                        <span className="text-gray-700 capitalize">{key}</span>
-                      </div>
-                    </div>
-                  ))}
+                  <span className="text-gray-700 capitalize">{key}</span>
                 </div>
               </div>
-
-              <label className="text-xl font-semibold">
-                Assessment Modules
-              </label>
-              {assessment?.Assessmentmodules?.map((module, moduleIndex) => (
-                <div key={moduleIndex} className="border p-4 mb-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-row justify-between">
-                      <label>Module Name</label>
-                      <div
-                        className="bg-red-500 h-6 w-6 rounded flex items-center justify-center text-white text-xl cursor-pointer"
-                        onClick={() => handleRemoveModule(moduleIndex)}
-                      >
-                        <FaTimes />
-                      </div>
-                    </div>
+            ))}
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-4">
+              <h3 className="text-xl font-semibold text-gray-700">Modules</h3>
+              <FaCirclePlus
+                className="text-xl text-blue-500 cursor-pointer"
+                onClick={handleAddModule}
+              />
+            </div>
+            {assessment?.Assessmentmodules?.map((module, moduleIndex) => (
+              <div
+                key={moduleIndex}
+                className="flex md:justify-between justify-around items-center gap-4 p-4"
+              >
+                <div className="grid grid-cols-2  gap-4 w-full">
+                  <div className="flex items-center md:flex-col md:items-start  gap-2">
+                    <label className="text-gray-700 whitespace-nowrap">
+                      Module Name
+                    </label>
                     <input
                       type="text"
+                      className="w-full px-3 py-2 border rounded-md"
                       placeholder="Module Name"
-                      className="border w-full h-12 p-3"
                       value={module.moduleName || ""}
                       onChange={(e) =>
                         handleModuleInputChange(
@@ -296,11 +281,17 @@ const AddAssignment = () => {
                         )
                       }
                     />
-                    <label className="text-xl font-semibold">Time Limit</label>
+                  </div>
+                  <div className="flex items-center md:flex-col md:items-start  gap-2">
+                    <label className="text-gray-700 whitespace-nowrap">
+                      Time Limit
+                    </label>
                     <input
                       type="number"
-                      placeholder="Module Time Limit"
-                      className="border w-full h-12 p-3"
+                      className="w-full px-3 py-2 border rounded-md"
+                      placeholder="Time Limit"
+                      min={0}
+                      max={300}
                       value={module.timelimit || ""}
                       onChange={(e) =>
                         handleModuleInputChange(
@@ -312,31 +303,20 @@ const AddAssignment = () => {
                     />
                   </div>
                 </div>
-              ))}
-              <button
-                onClick={handleAddModule}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Add Module
-              </button>
-            </div>
+                <ImCross
+                  className="text-xl text-red-500 cursor-pointer"
+                  onClick={() => handleRemoveModule(moduleIndex)}
+                />
+              </div>
+            ))}
           </div>
-
-          <div className="flex justify-center">
-            <button
-              onClick={handleSubmit}
-              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
-            >
-              {loading ? (
-                <div className="flex items-center gap-1">
-                  Submitting ... <Loader />
-                </div>
-              ) : (
-                "Submit"
-              )}
-            </button>
-          </div>
-        </div>
+          <button
+            type="submit"
+            className=" mt-2 w-[20%] self-center p-2 bg-green-600 text-white rounded-md"
+          >
+            {loading ? "Submiting..." : "Submit"}
+          </button>
+        </form>
       </div>
     </div>
   );

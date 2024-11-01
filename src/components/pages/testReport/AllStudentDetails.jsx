@@ -420,23 +420,23 @@ const AllStudentDetails = () => {
               <React.Fragment key={index}>
                 {/* Row for XL screens */}
                 <tr
-                  className={`hidden xl:table-row ${
+                  className={`hidden xl:table-row border-2 ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
                 >
-                  <td className="border px-4 py-2">{index + 1}</td>
-                  <td className="border px-4 py-2">{student?.name}</td>
-                  <td className="border px-4 py-2 text-nowrap">{formatDate(student?.updatedAt)}</td>
-                  <td className="border px-4 py-2">{student?.email}</td>
-                  <td className="border px-4 py-2">{student?.phone_number}</td>
-                  <td className="border px-4 py-2">{student?.college_name}</td>
-                  <td className="border px-4 py-2">
+                  <td className=" px-4 py-2">{index + 1}</td>
+                  <td className=" px-4 py-2">{student?.name}</td>
+                  <td className=" px-4 py-2 text-nowrap">{formatDate(student?.updatedAt)}</td>
+                  <td className=" px-4 py-2">{student?.email}</td>
+                  <td className=" px-4 py-2">{student?.phone_number}</td>
+                  <td className=" px-4 py-2">{student?.college_name}</td>
+                  <td className=" px-4 py-2">
                     {student?.year_of_passing}
                   </td>
-                  <td className="border px-4 py-2">{student?.totalMarks}</td>
-                  <td className="border px-4 py-2">{student?.rank}</td>
-                  <td className="border px-4 py-2">{getStatus(student)}</td>
-                  <td className="border px-4 py-2 flex ">
+                  <td className=" px-4 py-2">{student?.totalMarks}</td>
+                  <td className=" px-4 py-2">{student?.rank}</td>
+                  <td className=" px-4 py-2">{getStatus(student)}</td>
+                  <td className="px-4 py-4 flex ">
                   <button
                       disabled={
                         student?.isSuspended || student?.isAssessmentCompleted

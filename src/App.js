@@ -14,7 +14,6 @@ import AddCandidates from "./components/pages/AddCandidates";
 import EditAssessment from "./components/pages/EditAssessment";
 import TestDetails from "./components/pages/TestDetails";
 import LoginPage from "./components/login/signup/LoginPage";
-import Register from "./components/login/signup/Register";
 import PrivateRoute from "./PrivateRoute";
 import { useAuth } from "./AuthContext";
 import AdminProfile from "./components/profile/AdminProfile";
@@ -41,7 +40,7 @@ function App() {
         <div
           className={
             isAuthenticated
-              ? "flex-1 flex flex-col ml-64 h-full overflow-x-hidden"
+              ? "flex-1 flex flex-col ml-64 h-full overflow-x-hidden mr-4 rounded-md"
               : "w-full flex flex-col h-full overflow-x-hidden"
           }
         >
@@ -49,7 +48,7 @@ function App() {
           {isAuthenticated && <Navbar />}
 
           {/* Main Section */}
-          <div className="flex-1 overflow-auto scroll-smooth pl-6">
+          <div className="flex-1 pb-4 overflow-auto scroll-smooth pl-6 mt-0 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar]:h-2 [&::-webkit-scrollbar-thumb]:rounded-md [&::-webkit-scrollbar-track]:bg-white [&::-webkit-scrollbar-thumb]:bg-[#15262d]">
             <Routes>
               {/* Redirect to dashboard if authenticated */}
               <Route
@@ -58,18 +57,56 @@ function App() {
               />
 
               {/* Protected Routes */}
-              <Route path="/" element={<Navigate to={isAuthenticated ? "/dashboard" : "/login"} />} />
-              <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
-              <Route path="/add-assignment" element={<PrivateRoute element={AddAssignment} />} />
-              <Route path="/assessmentresult" element={<PrivateRoute element={AssignmentResult} />} />
-              <Route path="/add-candidates" element={<PrivateRoute element={AddCandidates} />} />
-              <Route path="/edit-assessment/:testId" element={<PrivateRoute element={EditAssessment} />} />
-              <Route path="/testdetails" element={<PrivateRoute element={TestDetails} />} />
-              <Route path="/profile" element={<PrivateRoute element={AdminProfile} />} />
-              <Route path="/AddQuestions" element={<PrivateRoute element={AddQuestions} />} />
-              <Route path="/test-report/:testId" element={<PrivateRoute element={AllStudentDetails} />} />
-              <Route path="/student-test-report/:testId/:studentId" element={<PrivateRoute element={EachStudentDetails} />} />
-              <Route path="/feedback" element={<PrivateRoute element={FeedBack} />} />
+              <Route
+                path="/"
+                element={
+                  <Navigate to={isAuthenticated ? "/dashboard" : "/login"} />
+                }
+              />
+              <Route
+                path="/dashboard"
+                element={<PrivateRoute element={Dashboard} />}
+              />
+              <Route
+                path="/add-assignment"
+                element={<PrivateRoute element={AddAssignment} />}
+              />
+              <Route
+                path="/assessment-result"
+                element={<PrivateRoute element={AssignmentResult} />}
+              />
+              <Route
+                path="/add-candidates"
+                element={<PrivateRoute element={AddCandidates} />}
+              />
+              <Route
+                path="/edit-assessment/:testId"
+                element={<PrivateRoute element={EditAssessment} />}
+              />
+              <Route
+                path="/testdetails"
+                element={<PrivateRoute element={TestDetails} />}
+              />
+              <Route
+                path="/profile"
+                element={<PrivateRoute element={AdminProfile} />}
+              />
+              <Route
+                path="/add-questions"
+                element={<PrivateRoute element={AddQuestions} />}
+              />
+              <Route
+                path="/test-report/:testId"
+                element={<PrivateRoute element={AllStudentDetails} />}
+              />
+              <Route
+                path="/student-test-report/:testId/:studentId"
+                element={<PrivateRoute element={EachStudentDetails} />}
+              />
+              <Route
+                path="/studentfeedback"
+                element={<PrivateRoute element={FeedBack} />}
+              />
 
               {/* 404 Route */}
               <Route path="*" element={<NotFoundPage />} />

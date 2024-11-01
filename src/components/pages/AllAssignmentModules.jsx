@@ -1,142 +1,79 @@
 import React, { useState, useEffect } from "react";
-import { GrDocumentCsv, GrDownload } from "react-icons/gr";
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TablePagination,
-} from "@mui/material";
 import axios from "axios";
-import * as XLSX from "xlsx";
-import { saveAs } from "file-saver";
 import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import Loader from "../Loader";
-
 
 const AssignmentResult = () => {
   const [testData, setTestData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const adminToken = localStorage.getItem("authToken");
-  const [loading, setLoading] = useState(true)
-  const navigate= useNavigate();
-let temp=true
-  useEffect(() => {
-    setLoading(true); // Set loading to true when the API request starts
-  if(temp){
-    
-    axios
-      .get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`, {
-        headers: {
-          Authorization: "Bearer " + adminToken,
-        },
-      })
-      .then((response) => {
-        setTestData(response?.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching test details:", error);
-      })
-      .finally(() => {
-        setLoading(false); // Set loading to false when the request finishes
-      });
-      temp=false
-  }
-  }, []);
-  
+  const [loading, setLoading] = useState(true);
+  const [viewLoading, setViewLoading] = useState({});
+  const navigate = useNavigate();
+  const temp = true;
 
+  useEffect(() => {
+    setLoading(true);
+    if (temp) {
+      axios
+        .get(
+          `${process.env.REACT_APP_SERVER_DOMAIN}/getAllAssessmentForAdmin`,
+          {
+            headers: { Authorization: "Bearer " + adminToken },
+          }
+        )
+        .then((response) => {
+          setTestData(response?.data.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching test details:", error);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, []);
   const fetchData = async (testId) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_SERVER_DOMAIN}/getAllUsersResultForAssessment/${testId}`, {
-        headers: {
-          Authorization: `Bearer ${adminToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_DOMAIN}/getAllUsersResultForAssessment/${testId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${adminToken}`,
+          },
+        }
+      );
       // console.log(response?.data);  // Log the response for debugging
       if (response) {
         // setCheckStudents(response?.data);
-        return response?.data
+        return response?.data;
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  
-
-  const handleViewClick = async (testId,assessmentName) => {
+  const handleViewClick = async (testId, assessmentName) => {
+    setViewLoading((prev) => ({ ...prev, [testId]: true })); // Set loading for this specific testId
     try {
       const response = await fetchData(testId);
-      const students = response?.data || []; // Get students from response
-      // console.log(response)
+      const students = response?.data || [];
       if (students.length > 0) {
-        navigate(`/test-report/${testId}`, { state: { assessmentName:assessmentName } });
+        navigate(`/test-report/${testId}`, { state: { assessmentName } });
       } else {
         toast.error("No Students are available");
       }
     } catch (error) {
       console.error("Error fetching students:", error);
       toast.error("Failed to fetch students.");
+    } finally {
+      setViewLoading((prev) => ({ ...prev, [testId]: false })); // Reset loading state for this testId
     }
   };
-  
 
-  const handleDownload = () => {
-  
-    // Customize the data
-    const customizedData = testData.map((item) => {
-      // Build the Proctoring array
-      const Proctoring = [
-        item.ProctoringFor?.mic?.inUse && "Mic",
-        item.ProctoringFor?.webcam?.inUse && "Webcam",
-        item.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
-        item.ProctoringFor?.multiplePersonInFrame?.inUse && "MultiplePersonInFrame",
-        item.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
-        item.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
-      ].filter(Boolean); // Remove any falsey values
-    
-      return {
-        Assessment: item.assessmentName,
-        Modules: item?.Assessmentmodules?.length,
-        Marks: item.maxMarks,
-        Time: item.timelimit,
-        Proctoring: Proctoring, 
-        expired:item?.lastDate
-      };
-    });
-  
-    const worksheet = XLSX.utils.json_to_sheet(customizedData, {
-      header: [
-        "Assessment",
-        "Modules",
-        "Marks",
-        "Time",
-        "Proctoring",
-        "Expiry Date"
-      ],
-    });
-  
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Test Details");
-  
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-    
-    const file = new Blob([excelBuffer], {
-      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    });
-  
-    saveAs(file, "TestDetails.xlsx");
-  };
-
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (newPage) => {
     setPage(newPage);
   };
 
@@ -149,150 +86,160 @@ let temp=true
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
+  const totalPages = Math.ceil(testData.length / rowsPerPage);
 
-// format date
-function formatDate(dateString) {
-  const dateObj = new Date(dateString); // Keep this as a Date object
+  const formatDate = (dateString) => {
+    const dateObj = new Date(dateString);
+    const day = String(dateObj.getUTCDate()).padStart(2, "0");
+    const year = dateObj.getUTCFullYear();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const month = monthNames[dateObj.getUTCMonth()];
+    let hours = dateObj.getUTCHours();
+    const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12 || 12;
+    return `${day} ${month} ${year} ${hours}.${minutes}${ampm}`;
+  };
 
-  const day = String(dateObj.getUTCDate()).padStart(2, "0");
-  const year = dateObj.getUTCFullYear();
-
-  const monthNames = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const month = monthNames[dateObj.getUTCMonth()];
-
-  let hours = dateObj.getUTCHours();
-  const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
-
-  const ampm = hours >= 12 ? "pm" : "am";
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour '0' should be '12'
-
-  const time = `${hours}.${minutes}${ampm}`;
-
-  return `${day} ${month} ${year} ${time}`;
-}
-if(loading){
-  return(
-    <Loader/>
-  )
-}
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="p-5">
       <Toaster position="top-center" />
-      <h1 className="text-[30px] flex justify-center font-bold p-4">
-        Assessment Results
-      </h1>
-      <div className="flex justify-end">
-        <Button variant="contained" color="primary" onClick={handleDownload}>
-          <div className="flex justify-between p-2">
-            <span className="pr-3">
-              <GrDocumentCsv className="text-xl" />
-            </span>
-            <span>
-              <GrDownload className="text-xl" />
-            </span>
-          </div>
-        </Button>
+      <table className="min-w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
+        <thead className="bg-gray-200 text-gray-700">
+          <tr>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Assessment Name
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Total Module
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Max Marks
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Time Limit (mins)
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Proctoring
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Start Date
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Last Date
+            </th>
+            <th className="py-3 px-4 text-left font-semibold border-b">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {paginatedData.map((assessment, index) => (
+            <tr
+              key={index}
+              className="hover:bg-green-50 transition duration-150"
+            >
+              <td className="py-3 px-4 border-b">{assessment.assessmentName}</td>
+              <td className="py-3 px-4 border-b">
+                {assessment?.Assessmentmodules?.length || 0}
+              </td>
+              <td className="py-3 px-4 border-b">{assessment.maxMarks}</td>
+              <td className="py-3 px-4 border-b">{assessment.timelimit}</td>
+              <td className="py-3 px-4 border-b">
+                {[
+                  assessment.ProctoringFor?.mic?.inUse && "Mic",
+                  assessment.ProctoringFor?.webcam?.inUse && "Webcam",
+                  assessment.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
+                  assessment.ProctoringFor?.multiplePersonInFrame?.inUse &&
+                    "MultiplePersonInFrame",
+                  assessment.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
+                  assessment.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
+                  assessment.ProctoringFor?.ControlKeyPressed?.inUse &&
+                    "ControlKeyPressed",
+                  assessment.ProctoringFor?.invisiblecam?.inUse && "invisiblecam",
+                ]
+                  .filter(Boolean)
+                  .join(", ")}
+              </td>
+              <td className="py-3 px-4 border-b">
+                {formatDate(assessment.startDate)}
+              </td>
+              <td className="py-3 px-4 border-b">
+                {formatDate(assessment.lastDate)}
+              </td>
+              <td
+                className="py-3 px-4 border-b cursor-pointer"
+                onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}
+              >
+                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white">{viewLoading[assessment._id] ? "Viewing..." : "View"}</span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+<div className="flex justify-between">
+      <div className="flex items-center mt-4">
+        <span className="mr-2">Rows per page:</span>
+        <select
+          value={rowsPerPage}
+          onChange={handleChangeRowsPerPage}
+          className="px-2 py-1 rounded bg-gray-200 text-gray-700 "
+        >
+          {[5, 10, 25, 50].map((size) => (
+            <option key={size} value={size}>
+              {size}
+            </option>
+          ))}
+        </select>
       </div>
-      <TableContainer>
-        <Table className="px-8">
-          <TableHead>
-            <TableRow className="">
-              <TableCell sx={{ fontSize: "1.2rem" }}>Assessment Name</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>Total Modules</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>Max Marks</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>
-                Time Limit (mins)
-              </TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>Proctoring</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>Start Date</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>End Date</TableCell>
-              <TableCell sx={{ fontSize: "1.2rem" }}>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {paginatedData?.map((test) => (
-              <TableRow key={test._id}>
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  {test.assessmentName}
-                </TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  {test?.Assessmentmodules?.length||0}
-                </TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>{test.maxMarks}</TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  {test.timelimit}
-                </TableCell>
-                <TableCell
-                  sx={{ fontSize: "1rem" }}
-                  className="grid grid-cols-2"
-                >
-                  {[
-                    test.ProctoringFor?.mic?.inUse && "Mic",
-                    test.ProctoringFor?.webcam?.inUse && "Webcam",
-                    test.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
-                    test.ProctoringFor?.multiplePersonInFrame?.inUse &&
-                      "MultiplePersonInFrame",
-                    test.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
-                    test.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
-                    test.ProctoringFor?.ControlKeyPressed?.inUse && "ControlKeyPressed",
-                    test.ProctoringFor?.invisiblecam?.inUse && "invisiblecam",
-                  ]
-                    .filter(Boolean) // Remove falsy values
-                    .join(" , ")}{" "}
-                </TableCell>
 
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  {formatDate(test.startDate)}
-                </TableCell>
-                <TableCell sx={{ fontSize: "1rem" }}>
-                  {formatDate(test.lastDate)}
-                </TableCell>
-                <TableCell sx={{ fontSize: "1rem", cursor: "pointer" }}>
-                  <Button
-                    onClick={() => handleViewClick(test._id,test.assessmentName)}
-                    variant="outlined"
-                  >
-                    View
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-
-      {/* Pagination */}
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25, 50]}
-        component="div"
-        count={testData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-
-      {/* Modal for detailed view */}
-      {/* <ResultsAssessment
-        show={showModal}
-        onClose={handleCloseModal}
-        student={selectedTest}
-      /> */}
+      <div className="flex justify-center items-center mt-4 gap-2">
+        <button
+          onClick={() => handleChangePage(page - 1)}
+          disabled={page === 0}
+          className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
+        >
+          {"<"}
+        </button>
+        {[...Array(totalPages)].map((_, index) => (
+          <button
+            key={index}
+            onClick={() => handleChangePage(index)}
+            className={`px-3 py-1 rounded mx-1 ${
+              page === index
+                ? "bg-green-500 text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            {index + 1}
+          </button>
+        ))}
+        <button
+          onClick={() => handleChangePage(page + 1)}
+          disabled={page === totalPages - 1}
+          className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
+        >
+          {">"}
+        </button>
+      </div>
+</div>
     </div>
   );
 };
