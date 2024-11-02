@@ -131,13 +131,6 @@ const AddQuestions = () => {
     <div className="p-5 overflow-hidden">
       <Toaster />
       <form className="flex items-center justify-center gap-5  md:flex-col lg:flex-row ">
-        {/* <a
-          href="/PAPAssessmentTemplate.xlsx"
-          download
-          className=" bg-gray-400  flex flex-row gap-2 items-center justify-center py-2 shadow-sm rounded-lg text-lg font-semibold w-[14vw]"
-        >
-          <GoDownload /> <span>Format</span>
-        </a> */}
         <div className="flex flex-col gap-4 p-10 bg-white rounded-xl 2xl:w-full md:w-full sm:w-full lg:w-full xl:w-full shadow-md">
           <label htmlFor="module" className="whitespace-nowrap font-semibold">
             Select An Assesment
