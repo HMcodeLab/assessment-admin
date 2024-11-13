@@ -177,7 +177,7 @@ const AllStudentDetails = () => {
       filteredStudents?.map((student) => ({
         Name: student?.name,
         Email: student?.email,
-        Contact: student?.phone_number,
+        Contact: student?.phone_number?.toString(),
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
         marks: student?.totalMarks,
