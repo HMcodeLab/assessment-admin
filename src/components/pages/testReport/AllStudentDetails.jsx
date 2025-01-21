@@ -27,10 +27,7 @@ const AllStudentDetails = () => {
   const [sortColumn, setSortColumn] = useState(null);
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedDate, setSelectedDate] = useState("");
-  const [loadingStates, setLoadingStates] = useState({
-    delete: false,
-    restart: false,
-  });
+  const [loadingStates, setLoadingStates] = useState({});
   const [autoRefresh, setAutoRefresh] = useState(false);
 
   const [toggleOpen, setToggleOpen] = useState(null);
@@ -154,7 +151,9 @@ const AllStudentDetails = () => {
     .filter(filteredByDate);
 
   const handleView = (studentId) => {
-    navigate(`/student-test-report/${testId}/${studentId}`);
+    navigate(
+      `/student-test-report/${testId}/${studentId}?assessmentName=${assessmentName}`
+    );
   };
 
   const countStudentsByRank = (studentsData) => {
@@ -270,8 +269,14 @@ const AllStudentDetails = () => {
   };
 
   const handleRestartClick = async (email) => {
-    setLoadingStates((prev) => ({ ...prev, restart: true }));
+    console.log("Restarting Assessment for:", email);
+
+    setLoadingStates((prev) => ({
+      ...prev,
+      [email]: { restart: true },
+    }));
     setRestartloading(true);
+
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_SERVER_DOMAIN}/restartAssessment`,
@@ -280,7 +285,6 @@ const AllStudentDetails = () => {
       );
       if (response) {
         toast.success("Assessment Restarted Successfully");
-        // Remove the deleted student from the state
         fetchData();
       }
     } catch (error) {
@@ -288,7 +292,10 @@ const AllStudentDetails = () => {
       console.error("Restart Error:", error);
     } finally {
       setRestartloading(false);
-      setLoadingStates((prev) => ({ ...prev, restart: false }));
+      setLoadingStates((prev) => ({
+        ...prev,
+        [email]: { restart: false },
+      }));
     }
   };
 
@@ -426,25 +433,25 @@ const AllStudentDetails = () => {
                 >
                   <td className=" px-4 py-2">{index + 1}</td>
                   <td className=" px-4 py-2">{student?.name}</td>
-                  <td className=" px-4 py-2 text-nowrap">{formatDate(student?.updatedAt)}</td>
+                  <td className=" px-4 py-2 text-nowrap">
+                    {formatDate(student?.updatedAt)}
+                  </td>
                   <td className=" px-4 py-2">{student?.email}</td>
                   <td className=" px-4 py-2">{student?.phone_number}</td>
                   <td className=" px-4 py-2">{student?.college_name}</td>
-                  <td className=" px-4 py-2">
-                    {student?.year_of_passing}
-                  </td>
+                  <td className=" px-4 py-2">{student?.year_of_passing}</td>
                   <td className=" px-4 py-2">{student?.totalMarks}</td>
                   <td className=" px-4 py-2">{student?.rank}</td>
                   <td className=" px-4 py-2">{getStatus(student)}</td>
                   <td className="px-4 py-4 flex ">
-                  <button
+                    <button
                       disabled={
                         student?.isSuspended || student?.isAssessmentCompleted
                           ? false
                           : true
                       }
                       onClick={() => handleView(student.email)}
-                      className={ `${
+                      className={`${
                         student.isSuspended || student.isAssessmentCompleted
                           ? " hover:bg-blue-700 bg-blue-500"
                           : "bg-blue-200"
@@ -454,27 +461,41 @@ const AllStudentDetails = () => {
                     </button>
                     <button
                       onClick={() => handleDeleteClick(student?.email)}
+                      style={{
+                        display:
+                          student?.isAssessmentCompleted &&
+                          !student?.isSuspended
+                            ? "none"
+                            : "block",
+                      }}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
                     >
                       D
                     </button>
 
                     <button
-                      disabled={
-                        student?.isSuspended || student?.isAssessmentCompleted
-                          ? false
-                          : true
-                      }
-                      onClick={() => handleRestartClick(student?.email)}
-                      className={ `${
+                      // disabled={
+                      //   student?.isAssessmentCompleted || student?.isSuspended
+                      // }
+                      style={{
+                        display: student?.isSuspended ? "block" : "none",
+                      }}
+                      onClick={() => {
+                        console.log(
+                          "Restarting Assessment for:",
+                          student?.email
+                        );
+                        handleRestartClick(student?.email);
+                      }}
+                      className={`${
                         student.isSuspended || student.isAssessmentCompleted
                           ? " hover:bg-yellow-700 bg-yellow-500"
                           : "bg-yellow-200"
-                      }  text-white font-bold py-2 px-4 rounded ml-2`}
+                      } text-white font-bold py-2 px-4 rounded ml-2`}
                     >
-                      {restartloading && loadingStates
-                        ? "Resuming ..."
-                        : "Resume"}
+                      {loadingStates[student.email]?.restart && restartloading
+                        ? "R ..."
+                        : "R"}
                     </button>
                   </td>
                 </tr>

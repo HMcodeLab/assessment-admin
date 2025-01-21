@@ -174,7 +174,9 @@ const AddAssignment = () => {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-1 items-center gap-4">
             <div className="flex items-center gap-2 text-nowrap">
-              <label className=" text-gray-700 font-semibold">Total Marks</label>
+              <label className=" text-gray-700 font-semibold">
+                Total Marks
+              </label>
               <input
                 type="number"
                 className="w-full px-3 py-2 border rounded-md"
@@ -197,31 +199,65 @@ const AddAssignment = () => {
             </div>
           </div>
           <div className="flex gap-2 flex-col">
-            <label className=" text-gray-700 font-semibold">Date For Assessment</label>
+            <label className="text-gray-700 font-semibold">
+              Date For Assessment
+            </label>
             <div className="grid grid-cols-2 gap-2">
-              
-            <div className="flex items-center md:items-start md:flex-col">
-              <span>FROM</span>
-              <input
-                type="datetime-local"
-                className="w-full px-12 py-2 border rounded-md"
-                placeholder="From"
-                value={assessment?.startDate || ""}
-                onChange={(e) => handleInputChange("startDate", e.target.value)}
-              />
-            </div>
-            <div className="flex items-center md:items-start md:flex-col">
-              <span>TO</span>
-              <input
-                type="datetime-local"
-                className="w-full px-12 py-2 border rounded-md"
-                placeholder="To"
-                value={assessment?.lastDate || ""}
-                onChange={(e) => handleInputChange("lastDate", e.target.value)}
-              />
-            </div>
+              <div className="flex items-center md:items-start md:flex-col">
+                <span>FROM</span>
+                <input
+                  type="datetime-local"
+                  className="w-full px-12 py-2 border rounded-md"
+                  placeholder="From"
+                  id="startDate"
+                  value={assessment?.startDate || ""}
+                  onChange={(e) => {
+                    const newStartDate = e.target.value;
+                    handleInputChange("startDate", newStartDate);
+
+                    // Ensure start date is not after end date
+                    if (
+                      assessment?.lastDate &&
+                      newStartDate > assessment.lastDate
+                    ) {
+                      handleInputChange("lastDate", newStartDate); // Adjust lastDate to be after startDate
+                    }
+
+                    setTimeout(() => {
+                      document.getElementById("startDate")?.blur();
+                    }, 3000);
+                  }}
+                />
+              </div>
+
+              <div className="flex items-center md:items-start md:flex-col">
+                <span>TO</span>
+                <input
+                  type="datetime-local"
+                  className="w-full px-12 py-2 border rounded-md"
+                  placeholder="To"
+                  id="lastDate"
+                  value={assessment?.lastDate || ""}
+                  onChange={(e) => {
+                    const newEndDate = e.target.value;
+                    handleInputChange("lastDate", newEndDate);
+
+                    // Ensure end date is not before start date
+                    if (newEndDate < assessment?.startDate) {
+                      // You could either show an error message or automatically adjust the date
+                      toast.error("End date must be greater than start date.");
+                      handleInputChange("lastDate", assessment?.startDate); // Adjust lastDate to be after startDate
+                    }
+
+                    setTimeout(() => {
+                      document.getElementById("lastDate")?.blur();
+                    }, 3000);
+                  }}
+                />
+              </div>
             </div>
           </div>
+
           <div className="flex items-center justify-between text-xl font-semibold text-gray-700">
             <label className="">Proctoring Options</label>
             <p className="cursor-pointer" onClick={handleSelect}>

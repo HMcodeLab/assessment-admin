@@ -11,9 +11,9 @@ const AddCandidates = () => {
   const [selectedModule, setSelectedModule] = useState("");
   const fileInputRef = useRef(null);
   const adminToken = localStorage.getItem("authToken");
-  const [loading, setloading] = useState(false);
-  const [loader, setloader] = useState(true);
-  const [errorCount, seterrorCount] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [loader, setLoader] = useState(true);
+  const [errorCount, setErrorCount] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -31,27 +31,41 @@ const AddCandidates = () => {
           id: module._id,
         }));
         setModules(modules);
-        // console.log(response.data.data);
       }
-      // console.log(response);
     } catch (error) {
       console.log(error);
     } finally {
-      setloader(false);
+      setLoader(false);
     }
   };
-  let temp = true;
+
   useEffect(() => {
-    if (temp) {
-      fetchData();
-      temp = false;
-    }
+    fetchData();
   }, []);
 
-  // console.log(modules);
-
   const handleChange = (event) => {
-    setSelectedModule(event.target.value); // Update state with selected value
+    setSelectedModule(event.target.value);
+  };
+
+  const validateData = (data) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+
+    const invalidEntries = data.filter((row) => {
+      return (
+        !emailRegex.test(row.email) || !phoneRegex.test(row.phone_number)
+      );
+    });
+
+    if (invalidEntries.length > 0) {
+      toast.error("Some entries have invalid email or phone number format.");
+      setExcelData(invalidEntries); // Set only invalid data to show in the table
+      setErrorCount(true);
+      return false; // Indicate that validation failed
+    }
+
+    setErrorCount(false);
+    return true; // Validation successful
   };
 
   const handleFileUpload = (e) => {
@@ -62,14 +76,11 @@ const AddCandidates = () => {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       ];
 
-      // Check if the file type is valid
       if (!validTypes.includes(file.type)) {
         toast.error("Please upload a valid Excel file (.xls or .xlsx)");
         return;
-        // handleClear();
       }
 
-      // console.log(file.type);
       setExcelFile(file);
 
       const reader = new FileReader();
@@ -79,34 +90,36 @@ const AddCandidates = () => {
         const sheetName = workbook.SheetNames[0];
         const sheet = workbook.Sheets[sheetName];
         const data = XLSX.utils.sheet_to_json(sheet);
-        setExcelData(data);
+
+        // Validate the data before setting it
+        if (validateData(data)) {
+          setExcelData(data);
+        }
       };
 
       reader.readAsBinaryString(file);
     }
   };
 
-  // console.log(excelFile);
-
   const handleClear = () => {
     setExcelFile(null);
     setExcelData([]);
-    seterrorCount(false);
+    setErrorCount(false);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
   };
 
   const handleSubmit = async () => {
-    setloading(true);
+    setLoading(true);
     if (!selectedModule) {
       toast.error("Please select a module");
-      setloading(false);
+      setLoading(false);
       return;
     }
     if (!excelFile) {
       toast.error("Please upload an Excel file.");
-      setloading(false);
+      setLoading(false);
       return;
     }
 
@@ -131,7 +144,6 @@ const AddCandidates = () => {
         const results = response.data?.results || [];
         console.log("API Results:", results);
 
-        // Create a map of row numbers to emails for successful candidates
         const rowToEmailMap = {};
         results.forEach((result) => {
           if (result.success && result.data?.email) {
@@ -139,38 +151,32 @@ const AddCandidates = () => {
           }
         });
 
-        // Filter unsuccessful entries and add matched emails from rowToEmailMap
         const unsuccessfulData = results
           .filter((result) => result.success === false)
           .map((result) => {
             const rowNum = result.row;
-
-            const matchingCandidate = excelData[rowNum - 2]; // Assuming row numbers start from 1
-
-            // Extract data from the matching candidate, if found
+            const matchingCandidate = excelData[rowNum - 2];
             return {
               "SNO.": rowNum,
               email: matchingCandidate
                 ? matchingCandidate.email
-                : "Email not found", // Get email from excelData
+                : "Email not found",
               name: matchingCandidate
                 ? matchingCandidate.name
-                : "Name not found", // Get name from excelData
+                : "Name not found",
               phone: matchingCandidate
                 ? matchingCandidate.phone_number
-                : "Phone not found", // Get phone from excelData
+                : "Phone not found",
               college: matchingCandidate
                 ? matchingCandidate.college_name
-                : "College not found", // Get college from excelData
+                : "College not found",
               yearOfPassing: matchingCandidate
                 ? matchingCandidate.year_of_passing
-                : "Year not found", // Get year from excelData
+                : "Year not found",
             };
           });
 
-unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
-
-        // Set unsuccessful data to the table display
+        setErrorCount(unsuccessfulData.length > 0);
         setExcelData(unsuccessfulData);
       } else {
         toast.error(`Error: ${response.statusText}`);
@@ -181,7 +187,7 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
       console.error("Upload error:", error.response?.data || error.message);
       toast.error(errorMessage);
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -189,12 +195,13 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
     return <Loader />;
   }
 
+
   return (
     <div className="p-5 overflow-hidden">
       <Toaster position="top-center" />
       <div className="flex items-center justify-center gap-5  md:flex-col lg:flex-row ">
         <div className="flex flex-col gap-4 p-10 bg-white rounded-xl 2xl:w-full md:w-full sm:w-full lg:w-full xl:w-full shadow-md relative">
-        <label htmlFor="module" className="whitespace-nowrap font-semibold">
+          <label htmlFor="module" className="whitespace-nowrap font-semibold">
             Select An Assesment
           </label>
           <select
@@ -202,7 +209,7 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
             id="module"
             value={selectedModule}
             onChange={handleChange}
-             className="px-4 py-2 w-full rounded-md border-2 border-gray-400 focus:outline-none placeholder-gray-400"
+            className="px-4 py-2 w-full rounded-md border-2 border-gray-400 focus:outline-none placeholder-gray-400"
           >
             <option value="" disabled>
               Select an Assessment
@@ -241,7 +248,7 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
         <div className="flex flex-col gap-2 p-2 bg-white rounded-xl 2xl:w-full md:w-full sm:w-full lg:w-full xl:w-full">
           <div>
             <img
-              src="image.png"
+              src="studentForm.png"
               alt=""
               className="w-full rounded-md shadow-lg"
             />
@@ -259,15 +266,15 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
                 </div>
               </div>
               <hr className="w-full " />
-              <button className="bg-white w-full p-3 text-black rounded-md" 
-               onClick={() => {
-                const link = document.createElement("a");
-                link.href = "/CandidatesForAssessment.xlsx";
-                link.download = "CandidatesForAssessment.xlsx";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              <button className="bg-white w-full p-3 text-black rounded-md"
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = "/CandidatesForAssessment.xlsx";
+                  link.download = "CandidatesForAssessment.xlsx";
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
               >
                 Download
               </button>
@@ -275,7 +282,7 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
           </div>
         </div>
       </div>
-        <div className="flex items-center justify-between px-10">
+      <div className="flex items-center justify-between px-10">
         {" "}
         <p className="text-white">-</p>
         <p className="xl:px-10 text-end">
@@ -298,9 +305,9 @@ unsuccessfulData ? seterrorCount(true) : seterrorCount(false)
                 ))}
               </tr>
             </thead>
-            <tbody className={`${errorCount ? "bg-red-500 text-white" :""}`}>
+            <tbody className={`${errorCount ? "bg-red-500 text-white" : "bg-white"}`}>
               {excelData.map((row, index) => (
-                <tr key={index} className="hover:bg-green-50 transition duration-150">
+                <tr key={index} className={`${errorCount ? "hover:bg-red-700":"hover:bg-green-50 "} transition duration-150`}>
                   {Object.values(row).map((value, i) => (
                     <td key={i} className="py-3 px-4 border-b">
                       {value}

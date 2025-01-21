@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import QuickSummery from "./components/QuickSummery";
 import Score from "./components/sectionalSummary/SectionScore";
 import StrengthMain from "./components/strengthWeakness/StrengthMain";
@@ -9,13 +9,19 @@ import TestAnalysis from "./components/Analysis/TestAnalysis";
 import ProtectingScore from "./components/ProtectingScore";
 import Carousel from "./components/SnapShots";
 import Loader from "../../Loader";
+import * as XLSX from "xlsx"; // Import xlsx library
 
 const EachStudentDetails = () => {
   const { testId, studentId } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const assessmentName = queryParams.get("assessmentName");
   const [color, setColor] = useState({});
   const [load, setLoad] = useState(false);
   const [studentDetails, setStudentDetails] = useState(null);
   const adminToken = localStorage.getItem("authToken");
+
+  // console.log(assessmentName);
 
   const fetchData = useCallback(async () => {
     setLoad(true);
@@ -90,6 +96,38 @@ const EachStudentDetails = () => {
     return <Loader />;
   }
 
+  const exportToExcel = () => {
+    // Assuming studentDetails is a single object, not an array
+    const student = studentDetails; // Use this single student object
+  
+    const worksheet = XLSX.utils.json_to_sheet([{
+      Name: student?.name,
+      Email: student?.email,
+      Contact: student?.phone_number?.toString(),
+      College: student?.college_name,
+      "Passing Year": student?.year_of_passing,
+      Marks: student?.analysis?.user?.totalMarks,
+      Accuracy: student?.analysis?.user?.accuracy,
+      Correct: student?.analysis?.user?.correct,
+      Incorrect: student?.analysis?.user?.incorrect,
+      Rank: student?.rank,
+      HighestMarks: student?.analysis?.allUsers?.highestMarks,
+      Suspended: student?.isSuspended ? "Yes" : "No",
+      totalUsers: student?.totalUsers,
+      mic:student?.ProctoringScore?.mic,
+      webcam:student?.ProctoringScore?.webcam,
+      multiplePersonInFrame:student?.ProctoringScore?.multiplePersonInFrame,
+      TabSwitch:student?.ProctoringScore?.TabSwitch,
+      PhoneinFrame:student?.ProctoringScore?.PhoneinFrame,
+      ControlKeyPressed:student?.ProctoringScore?.ControlKeyPressed,
+    }]);
+  
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Student Report");
+    XLSX.writeFile(workbook, `${student?.name}.xlsx`);
+  };
+  
+
   return (
     <>
       {load ? (
@@ -107,14 +145,23 @@ const EachStudentDetails = () => {
         <Box className="xl:px-[8rem] md:px-[1rem] py-8">
           <div className="flex justify-between items-center">
             <div>
-              <p className="font-semibold md:text-sm xl:text-lg">
-                Hi {studentDetails?.name} ,
+              <p className=" xl:text-2xl font-semibold md:text-sm  ">
+                Hi{" "}
+                <span className="capitalize text-blue-500 xl:text-lg">
+                  {studentDetails?.name}
+                </span>
               </p>
               <h1 className="xl:text-2xl md:text-md font-semibold">
                 Here Are Your Results For{" "}
-                <span className="text-green-500">Designing Assessment!</span>
+                <span className="text-green-500">{assessmentName}!</span>
               </h1>
             </div>
+            <button
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              onClick={exportToExcel}
+            >
+              Download
+            </button>
             <div className="flex gap-2 items-center">
               <Dot color={color.bgColor} />
               <h2
@@ -135,61 +182,6 @@ const EachStudentDetails = () => {
             <StrengthMain generatedModules={studentDetails?.generatedModules} />
             <TestAnalysis user={studentDetails} />
           </div>
-          {/* <fieldset className="flex flex-col gap-2 border border-red-500 p-4 w-[40%] mx-auto font-semibold">
-              <legend className="text-center font-semibold text-red-500 px-2 text-xl uppercase">
-                Proctoring Score
-              </legend>
-              <table className="min-w-full">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Proctoring Criteria
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Score
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Microphone</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.mic}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Web Camera</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.webcam}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Tab Switching</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.TabSwitch}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Multiple Person In A Frame</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.multiplePersonInFrame}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Phone Out of Frame</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.PhoneinFrame}
-                    </td>
-                  </tr>
-                  <tr>
-                    <td className="px-6 py-4 whitespace-nowrap">Sound Captured</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-red-500">
-                      {studentDetails?.ProctoringScore?.SoundCaptured}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </fieldset> */}
           <div className="flex flex-col my-4 xl:grid xl:grid-cols-2 gap-2">
             <ProtectingScore
               ProctoringScore={studentDetails?.ProctoringScore}
