@@ -7,6 +7,31 @@ import toast, { Toaster } from "react-hot-toast";
 const AddAssignment = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+  const handleCheckboxChange = (event) => {
+    const checked = event.target.checked;
+    setIsChecked(checked);
+    setAssessment((prev) => ({
+      ...prev,
+      haveCodingAssessment: checked,
+    }));
+  };
+
+  const handleProblemChange = (difficulty, key, value) => {
+    setAssessment((prev) => ({
+      ...prev,
+      problems: {
+        ...prev.problems,
+        [difficulty]: {
+          ...prev.problems[difficulty],
+          [key]:
+            key === "topicTags"
+              ? value.split(",").map((tag) => tag.trim())
+              : value,
+        },
+      },
+    }));
+  };
 
   const initialAssessmentState = {
     assessmentDesc: "",
@@ -26,6 +51,12 @@ const AddAssignment = () => {
       invisiblecam: { inUse: false, maxRating: 1500 },
     },
     Assessmentmodules: [{ moduleName: "", timelimit: "" }],
+    problems: {
+      easy: { noOfProblems: 0, topicTags: [] },
+      medium: { noOfProblems: 0, topicTags: [] },
+      hard: { noOfProblems: 0, topicTags: [] },
+    },
+    haveCodingAssessment: isChecked,
   };
 
   const [assessment, setAssessment] = useState(initialAssessmentState);
@@ -95,6 +126,9 @@ const AddAssignment = () => {
     setloading(true);
     try {
       const jsonData = JSON.stringify(assessment);
+      // console.log("Assessment Data:", assessment);
+
+      // return;
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_DOMAIN}/createModuleAssessment`,
         jsonData,
@@ -345,6 +379,90 @@ const AddAssignment = () => {
                 />
               </div>
             ))}
+          </div>
+          <div>
+            {/* Checkbox Section */}
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="codingPlatform"
+                className="text-gray-700 text-xl font-bold"
+              >
+                Have coding Assesment
+              </label>
+              <input
+                type="checkbox"
+                id="codingPlatform"
+                className="cursor-pointer rounded-full form-checkbox h-5 w-5 text-blue-500 transition duration-150 ease-in-out"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+            </div>
+
+            {/* Conditionally Rendered Coding Modules Section */}
+            {isChecked && (
+              <div className="mt-4">
+                <h3 className="text-xl font-semibold text-gray-700">
+                  Add Coding Modules:
+                </h3>
+                <div className="mt-4 space-y-6">
+                  {/* Iterate through problems object */}
+                  {Object.entries(assessment.problems).map(
+                    ([difficulty, details]) => (
+                      <div
+                        key={difficulty}
+                        className="p-4 border rounded-lg shadow-sm "
+                      >
+                        <h4 className="text-lg font-bold capitalize text-gray-800">
+                          {difficulty.charAt(0).toUpperCase() +
+                            difficulty.slice(1)}{" "}
+                          Level
+                        </h4>
+                        <div className="flex items-center justify-between gap-20">
+                          {/* Number of Problems Input */}
+                          <div className="w-full">
+                            <label htmlFor={`${difficulty}-noOfProblems`}>
+                              Number of Problems
+                            </label>
+                            <input
+                              className="w-full border p-2 rounded"
+                              type="number"
+                              id={`${difficulty}-noOfProblems`}
+                              value={details.noOfProblems}
+                              onChange={(e) =>
+                                handleProblemChange(
+                                  difficulty,
+                                  "noOfProblems",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                          {/* Topic Tags Input */}
+                          <div className="w-full">
+                            <label htmlFor={`${difficulty}-topicTags`}>
+                              Topic Tags
+                            </label>
+                            <input
+                              className="w-full border p-2 rounded"
+                              type="text"
+                              id={`${difficulty}-topicTags`}
+                              value={details.topicTags.join(",")}
+                              onChange={(e) =>
+                                handleProblemChange(
+                                  difficulty,
+                                  "topicTags",
+                                  e.target.value
+                                )
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            )}
           </div>
           <button
             type="submit"

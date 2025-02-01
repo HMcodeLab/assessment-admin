@@ -50,6 +50,35 @@ const EditAssignment = () => {
     }));
   };
 
+  const handleProblemsChange = (difficulty, field, value) => {
+    setAssessment((prev) => ({
+      ...prev,
+      problems: {
+        ...prev.problems,
+        [difficulty]: {
+          ...prev.problems[difficulty],
+          [field]: field === "noOfProblems" ? parseInt(value) || 0 : value,
+        },
+      },
+    }));
+  };
+
+  const handleTagChange = (difficulty, index, value) => {
+    setAssessment((prev) => {
+      const updatedTags = [...prev.problems[difficulty].topicTags];
+      updatedTags[index] = value;
+      return {
+        ...prev,
+        problems: {
+          ...prev.problems,
+          [difficulty]: {
+            ...prev.problems[difficulty],
+            topicTags: updatedTags,
+          },
+        },
+      };
+    });
+  };
   const handleModuleInputChange = (moduleIndex, field, value) => {
     setAssessment((prev) => {
       if (!prev?.Assessmentmodules) return prev; // Ensure Assessmentmodules exists
@@ -395,6 +424,19 @@ const EditAssignment = () => {
                         )
                       }
                     />
+                    <label className="text-xl font-semibold">No. of Questions</label>
+                    <input type="number"
+                    placeholder="number of questions"
+                    className="border w-full h-12 p-3"
+                    value={module?.module?.noOfQuestions || ""}
+                    onChange={(e)=>{
+                      handleModuleInputChange(
+                        moduleIndex,
+                        "module.noOfQuestions",
+                        e.target.value
+                      )
+                    }}
+                    />
                   </div>
                 </div>
               ))}
@@ -406,7 +448,43 @@ const EditAssignment = () => {
               </button>
             </div>
           </div>
+          <div className="space-y-8">
+          <div className="space-y-4 border p-3">
+            <h2 className="text-xl font-semibold">Problems</h2>
+            {["easy", "medium", "hard"].map((difficulty) => (
+              <div key={difficulty} className="mb-4 border p-4 rounded">
+                <h3 className="text-lg font-bold capitalize">{difficulty} Problems</h3>
+                <label className="block mt-2 text-sm font-medium">
+                  Number of Problems:
+                </label>
+                <input
+                  type="number"
+                  value={assessment?.problems[difficulty]?.noOfProblems || ""}
+                  onChange={(e) =>
+                    handleProblemsChange(difficulty, "noOfProblems", e.target.value)
+                  }
+                  className="border w-full h-10 p-2 mt-1"
+                />
 
+                <label className="block mt-2 text-sm font-medium">Topic Tags:</label>
+                {assessment?.problems[difficulty]?.topicTags?.map((tag, index) => (
+                  <div key={index} className="flex items-center gap-2 mt-2">
+                    <input
+                      type="text"
+                      value={tag}
+                      onChange={(e) =>
+                        handleTagChange(difficulty, index, e.target.value)
+                      }
+                      className="border w-full h-10 p-2"
+                    />
+                   
+                  </div>
+                ))}
+               
+              </div>
+            ))}
+          </div>
+          </div>
           <div className="flex justify-center">
             <button
               onClick={handleSubmit}
