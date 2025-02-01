@@ -9,6 +9,8 @@ import addAssessmentIcon from "../../Assets/addasses.png";
 import candidateIcon from "../../Assets/addcandi.png";
 import questionIcon from "../../Assets/addquestion.png";
 import studentIcon from "../../Assets/feedback.png";
+import { FaFileCode } from "react-icons/fa";
+import { FaQrcode } from "react-icons/fa";
 
 const Sidebar = () => {
   const { isAuthenticated } = useAuth();
@@ -101,6 +103,30 @@ const Sidebar = () => {
             {" "}
             <img src={studentIcon} alt="" />
             Student Feedback
+          </NavLink>
+          <NavLink
+            to="/AddProblems"
+            className={({ isActive }) =>
+              `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
+                isActive ? "bg-[#1fc074] text-white" : ""
+              }`
+            }
+          >
+            {" "}
+            <FaFileCode/>
+            Add Problems
+          </NavLink>
+          <NavLink
+            to="/UpdateProblems"
+            className={({ isActive }) =>
+              `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
+                isActive ? "bg-[#1fc074] text-white" : ""
+              }`
+            }
+          >
+            {" "}
+            <FaQrcode/>
+            Update Problems
           </NavLink>
         </nav>
       </aside>

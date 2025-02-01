@@ -22,6 +22,9 @@ import AllStudentDetails from "./components/pages/testReport/AllStudentDetails";
 import EachStudentDetails from "./components/pages/testReport/EachStudentDetails";
 import FeedBack from "./components/pages/FeedBack";
 import NotFoundPage from "./components/NotFound";
+import AddProblems from "./components/pages/AddProblems";
+import UpdateProblems from "./components/pages/UpdateProblems";
+
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -106,6 +109,14 @@ function App() {
               <Route
                 path="/studentfeedback"
                 element={<PrivateRoute element={FeedBack} />}
+              />
+              <Route
+                path="/AddProblems"
+                element={<AddProblems element={AddProblems} />}
+              />
+              <Route
+              path="/Updateproblems"
+              element={<UpdateProblems element={UpdateProblems} />}
               />
 
               {/* 404 Route */}

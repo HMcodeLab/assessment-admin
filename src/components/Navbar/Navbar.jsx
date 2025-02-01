@@ -12,6 +12,8 @@ import candidateIcon from "../../Assets/candidate.png";
 import questionIcon from "../../Assets/question.png";
 import studentIcon from "../../Assets/student.png";
 import defaultIcon from "../../Assets/Tag.png";
+import code from "../../Assets/code.png";
+import edit from "../../Assets/edit.png";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -75,6 +77,10 @@ const Navbar = () => {
         return { title: "Assessment Result", icon: studentResultIcon };
       case "/studentfeedback":
         return { title: "Student Feedback", icon: studentIcon };
+        case "/AddProblems":
+          return { title: "Add Problems", icon: code };
+        case "/UpdateProblems":
+          return { title: "Update Problems", icon: edit };
       default:
         return { title: "Page Not Found", icon: defaultIcon };
     }
