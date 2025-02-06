@@ -158,21 +158,21 @@ const AddCandidates = () => {
             const matchingCandidate = excelData[rowNum - 2];
             return {
               "SNO.": rowNum,
-              email: matchingCandidate
-                ? matchingCandidate.email
-                : "Email not found",
-              name: matchingCandidate
-                ? matchingCandidate.name
-                : "Name not found",
-              phone: matchingCandidate
-                ? matchingCandidate.phone_number
-                : "Phone not found",
-              college: matchingCandidate
-                ? matchingCandidate.college_name
-                : "College not found",
-              yearOfPassing: matchingCandidate
-                ? matchingCandidate.year_of_passing
-                : "Year not found",
+              email: 
+                 matchingCandidate.email,
+                
+              name: 
+                 matchingCandidate.name,
+               
+              phone:
+                 matchingCandidate.phone_number,
+              
+              college: 
+                 matchingCandidate.college_name,
+              
+              yearOfPassing: 
+                 matchingCandidate.year_of_passing
+              
             };
           });
 
@@ -185,7 +185,7 @@ const AddCandidates = () => {
       const errorMessage =
         error.response?.data?.message || "Error uploading file.";
       console.error("Upload error:", error.response?.data || error.message);
-      toast.error(errorMessage);
+      
     } finally {
       setLoading(false);
     }
@@ -307,7 +307,7 @@ const AddCandidates = () => {
             </thead>
             <tbody className={`${errorCount ? "bg-red-500 text-white" : "bg-white"}`}>
               {excelData.map((row, index) => (
-                <tr key={index} className={`${errorCount ? "hover:bg-red-700":"hover:bg-green-50 "} transition duration-150`}>
+                <tr key={index} className={`${errorCount ? "hover:bg-green-700":"hover:bg-green-50 "} transition duration-150`}>
                   {Object.values(row).map((value, i) => (
                     <td key={i} className="py-3 px-4 border-b">
                       {value}
