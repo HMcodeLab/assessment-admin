@@ -19,7 +19,7 @@ const Sidebar = () => {
     <div className="min-h-screen flex p-5">
       <aside className="w-56 bg-[#15262d] text-white  p-4 rounded-lg flex flex-col justify-between">
         <nav className="flex flex-col space-y-2 ">
-          <img src="white.png" alt="" className="px-5" />
+          <img src="/white.png" alt="" className="px-5" />
           <NavLink
             to="/"
             className={({ isActive }) =>
