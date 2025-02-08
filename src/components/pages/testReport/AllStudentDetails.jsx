@@ -524,7 +524,7 @@ const AllStudentDetails = () => {
                   >
                     <MdMoreVert />
                     {toggleOpen === student.email && (
-                      <ul className="absolute bg-white shadow-lg py-2 rounded-lg right-0 mt-1 text-sm">
+                      <ul className="absolute bg-white shadow-lg py-2 z-50 rounded-lg right-0 mt-1 text-sm">
                         <li
                           className="cursor-pointer px-2 py-1 rounded-md hover:bg-green-300"
                           onClick={() => handleView(student.email)}
