@@ -176,6 +176,42 @@ const AddAssignment = () => {
     }));
   };
 
+  const topics = [
+    "arrays",
+    "strings",
+    "tree",
+    "hash",
+    "matrix",
+    "graph",
+    "linked list",
+    "stack",
+    "binary search tree",
+    "queue",
+    "map",
+    "heap",
+    "trie",
+    "segment-tree",
+    "tree",
+    "pointer",
+    "avl-tree",
+    "mathematical",
+    "dynamic programming",
+    "sorting",
+    "bit magic",
+    "greedy",
+    "recursion",
+    "searching",
+    "Binary Search",
+    "two-pointer-algorithm",
+    "DFS",
+    "BFS",
+    "sliding-window",
+    "backtracking",
+    "divide and conquer",
+    "prefix-sum",
+    "merge sort",
+  ];
+
   return (
     <div className=" bg-gray-100 flex items-center justify-center mt-0 px-4 py-4 h-auto">
       <Toaster />

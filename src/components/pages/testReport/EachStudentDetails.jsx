@@ -10,6 +10,7 @@ import ProtectingScore from "./components/ProtectingScore";
 import Carousel from "./components/SnapShots";
 import Loader from "../../Loader";
 import * as XLSX from "xlsx"; // Import xlsx library
+import CodingScore from "./components/codingPlatform/CodingScore";
 
 const EachStudentDetails = () => {
   const { testId, studentId } = useParams();
@@ -99,34 +100,41 @@ const EachStudentDetails = () => {
   const exportToExcel = () => {
     // Assuming studentDetails is a single object, not an array
     const student = studentDetails; // Use this single student object
-  
-    const worksheet = XLSX.utils.json_to_sheet([{
-      Name: student?.name,
-      Email: student?.email,
-      Contact: student?.phone_number?.toString(),
-      College: student?.college_name,
-      "Passing Year": student?.year_of_passing,
-      Marks: student?.analysis?.user?.totalMarks,
-      Accuracy: student?.analysis?.user?.accuracy,
-      Correct: student?.analysis?.user?.correct,
-      Incorrect: student?.analysis?.user?.incorrect,
-      Rank: student?.rank,
-      HighestMarks: student?.analysis?.allUsers?.highestMarks,
-      Suspended: student?.isSuspended ? "Yes" : "No",
-      totalUsers: student?.totalUsers,
-      mic:student?.ProctoringScore?.mic,
-      webcam:student?.ProctoringScore?.webcam,
-      multiplePersonInFrame:student?.ProctoringScore?.multiplePersonInFrame,
-      TabSwitch:student?.ProctoringScore?.TabSwitch,
-      PhoneinFrame:student?.ProctoringScore?.PhoneinFrame,
-      ControlKeyPressed:student?.ProctoringScore?.ControlKeyPressed,
-    }]);
-  
+
+    const worksheet = XLSX.utils.json_to_sheet([
+      {
+        Name: student?.name,
+        Email: student?.email,
+        Contact: student?.phone_number?.toString(),
+        College: student?.college_name,
+        "Passing Year": student?.year_of_passing,
+        Marks: student?.analysis?.user?.totalMarks,
+        Accuracy: student?.analysis?.user?.accuracy,
+        Correct: student?.analysis?.user?.correct,
+        Incorrect: student?.analysis?.user?.incorrect,
+        Rank: student?.rank,
+        HighestMarks: student?.analysis?.allUsers?.highestMarks,
+        Suspended: student?.isSuspended ? "Yes" : "No",
+        totalUsers: student?.totalUsers,
+        mic: student?.ProctoringScore?.mic,
+        webcam: student?.ProctoringScore?.webcam,
+        multiplePersonInFrame: student?.ProctoringScore?.multiplePersonInFrame,
+        TabSwitch: student?.ProctoringScore?.TabSwitch,
+        PhoneinFrame: student?.ProctoringScore?.PhoneinFrame,
+        ControlKeyPressed: student?.ProctoringScore?.ControlKeyPressed,
+      },
+    ]);
+
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Student Report");
     XLSX.writeFile(workbook, `${student?.name}.xlsx`);
   };
-  
+
+  const formatSubmissionTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes} min ${remainingSeconds} sec`;
+  };
 
   return (
     <>
@@ -142,7 +150,7 @@ const EachStudentDetails = () => {
           <CircularProgress />
         </Box>
       ) : (
-        <Box className="xl:px-[8rem] md:px-[1rem] py-8">
+        <Box className="px-4 py-8">
           <div className="flex justify-between items-center">
             <div>
               <p className=" xl:text-2xl font-semibold md:text-sm  ">
@@ -162,13 +170,22 @@ const EachStudentDetails = () => {
             >
               Download
             </button>
-            <div className="flex gap-2 items-center">
-              <Dot color={color.bgColor} />
-              <h2
-                className={`xl:font-bold md:font-semibold xl:text-xl md:text-md ${color.color}`}
-              >
-                {getStatus()}
-              </h2>
+            <div className="flex flex-col">
+              <div className="flex gap-2 items-center">
+                <p className="text-red-500 font-semibold" >
+                  Submission Time :{" "}
+                  
+                </p>
+                <span>{studentDetails?.submissionTime ? formatSubmissionTime(studentDetails?.submissionTime) : "N/A"}</span>
+              </div>
+              <div className="flex gap-2 items-center">
+                <Dot color={color.bgColor} />
+                <h2
+                  className={`xl:font-bold md:font-semibold xl:text-xl md:text-md ${color.color}`}
+                >
+                  {getStatus()}
+                </h2>
+              </div>
             </div>
           </div>
           <div className="flex flex-col w-full gap-2 my-4 xl:grid xl:grid-cols-2">
@@ -190,6 +207,14 @@ const EachStudentDetails = () => {
               <Carousel userScreenshots={studentDetails?.userScreenshots} />
             )}
           </div>
+          {studentDetails?.isCodingAssessmentCompleted && (
+            <CodingScore
+              assigned_problems_set={studentDetails?.assigned_problems_set}
+              studentDetails={studentDetails}
+            />
+          )}
+          {/* <div className="flex flex-col my-4"> */}
+          {/* </div> */}
         </Box>
       )}
     </>

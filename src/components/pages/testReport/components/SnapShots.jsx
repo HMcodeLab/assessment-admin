@@ -39,7 +39,7 @@ const Carousel = ({ userScreenshots }) => {
     userScreenshots.length > 0 && (
       <div id="default-carousel" className="relative w-full" data-carousel="slide">
         {/* Carousel wrapper */}
-        <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
+        <div className="relative h-56 overflow-hidden rounded-lg md:h-96 mt-4">
           <h1 className="text-red-500 text-center py-2 font-semibold text-xl">
             ScreenShot
           </h1>

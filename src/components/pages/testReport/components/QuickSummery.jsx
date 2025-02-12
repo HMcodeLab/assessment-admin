@@ -65,7 +65,7 @@ const QuickSummery = ({ user, analysis }) => {
 
   // The ProgressBar component
   const ProgressBar = ({ percentage }) => {
-    console.log(percentage);
+    // console.log(percentage);
     
     return (
       <div className="w-40 bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">

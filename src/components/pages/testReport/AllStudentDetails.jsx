@@ -195,6 +195,7 @@ const AllStudentDetails = () => {
   const handleDeleteClick = (email) => {
     setSelectedStudent(email);
     setShowModal(true);
+    // fetchData();
   };
 
   // Confirm deletion and remove from state without reloading
@@ -219,9 +220,10 @@ const AllStudentDetails = () => {
         toast.success("Student Report Deleted Successfully");
 
         // Remove the deleted student from the state
-        setAllStudent((prevStudents) =>
-          prevStudents.filter((student) => student.email !== selectedStudent)
-        );
+        // setAllStudent((prevStudents) =>
+        //   prevStudents.filter((student) => student.email !== selectedStudent)
+        // );
+        fetchData();
       }
     } catch (error) {
       toast.error("Error in Deleting student Report");
@@ -461,13 +463,6 @@ const AllStudentDetails = () => {
                     </button>
                     <button
                       onClick={() => handleDeleteClick(student?.email)}
-                      style={{
-                        display:
-                          student?.isAssessmentCompleted &&
-                          !student?.isSuspended
-                            ? "none"
-                            : "block",
-                      }}
                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
                     >
                       D

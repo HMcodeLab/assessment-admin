@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import toast from "react-hot-toast";
+import toast,{Toaster} from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
+import Loader from "../Loader";
+// import { Toaster } from "react-hot-toast";
 
 const AdminProfile = () => {
   const adminToken = localStorage.getItem("authToken");
@@ -11,7 +13,7 @@ const AdminProfile = () => {
   const [isEditing, setIsEditing] = useState(false); // State for editing mode
 
   const adminEmail= jwtDecode(adminToken).email;
-  console.log(adminEmail);
+  // console.log(adminEmail);
   
 
   // Fetch Admin Details
@@ -33,7 +35,7 @@ const AdminProfile = () => {
       if (response.status === 200) {
         const admin = response.data.data;
         setAdminData(admin);
-        toast.success("Admin details fetched successfully!");
+        // toast.success("Admin details fetched successfully!");
       } else {
         toast.error("Failed to fetch admin details.");
       }
@@ -63,12 +65,12 @@ const AdminProfile = () => {
           },
         }
       );
-
-      if (response.status === 200) {
-        setAdminData(response.data.data);
-        toast.success("Admin details updated successfully!");
+      if (response.status === 201) {
+        fetchAdminDetails();
         setIsEditing(false); // Exit editing mode after successful update
-      } else {
+        toast.success("Admin details updated successfully!");
+      }else{
+
         toast.error("Failed to update admin details.");
       }
     } catch (error) {
@@ -89,9 +91,7 @@ const AdminProfile = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div>Loading...</div>
-      </div>
+      <Loader/>
     );
   }
 
@@ -113,7 +113,8 @@ const AdminProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-100 py-[7vh]">
+    <div className=" flex justify-center bg-gray-50 py-[7vh]">
+      <Toaster/>
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-lg w-full h-[40%] py-12">
         <h1 className="text-3xl font-bold text-green-600 mb-6 text-center">
           Admin Profile
@@ -171,7 +172,7 @@ const AdminProfile = () => {
                     className="border p-2 w-full"
                   />
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <label className="text-xl font-semibold text-gray-700">
                     Profile:
                   </label>
@@ -182,7 +183,7 @@ const AdminProfile = () => {
                     onChange={handleChange}
                     className="border p-2 w-full"
                   />
-                </div>
+                </div> */}
                 <button
                   onClick={handleUpdate}
                   className="p-3 bg-green-500 text-white rounded-full w-full"
@@ -214,11 +215,11 @@ const AdminProfile = () => {
                     <strong>Mobile:</strong> {adminData.mobile}
                   </p>
                 </div>
-                <div className="mb-4">
+                {/* <div className="mb-4">
                   <p className="text-xl font-semibold text-gray-700">
                     <strong>Profile:</strong> {adminData.profile}
                   </p>
-                </div>
+                </div> */}
                 <button
                   onClick={() => setIsEditing(true)}
                   className="p-3 w-full flex justify-center items-center bg-green-500 text-white rounded-full"
