@@ -24,6 +24,7 @@ import FeedBack from "./components/pages/FeedBack";
 import NotFoundPage from "./components/NotFound";
 import AddProblems from "./components/pages/AddProblems";
 import UpdateProblems from "./components/pages/UpdateProblems";
+import AllStudentGotMail from "./components/pages/testReport/AllStudentGotMail";
 
 
 function App() {
@@ -101,6 +102,10 @@ function App() {
               <Route
                 path="/test-report/:testId"
                 element={<PrivateRoute element={AllStudentDetails} />}
+              />
+              <Route
+                path="/assessment-student-mailed/:testId"
+                element={<PrivateRoute element={AllStudentGotMail} />}
               />
               <Route
                 path="/student-test-report/:testId/:studentId"

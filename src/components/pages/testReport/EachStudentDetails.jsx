@@ -131,11 +131,21 @@ const EachStudentDetails = () => {
   };
 
   const formatSubmissionTime = (seconds) => {
-    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes} min ${remainingSeconds} sec`;
+  
+    let formattedTime = "";
+    if (hours > 0) {
+      formattedTime += `${hours} hr `;
+    }
+    if (minutes > 0 || hours > 0) { // Include minutes if there are hours
+      formattedTime += `${minutes} min `;
+    }
+    formattedTime += `${remainingSeconds} sec`;
+  
+    return formattedTime;
   };
-
   return (
     <>
       {load ? (

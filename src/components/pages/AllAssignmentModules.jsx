@@ -11,6 +11,7 @@ const AssignmentResult = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setLoading] = useState(true);
   const [viewLoading, setViewLoading] = useState({});
+  const [mailloading, setmailloading] = useState({})
   const navigate = useNavigate();
   const temp = true;
 
@@ -70,6 +71,23 @@ const AssignmentResult = () => {
       toast.error("Failed to fetch students.");
     } finally {
       setViewLoading((prev) => ({ ...prev, [testId]: false })); // Reset loading state for this testId
+    }
+  };
+  const handleStudentGotMailClick = async (testId, assessmentName) => {
+    setmailloading((prev) => ({ ...prev, [testId]: true })); // Set loading for this specific testId
+    try {
+      // const response = await fetchData(testId);
+      navigate(`/assessment-student-mailed/${testId}`, { state: { assessmentName } });
+      // const students = response?.data || [];
+      // if (students.length > 0) {
+      // } else {
+      //   toast.error("No Students are available");
+      // }
+    } catch (error) {
+      console.error("Error fetching students:", error);
+      toast.error("Failed to fetch students.");
+    } finally {
+      setmailloading((prev) => ({ ...prev, [testId]: false })); // Reset loading state for this testId
     }
   };
 
@@ -185,14 +203,15 @@ const AssignmentResult = () => {
                 {formatDate(assessment.lastDate)}
               </td>
               <td
-                className="py-3 px-4 border-b cursor-pointer"
-                onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}
+                className="py-3 px-4 border-b flex gap-1"
+                
               >
-                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white">{viewLoading[assessment._id] ? "Viewing..." : "View"}</span>
+                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}>{viewLoading[assessment._id] ? "Viewing..." : "V"}</span>
+                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleStudentGotMailClick(assessment._id, assessment.assessmentName)}>{setmailloading[assessment._id] ? "Viewing All ..." : "S M"}</span>
               </td>
             </tr>
           ))}
-        </tbody>
+        </tbody> 
       </table>
 <div className="flex justify-between">
       <div className="flex items-center mt-4">
