@@ -50,7 +50,7 @@ const AddAssignment = () => {
       ControlKeyPressed: { inUse: false, maxRating: 1500 },
       invisiblecam: { inUse: false, maxRating: 1500 },
     },
-    Assessmentmodules: [{ moduleName: "", timelimit: "" }],
+    Assessmentmodules: [{ moduleName: "", timelimit: "",noOfQuestions:"" }],
     problems: {
       easy: { noOfProblems: 0, topicTags: [] },
       medium: { noOfProblems: 0, topicTags: [] },
@@ -369,7 +369,7 @@ const AddAssignment = () => {
                 key={moduleIndex}
                 className="flex md:justify-between justify-around items-center gap-4 p-4"
               >
-                <div className="grid grid-cols-2  gap-4 w-full">
+                <div className="grid grid-cols-3 lg:grid-cols-2  gap-4 w-full">
                   <div className="flex items-center md:flex-col md:items-start  gap-2">
                     <label className="text-gray-700 whitespace-nowrap">
                       Module Name
@@ -408,6 +408,26 @@ const AddAssignment = () => {
                       }
                     />
                   </div>
+                <div className="flex items-center md:flex-col md:items-start  gap-2">
+                <label className="text-gray-700 whitespace-nowrap">
+                      Total Ques.
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="number of questions"
+                      className="border w-full h-12 p-3"
+                      value={module?.noOfQuestions || ""}
+                      min={0}
+                      max={200}
+                      onChange={(e) => {
+                        handleModuleInputChange(
+                          moduleIndex,
+                          "noOfQuestions",
+                          e.target.value
+                        );
+                      }}
+                    />
+                    </div>
                 </div>
                 <ImCross
                   className="text-xl text-red-500 cursor-pointer"
@@ -462,6 +482,7 @@ const AddAssignment = () => {
                             <input
                               className="w-full border p-2 rounded"
                               type="number"
+                              min={0}
                               id={`${difficulty}-noOfProblems`}
                               value={details.noOfProblems}
                               onChange={(e) =>

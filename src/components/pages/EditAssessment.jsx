@@ -3,16 +3,23 @@ import { FaTimes } from "react-icons/fa";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import { Loader } from "../../api";
 
 const EditAssignment = () => {
   const { testId } = useParams();
   const adminToken = localStorage.getItem("authToken");
+  const [loading1, setloading1] = useState(true);
   const [loading, setloading] = useState(false);
   const [initialAssessment, setInitialAssessment] = useState(null);
+  const [showdate, setshowdate] = useState({
+    startDate: "",
+    endDate: "",
+  });
   const [assessment, setAssessment] = useState(null);
   const [prevstartdate, setprevstartdate] = useState(true);
   const [prevlastdate, setprevlastdate] = useState(true);
   const fetchAssessmentData = async () => {
+    setloading1(true);
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_SERVER_DOMAIN}/getModuleAssessment/${testId}`,
@@ -27,6 +34,8 @@ const EditAssignment = () => {
       console.log(response?.data.data);
     } catch (error) {
       console.error("Error fetching assessment data:", error);
+    } finally {
+      setloading1(false);
     }
   };
   let temp = true;
@@ -38,11 +47,31 @@ const EditAssignment = () => {
   }, [testId]);
 
   const handleInputChange = (field, value) => {
+    const date = new Date(value);
+    const utcDate = new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        date.getHours(),
+        date.getMinutes()
+      )
+    ).toISOString();
     if (field === "lastDate") {
       setprevlastdate(false);
+      // console.log("last",utcDate);
+      setshowdate((prevShowdate) => ({
+        ...prevShowdate,
+        lastDate: utcDate,
+      }));
     }
     if (field === "startDate") {
       setprevstartdate(false);
+      console.log("start", utcDate);
+      setshowdate((prevShowdate) => ({
+        ...prevShowdate,
+        startDate: utcDate,
+      }));
     }
     setAssessment((prev) => ({
       ...prev,
@@ -257,6 +286,36 @@ const EditAssignment = () => {
     }));
   };
 
+  if (loading1) {
+    return <Loader />;
+  }
+
+  const formatDate = (dateString) => {
+    const dateObj = new Date(dateString);
+    const day = String(dateObj.getUTCDate()).padStart(2, "0");
+    const year = dateObj.getUTCFullYear();
+    const monthNames = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const month = monthNames[dateObj.getUTCMonth()];
+    let hours = dateObj.getUTCHours();
+    const minutes = String(dateObj.getUTCMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12 || 12;
+    return `${day} ${month} ${year} ${hours}.${minutes}${ampm}`;
+  };
+
   return (
     <div className="flex flex-col items-center bg-gray-100 min-h-screen py-10 px-5 ">
       <Toaster />
@@ -308,29 +367,37 @@ const EditAssignment = () => {
                 <label className="text-xl font-semibold">
                   Date For Assessment
                 </label>
-                <div className="flex flex-row gap-3">
+
+                <div className="flex gap-3">
                   <label className="flex flex-col justify-center font-mono">
                     FROM
                   </label>
-                  <input
-                    type="datetime-local"
-                    className="border w-full h-12 p-3"
-                    value={formatDateForInput(assessment?.startDate) || ""}
-                    onChange={(e) =>
-                      handleInputChange("startDate", e.target.value)
-                    }
-                  />
+                  <div className="flex flex-col ">
+                    <input
+                      type="datetime-local"
+                      className="border w-full h-12 p-3"
+                      value={formatDateForInput(showdate.startDate ? showdate.startDate :assessment?.startDate) || ""}
+                      onChange={(e) =>
+                        handleInputChange("startDate", e.target.value)
+                      }
+                    />
+                    {/* <span className="text-green-500 font-semibold">{formatDate(showdate.startDate ? showdate.startDate : assessment.startDate)}</span> */}
+                  </div>
                   <label className="flex flex-col justify-center font-mono">
                     TO
                   </label>
+                  <div className="flex flex-col">
+
                   <input
                     type="datetime-local"
                     className="border w-full h-12 p-3"
-                    value={formatDateForInput(assessment?.lastDate) || ""}
+                    value={formatDateForInput(showdate.lastDate ? showdate.lastDate :assessment?.lastDate) || ""}
                     onChange={(e) =>
                       handleInputChange("lastDate", e.target.value)
                     }
                   />
+                   {/* <span className="text-green-500 font-semibold" >{formatDate(showdate.lastDate ? showdate.lastDate : assessment.lastDate)}</span> */}
+                  </div>
                 </div>
 
                 <label className="text-xl font-semibold">
@@ -424,18 +491,21 @@ const EditAssignment = () => {
                         )
                       }
                     />
-                    <label className="text-xl font-semibold">No. of Questions</label>
-                    <input type="number"
-                    placeholder="number of questions"
-                    className="border w-full h-12 p-3"
-                    value={module?.module?.noOfQuestions || ""}
-                    onChange={(e)=>{
-                      handleModuleInputChange(
-                        moduleIndex,
-                        "module.noOfQuestions",
-                        e.target.value
-                      )
-                    }}
+                    <label className="text-xl font-semibold">
+                      No. of Questions
+                    </label>
+                    <input
+                      type="number"
+                      placeholder="number of questions"
+                      className="border w-full h-12 p-3"
+                      value={module?.module?.noOfQuestions || ""}
+                      onChange={(e) => {
+                        handleModuleInputChange(
+                          moduleIndex,
+                          "module.noOfQuestions",
+                          e.target.value
+                        );
+                      }}
                     />
                   </div>
                 </div>
@@ -449,41 +519,49 @@ const EditAssignment = () => {
             </div>
           </div>
           <div className="space-y-8">
-          <div className="space-y-4 border p-3">
-            <h2 className="text-xl font-semibold">Problems</h2>
-            {["easy", "medium", "hard"].map((difficulty) => (
-              <div key={difficulty} className="mb-4 border p-4 rounded">
-                <h3 className="text-lg font-bold capitalize">{difficulty} Problems</h3>
-                <label className="block mt-2 text-sm font-medium">
-                  Number of Problems:
-                </label>
-                <input
-                  type="number"
-                  value={assessment?.problems[difficulty]?.noOfProblems || ""}
-                  onChange={(e) =>
-                    handleProblemsChange(difficulty, "noOfProblems", e.target.value)
-                  }
-                  className="border w-full h-10 p-2 mt-1"
-                />
+            <div className="space-y-4 border p-3">
+              <h2 className="text-xl font-semibold">Problems</h2>
+              {["easy", "medium", "hard"].map((difficulty) => (
+                <div key={difficulty} className="mb-4 border p-4 rounded">
+                  <h3 className="text-lg font-bold capitalize">
+                    {difficulty} Problems
+                  </h3>
+                  <label className="block mt-2 text-sm font-medium">
+                    Number of Problems:
+                  </label>
+                  <input
+                    type="number"
+                    value={assessment?.problems[difficulty]?.noOfProblems || ""}
+                    onChange={(e) =>
+                      handleProblemsChange(
+                        difficulty,
+                        "noOfProblems",
+                        e.target.value
+                      )
+                    }
+                    className="border w-full h-10 p-2 mt-1"
+                  />
 
-                <label className="block mt-2 text-sm font-medium">Topic Tags:</label>
-                {assessment?.problems[difficulty]?.topicTags?.map((tag, index) => (
-                  <div key={index} className="flex items-center gap-2 mt-2">
-                    <input
-                      type="text"
-                      value={tag}
-                      onChange={(e) =>
-                        handleTagChange(difficulty, index, e.target.value)
-                      }
-                      className="border w-full h-10 p-2"
-                    />
-                   
-                  </div>
-                ))}
-               
-              </div>
-            ))}
-          </div>
+                  <label className="block mt-2 text-sm font-medium">
+                    Topic Tags:
+                  </label>
+                  {assessment?.problems[difficulty]?.topicTags?.map(
+                    (tag, index) => (
+                      <div key={index} className="flex items-center gap-2 mt-2">
+                        <input
+                          type="text"
+                          value={tag}
+                          onChange={(e) =>
+                            handleTagChange(difficulty, index, e.target.value)
+                          }
+                          className="border w-full h-10 p-2"
+                        />
+                      </div>
+                    )
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
           <div className="flex justify-center">
             <button
