@@ -29,24 +29,26 @@ const CodingScore = ({ assigned_problems_set,studentDetails }) => {
   return (
     <div>
       {assigned_problems_set.length > 0 && (
-        <div>
-          <p className="font-bold text-2xl my-10 bg-slate-100 text-center py-4">Coding Result</p>
+            <div>
+              <p className="font-bold text-2xl my-10 bg-slate-100 text-center py-4">Coding Result</p>
+        <div className="flex items-center justify-between px-10">
+      
 
-          <ul className="grid grid-cols-3 md:grid-cols-2 items-center gap-4">
+          <div className="">
             {assigned_problems_set.map((problem, index) => (
-              <li key={index} className="mt-2 p-4 border rounded">
+              <div key={index} className=" p-10 border rounded-lg w-full">
                 <p>
-                  <strong>Language Selected:</strong>{" "}
+                  <strong> Selected Language:</strong>{" "}
                   {problem.selected_language}
                 </p>
                 <p>
-                  <strong>Problem Submitted:</strong>{" "}
+                  <strong> Submitted Problem:</strong>{" "}
                   {problem.isProblemSubmitted ? "Yes" : "No"}
                 </p>
                 <p>
                   <strong>Final Test Cases Passed:</strong>{" "}
-                  {problem.final_test_cases_passed.from}/
-                  {problem.final_test_cases_passed.to}
+                  {problem.final_test_cases_passed.to}/
+                  {problem.final_test_cases_passed.from}
                 </p>
                 <button
                   onClick={() => openModal(problem)}
@@ -54,22 +56,23 @@ const CodingScore = ({ assigned_problems_set,studentDetails }) => {
                 >
                   View Solution for Problem {index + 1}
                 </button>
-              </li>
+              </div>
             ))}
-          </ul>
-          <div className="flex flex-col my-4 xl:grid xl:grid-cols-2 gap-2">
+          </div>
+          <div className="">
             <ProtectingScore
               ProctoringScore={studentDetails?.CodingAssessmentProctoringScore}
             />
-            {studentDetails?.CodingAssessmentUserScreenshots && (
+            {/* {studentDetails?.CodingAssessmentUserScreenshots && (
               <Carousel
                 userScreenshots={
                   studentDetails?.CodingAssessmentUserScreenshots
                 }
               />
-            )}
+            )} */}
           </div>
         </div>
+            </div>
       )}
       {selectedProblem && (
         // <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

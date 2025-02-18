@@ -206,8 +206,8 @@ const AssignmentResult = () => {
                 className="py-3 px-4 border-b flex gap-1"
                 
               >
-                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}>{viewLoading[assessment._id] ? "Viewing..." : "V"}</span>
-                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleStudentGotMailClick(assessment._id, assessment.assessmentName)}>{setmailloading[assessment._id] ? "Viewing All ..." : "S M"}</span>
+                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}>{viewLoading[assessment._id] ? "Viewing..." : "View"}</span>
+                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleStudentGotMailClick(assessment._id, assessment.assessmentName)}>{setmailloading[assessment._id] ? "Viewing All ..." : "mail summary"}</span>
               </td>
             </tr>
           ))}

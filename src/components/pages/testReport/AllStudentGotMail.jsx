@@ -46,6 +46,7 @@ const AllStudentGotMail = () => {
       );
       if (response && response.data) {
         setAllStudent(response.data.data);
+        
       }
     } catch (error) {
       toast.error("Error in fetching All student details");
@@ -123,12 +124,10 @@ const AllStudentGotMail = () => {
   const filteredByDate = (student) =>
     selectedDate === "" || formatDate(student.updatedAt) === selectedDate;
 
-
   const filteredStudents = allStudent
     .filter(filterByStatus)
     .filter(filterBySearch)
     .filter(filteredByDate);
-
 
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
@@ -138,15 +137,13 @@ const AllStudentGotMail = () => {
         Contact: student?.phone_number?.toString(),
         College: student?.college_name,
         "Year of Passing": student?.year_of_passing,
-       Link:student?.assessmentUrl
+        Link: student?.assessmentUrl,
       }))
     );
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Student Details");
     XLSX.writeFile(workbook, `${assessmentName}.xlsx`);
   };
-
-
 
   return (
     <div className="flex flex-col justify-center mx-4 my-4">
@@ -166,10 +163,7 @@ const AllStudentGotMail = () => {
       <div className="overflow-x-auto bg-white shadow-lg rounded-lg border-2 border-blue-400 ">
         <table className="w-full bg-white">
           <thead className="bg-gray-100">
-            {/* Large Screen (XL) */}
-            <tr className="hidden xl:table-row">
-              {" "}
-              {/* Only visible on XL screens */}
+            <tr className="xl:table-row">
               <th className="px-4 py-2 text-left">SNo.</th>
               <th className="text-sm font-semibold px-2 py-3 text-left cursor-pointer">
                 Name
@@ -178,7 +172,6 @@ const AllStudentGotMail = () => {
               <th className="px-4 py-2 text-left">Email ID</th>
               <th className="px-4 py-2 text-left">Contact No</th>
               <th className="px-4 py-2 text-left">Link</th>
-              {/* <th className="px-4 py-2 text-left">Action</th> */}
             </tr>
           </thead>
 
@@ -187,7 +180,7 @@ const AllStudentGotMail = () => {
               <React.Fragment key={index}>
                 {/* Row for XL screens */}
                 <tr
-                  className={`hidden xl:table-row border-2 ${
+                  className={` xl:table-row border-2 ${
                     student?.isSuspended && "bg-red-400"
                   } ${student?.isAssessmentCompleted && "bg-green-400"}`}
                 >
@@ -198,7 +191,9 @@ const AllStudentGotMail = () => {
                   </td>
                   <td className=" px-4 py-2">{student?.email}</td>
                   <td className=" px-4 py-2">{student?.phone_number}</td>
-                  <td className=" px-4 py-2">{student?.assessmentUrl || "N/A"}</td>
+                  <td className=" px-4 py-2">
+                    {student?.assessmentUrl || "N/A"}
+                  </td>
                 </tr>
               </React.Fragment>
             ))}

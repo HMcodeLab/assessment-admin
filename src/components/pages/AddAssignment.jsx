@@ -3,6 +3,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import { ImCross } from "react-icons/im";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import { IoMdArrowDropdown } from "react-icons/io";
 
 const AddAssignment = () => {
   const adminToken = localStorage.getItem("authToken");
@@ -16,6 +17,13 @@ const AddAssignment = () => {
       haveCodingAssessment: checked,
     }));
   };
+  const [openTopicDropdowns, setOpenTopicDropdowns] = useState({
+    easy: false,
+    medium: false,
+    hard: false
+  });
+
+
 
   const handleProblemChange = (difficulty, key, value) => {
     setAssessment((prev) => ({
@@ -30,6 +38,36 @@ const AddAssignment = () => {
               : value,
         },
       },
+    }));
+  };
+
+   // Handle topic selection
+   const handleTopicSelection = (difficulty, topic) => {
+    const currentTopics = assessment.problems[difficulty].topicTags;
+    let newTopics;
+    
+    if (currentTopics.includes(topic)) {
+      newTopics = currentTopics.filter(t => t !== topic);
+    } else {
+      newTopics = [...currentTopics, topic];
+    }
+
+    setAssessment(prev => ({
+      ...prev,
+      problems: {
+        ...prev.problems,
+        [difficulty]: {
+          ...prev.problems[difficulty],
+          topicTags: newTopics
+        }
+      }
+    }));
+  };
+
+  const toggleTopicDropdown = (difficulty) => {
+    setOpenTopicDropdowns(prev => ({
+      ...prev,
+      [difficulty]: !prev[difficulty]
     }));
   };
 
@@ -177,39 +215,39 @@ const AddAssignment = () => {
   };
 
   const topics = [
-    "arrays",
-    "strings",
-    "tree",
-    "hash",
-    "matrix",
-    "graph",
-    "linked list",
-    "stack",
-    "binary search tree",
-    "queue",
-    "map",
-    "heap",
-    "trie",
-    "segment-tree",
-    "tree",
-    "pointer",
-    "avl-tree",
-    "mathematical",
-    "dynamic programming",
-    "sorting",
-    "bit magic",
-    "greedy",
-    "recursion",
-    "searching",
+    "Array",
+    "String",
+    "Tree",
+    "Hash",
+    "Matrix",
+    "Graph",
+    "Linked list",
+    "Stack",
+    "Binary search tree",
+    "Queue",
+    "Map",
+    "Heap",
+    "Trie",
+    "Segment-tree",
+    "Tree",
+    "Pointer",
+    "Avl-tree",
+    "Mathematical",
+    "Dynamic programming",
+    "Sorting",
+    "Bit magic",
+    "Greedy",
+    "Recursion",
+    "Searching",
     "Binary Search",
-    "two-pointer-algorithm",
+    "Two-pointer-algorithm",
     "DFS",
     "BFS",
-    "sliding-window",
-    "backtracking",
-    "divide and conquer",
-    "prefix-sum",
-    "merge sort",
+    "Sliding-window",
+    "Backtracking",
+    "Divide and conquer",
+    "Prefix-sum",
+    "Merge sort",
   ];
 
   return (
@@ -456,70 +494,79 @@ const AddAssignment = () => {
 
             {/* Conditionally Rendered Coding Modules Section */}
             {isChecked && (
-              <div className="mt-4">
-                <h3 className="text-xl font-semibold text-gray-700">
-                  Add Coding Modules:
-                </h3>
-                <div className="mt-4 space-y-6">
-                  {/* Iterate through problems object */}
-                  {Object.entries(assessment.problems).map(
-                    ([difficulty, details]) => (
-                      <div
-                        key={difficulty}
-                        className="p-4 border rounded-lg shadow-sm "
-                      >
-                        <h4 className="text-lg font-bold capitalize text-gray-800">
-                          {difficulty.charAt(0).toUpperCase() +
-                            difficulty.slice(1)}{" "}
-                          Level
-                        </h4>
-                        <div className="flex items-center justify-between gap-20">
-                          {/* Number of Problems Input */}
-                          <div className="w-full">
-                            <label htmlFor={`${difficulty}-noOfProblems`}>
-                              Number of Problems
-                            </label>
+        <div className="mt-4">
+          <h3 className="text-xl font-semibold text-gray-700">
+            Add Coding Modules:
+          </h3>
+          <div className="mt-4 space-y-6">
+            {Object.entries(assessment.problems).map(([difficulty, details]) => (
+              <div key={difficulty} className="p-4 border rounded-lg shadow-sm">
+                <h4 className="text-lg font-bold capitalize text-gray-800">
+                  {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Level
+                </h4>
+                <div className="flex items-center justify-between gap-20">
+                  <div className="w-full">
+                    <label htmlFor={`${difficulty}-noOfProblems`}>
+                      Number of Problems
+                    </label>
+                    <input
+                      className="w-full border p-2 rounded"
+                      type="number"
+                      min={0}
+                      id={`${difficulty}-noOfProblems`}
+                      value={details.noOfProblems}
+                      onChange={(e) =>
+                        handleProblemChange(difficulty, "noOfProblems", e.target.value)
+                      }
+                    />
+                  </div>
+                  
+                  <div className="w-full relative">
+                    <label>Topic Tags</label>
+                    <div
+                      className="w-full border p-2 rounded cursor-pointer bg-white flex flex-wrap gap-1"
+                      onClick={() => toggleTopicDropdown(difficulty)}
+                    >
+                      {details.topicTags.length > 0 ? (
+                        details.topicTags.map((tag) => (
+                          <span key={tag} className="bg-blue-100 px-2 py-1 rounded text-sm">
+                            {tag}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-gray-500 flex justify-between items-center w-full px-4">Select topics...<IoMdArrowDropdown className="text-2xl"/></span>
+                      )}
+                    </div>
+                    
+                    {openTopicDropdowns[difficulty] && (
+                      <div className="absolute z-10 w-full mt-1 bg-white border rounded-md shadow-lg max-h-60 overflow-y-auto">
+                        {topics.map((topic) => (
+                          <div
+                            key={topic}
+                            className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleTopicSelection(difficulty, topic);
+                            }}
+                          >
                             <input
-                              className="w-full border p-2 rounded"
-                              type="number"
-                              min={0}
-                              id={`${difficulty}-noOfProblems`}
-                              value={details.noOfProblems}
-                              onChange={(e) =>
-                                handleProblemChange(
-                                  difficulty,
-                                  "noOfProblems",
-                                  e.target.value
-                                )
-                              }
+                              type="checkbox"
+                              checked={details.topicTags.includes(topic)}
+                              onChange={() => {}}
+                              className="mr-2"
                             />
+                            <span className="capitalize">{topic}</span>
                           </div>
-                          {/* Topic Tags Input */}
-                          <div className="w-full">
-                            <label htmlFor={`${difficulty}-topicTags`}>
-                              Topic Tags
-                            </label>
-                            <input
-                              className="w-full border p-2 rounded"
-                              type="text"
-                              id={`${difficulty}-topicTags`}
-                              value={details.topicTags.join(",")}
-                              onChange={(e) =>
-                                handleProblemChange(
-                                  difficulty,
-                                  "topicTags",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        </div>
+                        ))}
                       </div>
-                    )
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
-            )}
+            ))}
+          </div>
+        </div>
+      )}
           </div>
           <button
             type="submit"

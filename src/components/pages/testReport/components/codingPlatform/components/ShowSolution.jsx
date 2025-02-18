@@ -2,7 +2,7 @@ import React from "react";
 
 const ShowSolution = ({ selectedProblem, closeModal, submissionTime }) => {
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center backdrop-blur-md">
       <div className="bg-white p-6 rounded shadow-lg w-3/4 max-w-lg">
         <h2 className="text-xl font-bold mb-4">Problem Solution</h2>
         <p>

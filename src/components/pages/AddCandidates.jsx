@@ -505,7 +505,7 @@ const AddCandidates = () => {
               </tr>
             </thead>
             <tbody
-              className={`${errorCount ? "bg-red-500 text-white" : "bg-white"}`}
+              className={`${errorCount ? "bg-green-500 text-white" : "bg-white"}`}
             >
               {excelData.map((row, index) => (
                 <tr

@@ -3,13 +3,12 @@ import axios from "axios";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { BiError } from "react-icons/bi";
 import { FaRegEdit } from "react-icons/fa";
-import { MdDelete} from "react-icons/md";
+import { MdDelete } from "react-icons/md";
 
 function UpdateProblems() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,6 +59,7 @@ function UpdateProblems() {
               <th className="border p-3 text-left">Title</th>
               <th className="border p-3 text-left">Problem Detail</th>
               <th className="border p-3 text-left">Difficulty</th>
+              <th className="border p-3 text-left">Topic Tags</th>
               <th className="border p-3 text-left">Initial Code</th>
               <th className="boredr p-3 text-left">Problem solutions</th>
               <th className="border p-3 text-left">Actions</th>
@@ -86,6 +86,16 @@ function UpdateProblems() {
                   >
                     {problem.levels}
                   </span>
+                </td>
+                <td className="border p-3">
+                  {problem.topicTags?.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2  py-1 bg-blue-100 text-blue-800 rounded-full text-sm mr-2"
+                    >
+                      {tag}
+                    </span>
+                  ))}
                 </td>
                 <td className="border p-3">
                   <details className="cursor-pointer">

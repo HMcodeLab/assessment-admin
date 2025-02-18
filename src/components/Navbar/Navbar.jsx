@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { FaMailBulk } from "react-icons/fa";
 
 // Import images
 import dashboardIcon from "../../Assets/dashboard-dark.png";
@@ -61,6 +62,9 @@ const Navbar = () => {
     }
     if (location.pathname.startsWith("/student-test-report/")) {
       return { title: "Student Test Report", icon: studentResultIcon };
+    }
+    if(location.pathname.startsWith("/assessment-student-mailed/")){
+      return { title: "Sended mails", icon: editAssessmentIcon };
     }
     switch (location.pathname) {
       case "/dashboard":

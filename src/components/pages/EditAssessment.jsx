@@ -32,6 +32,10 @@ const EditAssignment = () => {
       setInitialAssessment(response?.data.data);
       setAssessment(response?.data.data);
       console.log(response?.data.data);
+      
+      
+      
+      
     } catch (error) {
       console.error("Error fetching assessment data:", error);
     } finally {
@@ -56,7 +60,7 @@ const EditAssignment = () => {
         date.getHours(),
         date.getMinutes()
       )
-    ).toISOString();
+    ).toString();
     if (field === "lastDate") {
       setprevlastdate(false);
       // console.log("last",utcDate);
@@ -193,14 +197,14 @@ const EditAssignment = () => {
       toast.error("No changes made to the assessment.");
       return;
     }
-    if (!prevlastdate && prevstartdate) {
-      toast.error("Also change start date");
-      return;
-    }
-    if (!prevstartdate && prevlastdate) {
-      toast.error("Also change last date");
-      return;
-    }
+    // if (!prevlastdate && prevstartdate) {
+    //   toast.error("Also change start date");
+    //   return;
+    // }
+    // if (!prevstartdate && prevlastdate) {
+    //   toast.error("Also change last date");
+    //   return;
+    // }
     setloading(true);
     try {
       if (initialAssessment.startDate !== assessment.startDate) {
@@ -214,7 +218,7 @@ const EditAssignment = () => {
               new Date(assessment.startDate).getHours(),
               new Date(assessment.startDate).getMinutes()
             )
-          ).toISOString(),
+          ).toString(),
         });
       }
       if (initialAssessment.lastDate !== assessment.lastDate) {
@@ -228,7 +232,7 @@ const EditAssignment = () => {
               new Date(assessment.lastDate).getHours(),
               new Date(assessment.lastDate).getMinutes()
             )
-          ).toISOString(),
+          ).toString(),
         });
       }
       const updatedAssessment = {
@@ -341,7 +345,7 @@ const EditAssignment = () => {
                     handleInputChange("assessmentName", e.target.value)
                   }
                 />
-                <label htmlFor="" className="text-xl font-semibold">
+                {/* <label htmlFor="" className="text-xl font-semibold">
                   Description
                 </label>
                 <input
@@ -351,8 +355,8 @@ const EditAssignment = () => {
                   value={assessment?.assessmentDesc || ""}
                   onChange={(e) =>
                     handleInputChange("assessmentDesc", e.target.value)
-                  }
-                />
+                  } */}
+                {/* /> */}
                 <label className="text-xl font-semibold">Total Marks</label>
                 <input
                   type="number"

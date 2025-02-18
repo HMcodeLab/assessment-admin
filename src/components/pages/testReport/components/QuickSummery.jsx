@@ -17,7 +17,7 @@ const QuickSummery = ({ user, analysis }) => {
   const totalQuestions = correct + incorrect + unattempted;
   const rank = user?.rank || "N/A";
   const totalUsers = user?.totalUsers || "N/A";
-  const percentile = correct
+  const percentage = correct
     ? ((correct / totalQuestions) * 100).toFixed(2)
     : 0;
 
@@ -31,8 +31,8 @@ const QuickSummery = ({ user, analysis }) => {
     },
     {
       color: "bg-green-300",
-      label: "Percentile",
-      value: `${percentile}%`,
+      label: "percentage",
+      value: `${percentage}%`,
       icon: <CiTrophy />,
     },
     {
@@ -117,7 +117,7 @@ const QuickSummery = ({ user, analysis }) => {
                       <ProgressBar2 percentage={item.value / item.totalValue} />
                       <span>{`${item.value}/${item.totalValue}`}</span>
                     </div>
-                  ) : item.label === "Accuracy" || "Percentile" ? (
+                  ) : item.label === "Accuracy" || "percentage" ? (
                     <div className="flex items-center gap-2">
                       <ProgressBar percentage={item.value} />
                       {item.value}
