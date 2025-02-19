@@ -153,9 +153,11 @@ const temp = true;
         <div className="w-2 h-6 bg-purple-500 rounded-full"></div>
         Pie Chart
       </h2>
-      <div className="transition-all duration-300 hover:scale-[1.02]">
+     <div className='flex items-center justify-center'>
+     <div className="transition-all duration-300 hover:scale-[1.02] w-[40%]">
         {pieData.labels.length > 0 && <Pie data={pieData} width={200} height={80} />}
       </div>
+     </div>
     </div>
 
     {/* Doughnut Chart */}
@@ -164,8 +166,10 @@ const temp = true;
         <div className="w-2 h-6 bg-orange-500 rounded-full"></div>
         Doughnut Chart
       </h2>
-      <div className="transition-all duration-300 hover:scale-[1.02] w-[40%] left-[20%] flex justify-center items-center">
+      <div className='flex items-center justify-center'>
+      <div className="transition-all duration-300 hover:scale-[1.02] w-[40%] left-[20%]">
         {doughnutData.labels.length > 0 && <Doughnut data={doughnutData} width={200} height={80} />}
+      </div>
       </div>
     </div>
 </div>

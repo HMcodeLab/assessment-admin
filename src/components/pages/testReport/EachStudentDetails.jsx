@@ -21,7 +21,14 @@ const EachStudentDetails = () => {
   const [load, setLoad] = useState(false);
   const [studentDetails, setStudentDetails] = useState(null);
   const adminToken = localStorage.getItem("authToken");
+  const [expandedQuestions, setExpandedQuestions] = useState({});
 
+  const toggleExpand = (moduleIndex, questionIndex) => {
+    setExpandedQuestions((prev) => ({
+      ...prev,
+      [`${moduleIndex}-${questionIndex}`]: !prev[`${moduleIndex}-${questionIndex}`],
+    }));
+  };
   // console.log(assessmentName);
 
   const fetchData = useCallback(async () => {
@@ -134,18 +141,18 @@ const EachStudentDetails = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-  console.log(studentDetails?.submissionTime);
-  
+
 
     let formattedTime = "";
     if (hours > 0) {
       formattedTime += `${hours} hr `;
     }
-    if (minutes > 0 || hours > 0) { // Include minutes if there are hours
+    if (minutes > 0 || hours > 0) {
+      // Include minutes if there are hours
       formattedTime += `${minutes} min `;
     }
     formattedTime += `${remainingSeconds} sec`;
-  
+
     return formattedTime;
   };
   return (
@@ -184,11 +191,12 @@ const EachStudentDetails = () => {
             </button>
             <div className="flex flex-col">
               <div className="flex gap-2 items-center">
-                <p className="text-red-500 font-semibold" >
-                  Submission Time :{" "}
-                  
-                </p>
-                <span>{studentDetails?.submissionTime ? formatSubmissionTime(studentDetails?.submissionTime) : "N/A"}</span>
+                <p className="text-red-500 font-semibold">Submission Time : </p>
+                <span>
+                  {studentDetails?.submissionTime
+                    ? formatSubmissionTime(studentDetails?.submissionTime)
+                    : "N/A"}
+                </span>
               </div>
               <div className="flex gap-2 items-center">
                 <Dot color={color.bgColor} />
@@ -219,6 +227,79 @@ const EachStudentDetails = () => {
               <Carousel userScreenshots={studentDetails?.userScreenshots} />
             )}
           </div>
+          <div className="mx-auto p-4">
+      {studentDetails?.generatedModules?.map((module, moduleIndex) => (
+        <div
+          key={moduleIndex}
+          className="mb-8 bg-white shadow-md rounded-lg overflow-hidden"
+        >
+          <div className="bg-gray-100 p-4 border-b">
+            <h2 className="text-xl font-semibold text-gray-800">
+              Module: {module?.module?.modueleInfo?.moduleName}
+            </h2>
+          </div>
+
+          <div className="p-4 grid lg:grid-cols-3 md:grid-cols-2 xl:grid-cols-4 gap-5">
+            {module?.module?.generatedQustionSet
+              ?.filter((question) => question?.submittedAnswer)
+              .map((question, Qindex) => {
+                const isExpanded = expandedQuestions[`${moduleIndex}-${Qindex}`];
+                const fullText = question?.question?.question || "";
+                const truncatedText = fullText.length > 50 ? fullText.slice(0, 50) + "..." : fullText;
+
+                return (
+                  <div
+                    key={Qindex}
+                    className="mb-4 border-l-4 border-green-500 bg-green-50 rounded-lg p-4 shadow-sm"
+                  >
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex items-center">
+                        <span className="inline-flex items-center justify-center p-3 h-6 w-6 rounded-full bg-green-500 text-white text-sm font-medium mr-2">
+                          {Qindex + 1}
+                        </span>
+                        <div>
+                          <h3 className="font-medium text-gray-700">
+                            Question:{" "}
+                            <span>{isExpanded ? fullText : truncatedText}</span>
+                          </h3>
+                          {fullText.length > 150 && (
+                            <button
+                              className="text-blue-500 hover:underline text-sm mt-1"
+                              onClick={() => toggleExpand(moduleIndex, Qindex)}
+                            >
+                              {isExpanded ? "Show Less" : "Show More"}
+                            </button>
+                          )}
+                          <p className="font-bold text-green-500 p-3">Answer: <span className="font-normal text-black">{question?.question?.answer}:- {question?.question?.options?.[question?.question?.answer]}</span></p>
+                        </div>
+                      </div>
+
+                      <div
+                        className={`ml-8 mt-2 p-3 rounded border border-gray-200 ${
+                          question?.question?.answer === question?.submittedAnswer
+                            ? "bg-green-100"
+                            : "bg-red-100"
+                        }`}
+                      >
+                        <p className="text-gray-800">{question?.submittedAnswer} :-  {question?.question?.options?.[question?.submittedAnswer]}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+            {/* Show a message if no submitted answers */}
+            {module?.module?.generatedQustionSet?.filter(
+              (q) => q?.submittedAnswer
+            ).length === 0 && (
+              <div className="col-span-4 text-center py-8 text-gray-500">
+                No answers have been submitted for this module.
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
           {studentDetails?.isCodingAssessmentCompleted && (
             <CodingScore
               assigned_problems_set={studentDetails?.assigned_problems_set}
