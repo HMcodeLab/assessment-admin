@@ -207,36 +207,10 @@ const EditAssignment = () => {
     // }
     setloading(true);
     try {
-      if (initialAssessment.startDate !== assessment.startDate) {
-        setAssessment({
-          ...assessment,
-          startDate: new Date(
-            Date.UTC(
-              new Date(assessment.startDate).getFullYear(),
-              new Date(assessment.startDate).getMonth(),
-              new Date(assessment.startDate).getDate(),
-              new Date(assessment.startDate).getHours(),
-              new Date(assessment.startDate).getMinutes()
-            )
-          ).toString(),
-        });
-      }
-      if (initialAssessment.lastDate !== assessment.lastDate) {
-        setAssessment({
-          ...assessment,
-          lastDate: new Date(
-            Date.UTC(
-              new Date(assessment.lastDate).getFullYear(),
-              new Date(assessment.lastDate).getMonth(),
-              new Date(assessment.lastDate).getDate(),
-              new Date(assessment.lastDate).getHours(),
-              new Date(assessment.lastDate).getMinutes()
-            )
-          ).toString(),
-        });
-      }
       const updatedAssessment = {
         ...assessment,
+        startDate: new Date(assessment.startDate).toISOString(),
+        lastDate: new Date(assessment.lastDate).toISOString(),
       };
 
       console.log("Submitting assessment:", updatedAssessment); // Log to verify payload
