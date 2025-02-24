@@ -14,13 +14,18 @@ import { FaQrcode } from "react-icons/fa";
 import { IoIosArrowDown } from "react-icons/io";
 import { IoIosPaper } from "react-icons/io";
 import { MdDashboard } from "react-icons/md";
+import { FaCode } from "react-icons/fa6";
 
 const Sidebar = () => {
   const { isAuthenticated } = useAuth();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
+  const [isDropdownOpen2, setIsDropdownOpen2] = useState(false);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown1 = () => {
+    setIsDropdownOpen1(!isDropdownOpen1);
+  };
+  const toggleDropdown2 = () => {
+    setIsDropdownOpen2(!isDropdownOpen2);
   };
 
   return isAuthenticated ? (
@@ -41,18 +46,18 @@ const Sidebar = () => {
             Dashboard
           </NavLink>
           <button
-            onClick={toggleDropdown}
+            onClick={toggleDropdown1}
             className="flex items-center gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300"
           >
             <IoIosPaper/>
             Assessment
-            {isDropdownOpen ?(
+            {isDropdownOpen1 ?(
               <IoIosArrowDown className="text-white"/>
             ):(
               <IoIosArrowDown className="text-white transform rotate-180"/>
             )}
           </button>
-          {isDropdownOpen && (
+          {isDropdownOpen1 && (
             <div className="flex flex-col space-y-2 bg-[#223741] rounded-lg">
               <NavLink
             to="/add-assignment"
@@ -128,31 +133,45 @@ const Sidebar = () => {
           </NavLink>
             </div>
           )}
+          <button onClick={toggleDropdown2} className="flex items-center gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300">
+            <FaCode/>
+            Problrms {
+              isDropdownOpen2 ?(
+                <IoIosArrowDown className="text-white"/>
+              ):(
+                <IoIosArrowDown className="text-white transform rotate-180"/>
+              )
+            } </button>
+            {isDropdownOpen2 && (
+              <div className="flex flex-col space-y-2 bg-[#223741] rounded-lg">
+              <NavLink
+              to="/AddProblems"
+              className={({ isActive }) =>
+                `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
+                  isActive ? "bg-[#1fc074] text-white" : ""
+                }`
+              }
+            >
+              {" "}
+              <FaFileCode/>
+              Add Problems
+            </NavLink>
+            <NavLink
+              to="/UpdateProblems"
+              className={({ isActive }) =>
+                `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
+                  isActive ? "bg-[#1fc074] text-white" : ""
+                }`
+              }
+            >
+              {" "}
+              <FaQrcode/>
+              Update Problems
+            </NavLink>
+            </div>
+            )}
           
-          <NavLink
-            to="/AddProblems"
-            className={({ isActive }) =>
-              `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
-                isActive ? "bg-[#1fc074] text-white" : ""
-              }`
-            }
-          >
-            {" "}
-            <FaFileCode/>
-            Add Problems
-          </NavLink>
-          <NavLink
-            to="/UpdateProblems"
-            className={({ isActive }) =>
-              `flex items-center  gap-2 px-4 py-2 rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300 ${
-                isActive ? "bg-[#1fc074] text-white" : ""
-              }`
-            }
-          >
-            {" "}
-            <FaQrcode/>
-            Update Problems
-          </NavLink>
+          
         </nav>
       </aside>
     </div>
