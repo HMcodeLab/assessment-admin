@@ -106,7 +106,23 @@ const EachStudentDetails = () => {
 
   const exportToExcel = () => {
     // Assuming studentDetails is a single object, not an array
-    const student = studentDetails; // Use this single student object
+    const student = studentDetails;
+    const submittedAnswers = [];
+
+    student?.generatedModules?.forEach((module) => {
+      module?.module?.generatedQustionSet
+        ?.filter((question) => question?.submittedAnswer)
+        .forEach((question, Qindex) => {
+          submittedAnswers.push({
+            Module: module?.module?.modueleInfo?.moduleName,
+            "Question Number": Qindex + 1,
+            Question: question?.question?.question,
+            "Submitted Answer": question?.submittedAnswer,
+            "Correct Answer": question?.question?.answer,
+          });
+        });
+    });
+    // Use this single student object
 
     const worksheet = XLSX.utils.json_to_sheet([
       {
@@ -130,6 +146,7 @@ const EachStudentDetails = () => {
         PhoneinFrame: student?.ProctoringScore?.PhoneinFrame,
         ControlKeyPressed: student?.ProctoringScore?.ControlKeyPressed,
       },
+      ...submittedAnswers,
     ]);
 
     const workbook = XLSX.utils.book_new();
@@ -233,7 +250,7 @@ const EachStudentDetails = () => {
           key={moduleIndex}
           className="mb-8 bg-white shadow-md rounded-lg overflow-hidden"
         >
-          <div className="bg-gray-100 p-4 border-b">
+          <div className="bg-gray-100 p-4 border-b ">
             <h2 className="text-xl font-semibold text-gray-800">
               Module: {module?.module?.modueleInfo?.moduleName}
             </h2>
