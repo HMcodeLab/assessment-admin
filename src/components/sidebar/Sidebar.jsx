@@ -30,8 +30,8 @@ const Sidebar = () => {
 
   return isAuthenticated ? (
     <div className="min-h-screen flex p-5">
-      <aside className="w-56 bg-[#15262d] text-white  p-4 rounded-lg flex flex-col justify-between">
-        <nav className="flex flex-col space-y-2 ">
+      <aside className="w-56 bg-[#15262d] text-white p-4 rounded-lg flex flex-col justify-between">
+        <nav className="flex flex-col space-y-1 ">
           <img src="/white.png" alt="" className="px-5" />
           <NavLink
             to="/"
@@ -47,14 +47,14 @@ const Sidebar = () => {
           </NavLink>
           <button
             onClick={toggleDropdown1}
-            className="flex items-center gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300"
+            className="flex items-center justify-between gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300"
           >
             <IoIosPaper/>
             Assessment
             {isDropdownOpen1 ?(
-              <IoIosArrowDown className="text-white"/>
+              <IoIosArrowDown className="text-white transition-all duration-300"/>
             ):(
-              <IoIosArrowDown className="text-white transform rotate-180"/>
+              <IoIosArrowDown className="text-white transform rotate-180 transition-all duration-300"/>
             )}
           </button>
           {isDropdownOpen1 && (
@@ -133,17 +133,17 @@ const Sidebar = () => {
           </NavLink>
             </div>
           )}
-          <button onClick={toggleDropdown2} className="flex items-center gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300">
+          <button onClick={toggleDropdown2} className="flex items-center justify-between gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300">
             <FaCode/>
-            Problems {
+             Problems {
               isDropdownOpen2 ?(
-                <IoIosArrowDown className="text-white"/>
+                <IoIosArrowDown className="text-white transition-all duration-300"/>
               ):(
-                <IoIosArrowDown className="text-white transform rotate-180"/>
+                <IoIosArrowDown className="text-white transform rotate-180 transition-all duration-300"/>
               )
             } </button>
             {isDropdownOpen2 && (
-              <div className="flex flex-col space-y-2 bg-[#223741] rounded-lg">
+              <div className="flex flex-col space-y-0 bg-[#223741] rounded-lg">
               <NavLink
               to="/AddProblems"
               className={({ isActive }) =>
