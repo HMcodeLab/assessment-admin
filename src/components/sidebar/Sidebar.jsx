@@ -135,7 +135,7 @@ const Sidebar = () => {
           )}
           <button onClick={toggleDropdown2} className="flex items-center gap-4  px-4 py-2 bg-[#384f59] rounded hover:bg-[#4f4f52] hover:text-white transition-all duration-300">
             <FaCode/>
-            Problrms {
+            Problems {
               isDropdownOpen2 ?(
                 <IoIosArrowDown className="text-white"/>
               ):(
