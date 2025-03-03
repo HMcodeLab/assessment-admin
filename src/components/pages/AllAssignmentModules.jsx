@@ -11,7 +11,7 @@ const AssignmentResult = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setLoading] = useState(true);
   const [viewLoading, setViewLoading] = useState({});
-  const [mailloading, setmailloading] = useState({})
+  const [mailloading, setmailloading] = useState({});
   const navigate = useNavigate();
   const temp = true;
 
@@ -77,7 +77,9 @@ const AssignmentResult = () => {
     setmailloading((prev) => ({ ...prev, [testId]: true })); // Set loading for this specific testId
     try {
       // const response = await fetchData(testId);
-      navigate(`/assessment-student-mailed/${testId}`, { state: { assessmentName } });
+      navigate(`/assessment-student-mailed/${testId}`, {
+        state: { assessmentName },
+      });
       // const students = response?.data || [];
       // if (students.length > 0) {
       // } else {
@@ -174,7 +176,9 @@ const AssignmentResult = () => {
               key={index}
               className="hover:bg-green-50 transition duration-150"
             >
-              <td className="py-3 px-4 border-b">{assessment.assessmentName}</td>
+              <td className="py-3 px-4 border-b">
+                {assessment.assessmentName}
+              </td>
               <td className="py-3 px-4 border-b">
                 {assessment?.Assessmentmodules?.length || 0}
               </td>
@@ -187,11 +191,14 @@ const AssignmentResult = () => {
                   assessment.ProctoringFor?.TabSwitch?.inUse && "TabSwitch",
                   assessment.ProctoringFor?.multiplePersonInFrame?.inUse &&
                     "MultiplePersonInFrame",
-                  assessment.ProctoringFor?.PhoneinFrame?.inUse && "PhoneInFrame",
-                  assessment.ProctoringFor?.SoundCaptured?.inUse && "SoundCaptured",
+                  assessment.ProctoringFor?.PhoneinFrame?.inUse &&
+                    "PhoneInFrame",
+                  assessment.ProctoringFor?.SoundCaptured?.inUse &&
+                    "SoundCaptured",
                   assessment.ProctoringFor?.ControlKeyPressed?.inUse &&
                     "ControlKeyPressed",
-                  assessment.ProctoringFor?.invisiblecam?.inUse && "invisiblecam",
+                  assessment.ProctoringFor?.invisiblecam?.inUse &&
+                    "invisiblecam",
                 ]
                   .filter(Boolean)
                   .join(", ")}
@@ -202,63 +209,79 @@ const AssignmentResult = () => {
               <td className="py-3 px-4 border-b">
                 {formatDate(assessment.lastDate)}
               </td>
-              <td
-                className="py-3 px-4 border-b flex gap-1"
-                
-              >
-                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleViewClick(assessment._id, assessment.assessmentName)}>{viewLoading[assessment._id] ? "Viewing..." : "View"}</span>
-                <span className="border border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer" onClick={() => handleStudentGotMailClick(assessment._id, assessment.assessmentName)}>{setmailloading[assessment._id] ? "Viewing All ..." : "mail summary"}</span>
+              <td className="py-3 px-4 border-b flex gap-1">
+                <span
+                  className="border text-xs text-center border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer"
+                  onClick={() =>
+                    handleViewClick(assessment._id, assessment.assessmentName)
+                  }
+                >
+                  {viewLoading[assessment._id] ? "Viewing..." : "View"}
+                </span>
+                <span
+                  className="border text-xs text-center border-yellow-500 px-4 py-2 rounded-md text-yellow-500 font-semibold hover:bg-yellow-500 hover:text-white  cursor-pointer"
+                  onClick={() =>
+                    handleStudentGotMailClick(
+                      assessment._id,
+                      assessment.assessmentName
+                    )
+                  }
+                >
+                  {setmailloading[assessment._id]
+                    ? "Viewing All ..."
+                    : "mail summary"}
+                </span>
               </td>
             </tr>
           ))}
-        </tbody> 
+        </tbody>
       </table>
-<div className="flex justify-between">
-      <div className="flex items-center mt-4">
-        <span className="mr-2">Rows per page:</span>
-        <select
-          value={rowsPerPage}
-          onChange={handleChangeRowsPerPage}
-          className="px-2 py-1 rounded bg-gray-200 text-gray-700 "
-        >
-          {[5, 10, 25, 50].map((size) => (
-            <option key={size} value={size}>
-              {size}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex justify-center items-center mt-4 gap-2">
-        <button
-          onClick={() => handleChangePage(page - 1)}
-          disabled={page === 0}
-          className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
-        >
-          {"<"}
-        </button>
-        {[...Array(totalPages)].map((_, index) => (
-          <button
-            key={index}
-            onClick={() => handleChangePage(index)}
-            className={`px-3 py-1 rounded mx-1 ${
-              page === index
-                ? "bg-green-500 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+      <div className="flex justify-between">
+        <div className="flex items-center mt-4">
+          <span className="mr-2">Rows per page:</span>
+          <select
+            value={rowsPerPage}
+            onChange={handleChangeRowsPerPage}
+            className="px-2 py-1 rounded bg-gray-200 text-gray-700 "
           >
-            {index + 1}
+            {[5, 10, 25, 50].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex justify-center items-center mt-4 gap-2">
+          <button
+            onClick={() => handleChangePage(page - 1)}
+            disabled={page === 0}
+            className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
+          >
+            {"<"}
           </button>
-        ))}
-        <button
-          onClick={() => handleChangePage(page + 1)}
-          disabled={page === totalPages - 1}
-          className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
-        >
-          {">"}
-        </button>
+          {[...Array(totalPages)].map((_, index) => (
+            <button
+              key={index}
+              onClick={() => handleChangePage(index)}
+              className={`px-3 py-1 rounded mx-1 ${
+                page === index
+                  ? "bg-green-500 text-white"
+                  : "bg-gray-200 text-gray-700"
+              }`}
+            >
+              {index + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => handleChangePage(page + 1)}
+            disabled={page === totalPages - 1}
+            className="px-3 py-1 rounded bg-gray-200 text-gray-500 disabled:opacity-50"
+          >
+            {">"}
+          </button>
+        </div>
       </div>
-</div>
     </div>
   );
 };
