@@ -126,6 +126,7 @@ const AddCandidates = () => {
 
   const handleChangeCandidateType = () => {
     setSingleCandidate(!singleCandidate);
+    setSelectedModule("")
   };
 
   const handleChangeCandidate = (e) => {

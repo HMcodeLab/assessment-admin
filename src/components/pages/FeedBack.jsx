@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ImSpinner9 } from "react-icons/im";
-import { IoIosMore } from "react-icons/io";
+import { IoIosMore,IoIosLess } from "react-icons/io";
 
 const StudentFeed = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -9,6 +9,7 @@ const StudentFeed = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [selectedDate, setSelectedDate] = useState(""); // State to store selected date
   const adminToken = localStorage.getItem("authToken");
+  const [showFullText, setShowFullText] = useState(false);
 
   // Fetch data from server
   const fetchData = async () => {
@@ -103,7 +104,9 @@ const StudentFeed = () => {
             <img
               src="down.png"
               alt=""
-              className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+              className={`transition-transform duration-200 ${
+                isDropdownOpen ? "rotate-180" : ""
+              }`}
             />
           </button>
 
@@ -131,7 +134,7 @@ const StudentFeed = () => {
           )}
         </div>
       </div>
-      
+
       {/* Feedback by students */}
       <div className="h-[80vh] p-3 overflow-y-auto scrollbar-thin scrollbar-thumb-[#1fc074] scrollbar-track-[#15262d] bg-gray-100">
         <div className="flex flex-col gap-3">
@@ -140,19 +143,35 @@ const StudentFeed = () => {
               key={index}
               className="flex flex-col w-full rounded-[13px] p-2 bg-white gap-2 shadow-lg"
             >
-              <h1 className="font-semibold text-lg text-blue-950 flex items-end ">
-                {item.feedback.slice(0,200)} 
-                <IoIosMore className="cursor-pointer "/>
+              <h1 className="font-semibold text-lg text-blue-950 flex items-end">
+                {showFullText ? item.feedback : item.feedback.slice(0, 100)}
+                {item.feedback.length > 100 && (
+                  <span
+                    className="cursor-pointer text-sm text-blue-500 underline"
+                    onClick={() => setShowFullText(!showFullText)}
+                  >
+                    {showFullText ? "show less" : <IoIosMore />}
+                  </span>
+                )}
               </h1>
               <ul>
                 <li className="text-sm font-semibold text-blue-950">
-                  <span className="text-slate-400 text-sm font-semibold">Name </span>: {item.name}
+                  <span className="text-slate-400 text-sm font-semibold">
+                    Name{" "}
+                  </span>
+                  : {item.name}
                 </li>
                 <li className="text-sm font-semibold text-blue-950">
-                  <span className="text-slate-400 text-sm font-semibold">Email </span>: {item.email}
+                  <span className="text-slate-400 text-sm font-semibold">
+                    Email{" "}
+                  </span>
+                  : {item.email}
                 </li>
                 <li className="text-sm font-semibold text-blue-950">
-                  <span className="text-slate-400 text-sm font-semibold">Date </span>: {formatDateShow(item.createdAt)}
+                  <span className="text-slate-400 text-sm font-semibold">
+                    Date{" "}
+                  </span>
+                  : {formatDateShow(item.createdAt)}
                 </li>
               </ul>
             </div>

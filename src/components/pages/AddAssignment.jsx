@@ -4,11 +4,12 @@ import { ImCross } from "react-icons/im";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { IoMdArrowDropdown } from "react-icons/io";
-
+import { useNavigate } from "react-router-dom";
 const AddAssignment = () => {
   const adminToken = localStorage.getItem("authToken");
   const [loading, setloading] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const navigate = useNavigate();
   const handleCheckboxChange = (event) => {
     const checked = event.target.checked;
     setIsChecked(checked);
@@ -23,6 +24,9 @@ const AddAssignment = () => {
     hard: false
   });
 
+  const handleNavigate =()=>{
+    navigate("/add-questions")
+  }
 
 
   const handleProblemChange = (difficulty, key, value) => {
@@ -182,6 +186,7 @@ const AddAssignment = () => {
         toast.success("Assessment submitted successfully!");
         // Reset form after successful submission
         setAssessment(initialAssessmentState);
+        handleNavigate();
       }
     } catch (error) {
       console.error(
@@ -569,6 +574,7 @@ const AddAssignment = () => {
       )}
           </div>
           <button
+          // onClick={handleNavigate}
             type="submit"
             className=" mt-2 w-[20%] self-center p-2 bg-green-600 text-white rounded-md"
           >

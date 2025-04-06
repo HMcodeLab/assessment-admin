@@ -3,6 +3,8 @@ import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { GoDownload } from "react-icons/go";
 import Loader from "../Loader";
+import { useNavigate } from "react-router-dom";
+
 
 const AddQuestions = () => {
   const [Allmodules, setAllmodules] = useState([]);
@@ -12,6 +14,11 @@ const AddQuestions = () => {
   const [selectedModule, setSelectedModule] = useState(""); // For moduleid
   const adminToken = localStorage.getItem("authToken");
   const [loader, setloader] = useState(true);
+  const navigate = useNavigate();
+
+  const handleNavigate =()=>{
+    navigate("/add-candidates")
+  }
 
   // Fetch all assessments and their submodules (modules)
   const fetchData = async () => {
@@ -114,6 +121,7 @@ const AddQuestions = () => {
         setsubmodulearray([]);
         setSelectedModule("");
         fileInput.value = ""; // Reset file input
+        handleNavigate();
       }
     } catch (error) {
       console.error("Error adding questions:", error);

@@ -53,7 +53,7 @@ const temp = true;
           }
         )
         .then((response) => {
-          setTestData(response?.data.data);
+          setTestData(response?.data);
         })
         .catch((error) => {
           console.error("Error fetching test details:", error);
@@ -128,22 +128,24 @@ const temp = true;
         <div className='flex flex-col items-center animate-slideDown'>
           <h1 className='text-2xl font-semibold text-gray-700 mb-2'>Total Assessments</h1>
           <div className='text-7xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent animate-pulse'>
-            {testData.length}
+            {testData?.total}
           </div>
         </div>
         <div className='absolute -right-8 -bottom-8 w-40 h-40 bg-green-300 rounded-full opacity-20 animate-spin-slow'></div>
-        <div className='absolute -left-8 -top-8 w-32 h-32 bg-emerald-500 rounded-full opacity-20 animate-spin-slow'></div>
+        <div className='absolute -left-8 -top-8 w-32 h-32 bg-emerald-500  opacity-20 animate-spin-slow'></div>
       </div>
     </div>
 
-    {/* Line Chart */}
-    <div className="bg-white rounded-xl shadow-lg p-6 transform transition-all duration-300 hover:shadow-xl animate-fadeIn">
-      <h2 className="text-xl font-bold text-gray-700 mb-6 flex items-center gap-2">
-        <div className="w-2 h-6 bg-blue-500 rounded-full"></div>
-        Line Chart
-      </h2>
-      <div className="transition-all duration-300 hover:scale-[1.02]">
-        {lineData.labels.length > 0 && <Line data={lineData} width={200} height={80} />}
+    <div className='relative overflow-hidden bg-gradient-to-br from-white to-green-50 shadow-lg rounded-xl p-8 border border-green-200 transform transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] animate-fadeIn'>
+      <div className='flex flex-col items-center justify-center h-full gap-6'>
+        <div className='flex flex-col items-center animate-slideDown'>
+          <h1 className='text-2xl font-semibold text-gray-700 mb-2'>Total Submission</h1>
+          <div className='text-7xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent animate-pulse'>
+            {testData?.totalSubmission}
+          </div>
+        </div>
+        <div className='absolute -right-8 -bottom-8 w-40 h-40 bg-green-300  opacity-20 animate-spin-slow'></div>
+        <div className='absolute -left-8 -top-8 w-32 h-32 bg-emerald-500 rounded-full opacity-20 animate-spin-slow'></div>
       </div>
     </div>
 

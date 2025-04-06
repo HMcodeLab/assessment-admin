@@ -30,6 +30,20 @@ const TestDetails = () => {
   const [testsPerPage,setTestsPerPage] = useState(5); // Number of tests per page
   const navigate = useNavigate();
   const [questionsModalOpen, setQuestionsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Filter tests based on search term
+const filteredTests = testData.filter((test) =>
+  test.assessmentName.toLowerCase().includes(searchTerm.toLowerCase())
+);
+
+// Get current tests for pagination (use filteredTests instead of testData)
+const indexOfLastTest = currentPage * testsPerPage;
+const indexOfFirstTest = indexOfLastTest - testsPerPage;
+const currentTests = filteredTests.slice(indexOfFirstTest, indexOfLastTest);
+
+// Update totalPages calculation to use filteredTests
+const totalPages = Math.ceil(filteredTests.length / testsPerPage);
 
   let temp = true;
   useEffect(() => {
@@ -60,7 +74,7 @@ const TestDetails = () => {
       temp = false;
     }
   }, []);
-  const totalPages = Math.ceil(testData.length / testsPerPage);
+  // const totalPages = Math.ceil(testData.length / testsPerPage);
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
@@ -200,9 +214,9 @@ const TestDetails = () => {
   };
 
   // Get current tests for pagination
-  const indexOfLastTest = currentPage * testsPerPage;
-  const indexOfFirstTest = indexOfLastTest - testsPerPage;
-  const currentTests = testData.slice(indexOfFirstTest, indexOfLastTest);
+  // const indexOfLastTest = currentPage * testsPerPage;
+  // const indexOfFirstTest = indexOfLastTest - testsPerPage;
+  // const currentTests = testData.slice(indexOfFirstTest, indexOfLastTest);
 
   // format date
   function formatDate(dateString) {
@@ -247,6 +261,33 @@ const TestDetails = () => {
   return (
     <div className="mx-6">
       <Toaster />
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+    {/* Search Input */}
+    <div className="relative w-full sm:w-96 mt-6">
+      <input
+        type="text"
+        placeholder="Search by assessment name..."
+        className="pl-10 pr-4 py-2 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-green-500"
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          setCurrentPage(1); // Reset to first page when searching
+        }}
+      />
+      <svg
+        className="absolute left-3 top-3 h-5 w-5 text-gray-400"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+      >
+        <path
+          fillRule="evenodd"
+          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+          clipRule="evenodd"
+        />
+      </svg>
+    </div>
+    </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
           <thead className="bg-gray-200 text-gray-700">

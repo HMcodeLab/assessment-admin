@@ -13,7 +13,18 @@ const AssignmentResult = () => {
   const [viewLoading, setViewLoading] = useState({});
   const [mailloading, setmailloading] = useState({});
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
   const temp = true;
+
+  const filteredData = testData.filter((assessment) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      assessment.assessmentName.toLowerCase().includes(searchLower) ||
+      (assessment.maxMarks && assessment.maxMarks.toString().includes(searchTerm)) ||
+      (assessment.timelimit && assessment.timelimit.toString().includes(searchTerm))
+      // Add more fields if needed
+    );
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -102,11 +113,11 @@ const AssignmentResult = () => {
     setPage(0);
   };
 
-  const paginatedData = testData.slice(
+  const paginatedData = filteredData.slice(
     page * rowsPerPage,
     page * rowsPerPage + rowsPerPage
   );
-  const totalPages = Math.ceil(testData.length / rowsPerPage);
+  const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
   const formatDate = (dateString) => {
     const dateObj = new Date(dateString);
@@ -141,6 +152,18 @@ const AssignmentResult = () => {
   return (
     <div className="p-5">
       <Toaster position="top-center" />
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search by name"
+          className="px-4 py-2 border rounded-lg w-full md:w-1/3"
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+            setPage(0); // Reset to first page when searching
+          }}
+        />
+      </div>
       <table className="min-w-full bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden">
         <thead className="bg-gray-200 text-gray-700">
           <tr>
